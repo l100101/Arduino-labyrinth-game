@@ -41,3 +41,17 @@ bool Player::isFlashlightOn() const {
 int Player::getNumberOfKeys() const {
     return numberOfKeys;
 }
+
+int Player::getHp() const {
+    return hp;
+}
+
+void Player::getDamage(int damage) {
+    hp+=damage;
+if (hp < 0) hp = 0;
+}
+
+void Player::getHeal(int heal) {
+    hp+=heal;
+if (hp > maxHp) hp = maxHp;
+}

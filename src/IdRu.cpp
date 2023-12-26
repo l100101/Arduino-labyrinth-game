@@ -35,6 +35,9 @@ Button left( 5);
 Button down( 6);
 Button right( 7);
 
+Player player(0, 0, true, 0);
+
+
 //создать класс для персонажа [V]
 //создать класс для монстра
 int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys

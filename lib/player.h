@@ -9,7 +9,9 @@ private:
     int previousY;
     bool flashlightOn;
     int numberOfKeys;
-
+    int hp;
+    int maxHp;
+    
 public:
     Player(int startX, int startY, bool initialFlashlightState, int initialNumberOfKeys);
 
@@ -20,6 +22,10 @@ public:
     void getPreviousCoordinates(int& x, int& y) const;
     bool isFlashlightOn() const;
     int getNumberOfKeys() const;
+    int getHp() const;
+    void getDamage(int damage);
+    void getHeal(int heal);
+
 };
 
 #endif // PLAYER_H
