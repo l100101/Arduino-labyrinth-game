@@ -21,6 +21,7 @@
 #include "sprites.h"  //файл с рисунками карт и символов
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include "../lib/player.h"
 
 #define  BUTTON_W 4
 #define  BUTTON_A 7
@@ -34,7 +35,8 @@ Button left( 5);
 Button down( 6);
 Button right( 7);
 
-//создать класс для персонажа
+//создать класс для персонажа [V]
+//создать класс для монстра
 int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
 byte last_free[2] = {0, 0}; //0-x, 1-y, последняя свободняя координата
 byte key[3] = {0, 3, 1};//0-x,1-y,2-сколько ключей in map
