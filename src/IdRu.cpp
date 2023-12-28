@@ -351,12 +351,12 @@ byte cbuttons()
   }
   if (left.click()) { //--x {
     //chell[0]--;
-    player.move(DIR_LEFT);
+    player.move(2);
     return 1;
   }
   if (right.click()) { //--y {
     //chell[1]--;
-    player.move(DIR_RIGHT);
+    player.move(3);
     return 1;
   }
 
