@@ -6,7 +6,7 @@
 //сделать монстра      +
 
 //сделать две двери на одном уровне
-//сделать уровень в 2 экрана\
+//сделать уровень в 2 экрана
 //добавить 0 уровень(проверка кнопок)   +-
 
 //добавть уровень на котором игрок теряет жизнь(1), и находит новую(1)
@@ -21,7 +21,7 @@
 #include "sprites.h"  //файл с рисунками карт и символов
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include "../lib/player.h"
+#include "../lib/Player/player.h"
 
 #define  BUTTON_W 4
 #define  BUTTON_A 7
@@ -30,13 +30,12 @@
 #define BUZZER_PIN 8
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
-Button up (4);
-Button left( 5);
-Button down( 6);
-Button right( 7);
+Button up (BUTTON_W);
+Button down(BUTTON_S);
+Button left( BUTTON_A);
+Button right(BUTTON_D);
 
 Player player(0, 0, true, 0);
-
 
 //создать класс для персонажа [V]
 //создать класс для монстра
@@ -89,48 +88,6 @@ void all_tone(byte val) { //общий звук который будет исп
 //byte cbuttons();
 //void ccheck();
 
-void setup()
-{
-  Serial.begin(9600);
-  lcd.init();                      // initialize the lcd
-  lcd.init();
-  lcd.createChar(0, people);
-  lcd.createChar(1, keyChar);
-  lcd.createChar(2, doorChar);
-  lcd.createChar(3, wallChar);
-  lcd.createChar(4, fakedoorChar);
-  lcd.createChar(5, heartChar);
-  //lcd.createChar(6, winChar);
-  lcd.createChar(6, people);
-  lcd.createChar(7, monsterChar);
-  //  lcd.createChar(8, heartChar);
-  lcd.backlight();
-
-  pinMode(BUZZER_PIN, OUTPUT);
-  // pinMode( BUTTON_W, INPUT_PULLUP);
-  // pinMode( BUTTON_A, INPUT_PULLUP);
-  // pinMode( BUTTON_S, INPUT_PULLUP);
-  // pinMode( BUTTON_D, INPUT_PULLUP);
-
-  all_tone(3);
-  lvl_design();
-}
-
-void loop()
-{
-  up.tick();
-  left.tick();
-  down.tick();
-  right.tick();
-  //опрос кнопок, расчёты, дебаг
-  if (cbuttons()) { //если любая кнопка была нажата
-    monstep();
-    draw();
-  }
-  //отрисовка тут(если cbuttons вернёт 1)
-  debug();
-
-}
 
 void monstep()
 {
@@ -167,114 +124,6 @@ void gate()
     if (!digitalRead(BUTTON_A) || !digitalRead(BUTTON_D))
       break;
   }
-}
-
-void draw()
-{
-  ccheck();
-  lcd.clear();
-
-  //if flashlight enabled
-  if (flashEnabled)
-  {
-    pole_zrenia_1 =  flashlight[0];
-    pole_zrenia_2 = flashlight[1];
-  } else {
-    pole_zrenia_1 =  0;
-    pole_zrenia_2 = 19;
-  }
-
-  for (int y = 0; y < 4; y++)
-  {
-    for (int x = pole_zrenia_1; x < pole_zrenia_2 ; x++)//если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
-    {
-      if (wall[y][x] > 0 )//и стена есть, торисуем её
-      {
-        lcd.setCursor(x, y);
-        lcd.write(3);
-      }
-    }
-  }
-
-  //вывод персонажа
-  lcd.setCursor(chell[0], chell[1]);
-  lcd.write(0);
-  if (key[2] > 0)//вывод ключа
-  {
-    lcd.setCursor(key[0], key[1]);
-    lcd.write(1);
-  }
-  if (door[2] > 0)//вывод двери
-  {
-    lcd.setCursor(door[0], door[1]);
-    lcd.write(2);
-  }
-  //вывод количества hp в кармане
-  lcd.setCursor(19, 0);
-  lcd.print(chell[2]);
-
-  //вывод монстра
-  lcd.setCursor(monster[0], monster[3] );
-  lcd.write(7);
-
-  if (trap[2] > 0)
-  {
-    lcd.setCursor(trap[0], trap[1] );
-    lcd.print("^");
-  }
-  if (heart[2] > 0)
-  {
-    lcd.setCursor(heart[0], heart[1] );
-    lcd.write(5);
-  }
-
-}
-
-byte cbuttons()
-{
-  if (up.click()) { //++x
-    chell[0]++;
-    return 1;
-  }
-  if (left.click()) { //--x {
-    chell[0]--;
-    return 1;
-  }
-  if (down.click()) { //++y {
-    chell[1]++;
-    return 1;
-  }
-  if (right.click()) { //--y {
-    chell[1]--;
-    return 1;
-  }
-
-  if (down.hold() && chell[0] == key[0] && chell[1] == key[1] && key[2] > 0) { //подбор ключа
-    chell[3]++;//прибавляем ключ в карман
-    key[2]--;//вычитаем ключ из карты
-    all_tone(0);//0-4(?)
-    return 1;
-  }
-
-  if (down.hold() && chell[0] == heart[0] && chell[1] == heart[1] && heart[2] > 0) { //подбор жизни
-    chell[2]++;//прибавляем ХП в карман
-    heart[2]--;//вычитаем аптечкуиз карты
-    all_tone(0);
-    return 1;
-  }
-
-  if (down.hold() && chell[0] == door[0] && chell[1] == door[1] && door[2] > 0 && chell[3] > 0 )
-  {
-    chell[3]--;//вычиттаем ключи из кармана
-    door[2]--;//вычиттаем дчверь из карты
-    all_tone(0);
-    lvl++;
-    lcd.clear();
-    lvl_design();
-    return 1;
-  }
-
-  return 0;
 }
 
 void ccheck()//проверка координат
@@ -314,7 +163,6 @@ void ccheck()//проверка координат
   }
 
 }
-
 void lvl_design()//вызываем в начале/конце каждого уровня
 {
   gate();//переход(должен принимать номер уровня
@@ -426,18 +274,178 @@ void lvl_design()//вызываем в начале/конце каждого у
       // default необязателен
   }
 }
+void draw()
+{
+  ccheck();
+  lcd.clear();
+
+  //if flashlight enabled
+  if (flashEnabled)
+  {
+    pole_zrenia_1 =  flashlight[0];
+    pole_zrenia_2 = flashlight[1];
+  } else {
+    pole_zrenia_1 =  0;
+    pole_zrenia_2 = 19;
+  }
+
+  for (int y = 0; y < 4; y++)
+  {
+    for (int x = pole_zrenia_1; x < pole_zrenia_2 ; x++)//если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
+    {
+      if (wall[y][x] > 0 )//и стена есть, торисуем её
+      {
+        lcd.setCursor(x, y);
+        lcd.write(3);
+      }
+    }
+  }
+
+  //вывод персонажа
+  //lcd.setCursor(chell[0], chell[1]);
+  lcd.setCursor(player.getCurrentX(), player.getCurrentY());
+  
+  lcd.write(0);
+  if (key[2] > 0)//вывод ключа
+  {
+    lcd.setCursor(key[0], key[1]);
+    lcd.write(1);
+  }
+  if (door[2] > 0)//вывод двери
+  {
+    lcd.setCursor(door[0], door[1]);
+    lcd.write(2);
+  }
+  //вывод количества hp в кармане
+  lcd.setCursor(19, 0);
+  lcd.print(player.getHp());
+
+  //вывод монстра
+  lcd.setCursor(monster[0], monster[3] );
+  lcd.write(7);
+
+  if (trap[2] > 0)
+  {
+    lcd.setCursor(trap[0], trap[1] );
+    lcd.print("^");
+  }
+  if (heart[2] > 0)
+  {
+    lcd.setCursor(heart[0], heart[1] );
+    lcd.write(5);
+  }
+
+}
+
+byte cbuttons()
+{
+  if (up.click()) { //++x
+    //chell[0]++;
+    return 1;
+    player.move(0);
+  }
+  if (down.click()) { //++y {
+    //chell[1]++;
+    player.move(1);
+    return 1;
+  }
+  if (left.click()) { //--x {
+    //chell[0]--;
+    player.move(DIR_LEFT);
+    return 1;
+  }
+  if (right.click()) { //--y {
+    //chell[1]--;
+    player.move(DIR_RIGHT);
+    return 1;
+  }
+
+  if (down.hold() && chell[0] == key[0] && chell[1] == key[1] && key[2] > 0) { //подбор ключа
+    //chell[3]++;//прибавляем ключ в карман
+    key[2]--;//вычитаем ключ из карты
+    all_tone(0);//0-4(?)
+    player.addKeys(1);//добавляем ключ в карман
+    return 1;
+  }
+
+  if (down.hold() && chell[0] == heart[0] && chell[1] == heart[1] && heart[2] > 0) { //подбор жизни
+   // chell[2]++;//прибавляем ХП в карман
+    heart[2]--;//вычитаем аптечкуиз карты
+    player.getHeal(1);
+    all_tone(0);
+    return 1;
+  }
+
+  if (down.hold() && chell[0] == door[0] && chell[1] == door[1] && door[2] > 0 && chell[3] > 0 )
+  {
+    //chell[3]--;//вычиттаем ключи из кармана
+    player.dropKeys(1);//
+    door[2]--;//вычиттаем дчверь из карты
+    all_tone(0);
+    lvl++;
+    lcd.clear();
+    lvl_design();
+    return 1;
+  }
+  return 0;
+}
+
+
 
 void debug()
 {
-  Serial.print(chell[0]);
-  Serial.print(chell[1]);
-  Serial.print(chell[2]);
+  Serial.print(player.getCurrentX());
+  Serial.print("\t");
+  Serial.print(player.getCurrentY());
+  Serial.print("\t");
+  Serial.println(player.getHp());
   //  Serial.print(pole_zrenia_2);
+  // Serial.print("\t");
+  // Serial.print(lvl);
+  // Serial.print("\t");
+  // Serial.print(heart[0]);
+  // Serial.print(heart[1]);
+  // Serial.println(heart[2]);
+}
+void setup()
+{
+  Serial.begin(9600);
+  lcd.init();                      // initialize the lcd
+  lcd.init();
+  lcd.createChar(0, people);
+  lcd.createChar(1, keyChar);
+  lcd.createChar(2, doorChar);
+  lcd.createChar(3, wallChar);
+  lcd.createChar(4, fakedoorChar);
+  lcd.createChar(5, heartChar);
+  //lcd.createChar(6, winChar);
+  lcd.createChar(6, people);
+  lcd.createChar(7, monsterChar);
+  //  lcd.createChar(8, heartChar);
+  lcd.backlight();
 
-  Serial.print("\t");
-  Serial.print(lvl);
-  Serial.print("\t");
-  Serial.print(heart[0]);
-  Serial.print(heart[1]);
-  Serial.println(heart[2]);
+  pinMode(BUZZER_PIN, OUTPUT);
+  // pinMode( BUTTON_W, INPUT_PULLUP);
+  // pinMode( BUTTON_A, INPUT_PULLUP);
+  // pinMode( BUTTON_S, INPUT_PULLUP);
+  // pinMode( BUTTON_D, INPUT_PULLUP);
+
+  all_tone(3);
+  lvl_design();
+}
+
+void loop()
+{
+  up.tick();
+  left.tick();
+  down.tick();
+  right.tick();
+  //опрос кнопок, расчёты, дебаг
+  if (cbuttons()) { //если любая кнопка была нажата
+    monstep();
+    draw();
+  }
+  //отрисовка тут(если cbuttons вернёт 1)
+  debug();
+
 }

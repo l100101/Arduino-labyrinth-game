@@ -1,6 +1,7 @@
 #include "player.h"
 #include <Arduino.h>
 
+
 Player::Player(int startX, int startY, bool initialFlashlightState, int initialNumberOfKeys) :
     currentX(startX),
     currentY(startY),
@@ -9,11 +10,33 @@ Player::Player(int startX, int startY, bool initialFlashlightState, int initialN
     flashlightOn(initialFlashlightState),
     numberOfKeys(initialNumberOfKeys) {}
 
-void Player::move(int newX, int newY) {
+// void Player::move(int newX, int newY) {
+//     previousX = currentX;
+//     previousY = currentY;
+//     currentX = newX;
+//     currentY = newY;
+// }
+void Player::move(uint8_t dir) {
     previousX = currentX;
     previousY = currentY;
-    currentX = newX;
-    currentY = newY;
+    switch (dir)
+    {
+    case 0:
+    currentY++;
+        break;
+    case 1:
+    currentY--;
+        break;
+    case DIR_LEFT:
+    currentX--;
+        break;
+    case DIR_RIGHT:
+    currentX++;
+        break;
+    
+    default:
+        break;
+    }
 }
 
 void Player::toggleFlashlight() {
@@ -22,6 +45,9 @@ void Player::toggleFlashlight() {
 
 void Player::addKeys(int keysToAdd) {
     numberOfKeys += keysToAdd;
+}
+void Player::dropKeys(int keysToDrop) {
+    numberOfKeys -= keysToDrop;
 }
 
 void Player::getCurrentCoordinates(int& x, int& y) const {
@@ -38,11 +64,11 @@ bool Player::isFlashlightOn() const {
     return flashlightOn;
 }
 
-int Player::getNumberOfKeys() const {
+uint8_t Player::getNumberOfKeys() const {
     return numberOfKeys;
 }
 
-int Player::getHp() const {
+uint8_t Player::getHp() const {
     return hp;
 }
 
@@ -54,4 +80,14 @@ if (hp < 0) hp = 0;
 void Player::getHeal(int heal) {
     hp+=heal;
 if (hp > maxHp) hp = maxHp;
+}
+
+uint8_t Player::getCurrentX()
+{
+    return currentX;    
+}
+
+uint8_t Player::getCurrentY()
+{
+    return currentY;
 }
