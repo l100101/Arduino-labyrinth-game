@@ -10,6 +10,7 @@ Player::Player(int startX, int startY, bool initialFlashlightState, int initialN
     flashlightOn(initialFlashlightState),
     numberOfKeys(initialNumberOfKeys) {}
 
+<<<<<<< HEAD:lib/Player/player.cpp
 // void Player::move(int newX, int newY) {
 //     previousX = currentX;
 //     previousY = currentY;
@@ -17,6 +18,9 @@ Player::Player(int startX, int startY, bool initialFlashlightState, int initialN
 //     currentY = newY;
 // }
 void Player::move(uint8_t dir) {
+=======
+void Player::move(int newX, int newY) { //add animation
+>>>>>>> 00139799c876e334529e8ca606091ba24ae5e85f:lib/player.cpp
     previousX = currentX;
     previousY = currentY;
     switch (dir)
@@ -79,9 +83,10 @@ if (hp < 0) hp = 0;
 
 void Player::getHeal(int heal) {
     hp+=heal;
-if (hp > maxHp) hp = maxHp;
+if (hp > maxHp) hp = maxHp;    
 }
 
+<<<<<<< HEAD:lib/Player/player.cpp
 uint8_t Player::getCurrentX()
 {
     return currentX;    
@@ -91,3 +96,6 @@ uint8_t Player::getCurrentY()
 {
     return currentY;
 }
+=======
+
+>>>>>>> 00139799c876e334529e8ca606091ba24ae5e85f:lib/player.cpp
