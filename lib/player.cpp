@@ -9,7 +9,7 @@ Player::Player(int startX, int startY, bool initialFlashlightState, int initialN
     flashlightOn(initialFlashlightState),
     numberOfKeys(initialNumberOfKeys) {}
 
-void Player::move(int newX, int newY) {
+void Player::move(int newX, int newY) { //add animation
     previousX = currentX;
     previousY = currentY;
     currentX = newX;
@@ -53,5 +53,7 @@ if (hp < 0) hp = 0;
 
 void Player::getHeal(int heal) {
     hp+=heal;
-if (hp > maxHp) hp = maxHp;
+if (hp > maxHp) hp = maxHp;    
 }
+
+
