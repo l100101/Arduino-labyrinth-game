@@ -23,24 +23,24 @@
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Player/player.h"
 
-#define  BUTTON_W 4
-#define  BUTTON_A 7
-#define  BUTTON_S 6
-#define  BUTTON_D 5
+#define  BUTTON_UP 4
+#define  BUTTON_DOWN  5  
+#define  BUTTON_LEFT  7
+#define  BUTTON_RIGHT  6
 #define BUZZER_PIN 8
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
-Button up (BUTTON_W);
-Button down(BUTTON_S);
-Button left( BUTTON_A);
-Button right(BUTTON_D);
+Button up (BUTTON_UP);
+Button down(BUTTON_DOWN);
+Button left( BUTTON_LEFT);
+Button right(BUTTON_RIGHT);
 
 Player player(0, 0, true, 0);
 
 //создать класс для персонажа [V]
 //создать класс для монстра
-int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
-byte last_free[2] = {0, 0}; //0-x, 1-y, последняя свободняя координата
+//int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
+//byte last_free[2] = {0, 0}; //0-x, 1-y, последняя свободняя координата
 byte key[3] = {0, 3, 1};//0-x,1-y,2-сколько ключей in map
 byte door[3] = {19, 2, 1}; //1-закрытаб, 0-открыта
 byte flashlight[2] = {0, 4}; //область видимости фонаря по x
@@ -109,10 +109,10 @@ void gate()
   lcd.print(lvl);
   lcd.setCursor(0, 1);
   lcd.print("hp:");
-  lcd.print(chell[2]);
+  lcd.print(player.getHp());
   lcd.setCursor(0, 2);
   lcd.print("keys:");
-  lcd.print(chell[3]);
+  lcd.print(player.getNumberOfKeys());
   delay(3000);
   lcd.clear();
   while (1)
@@ -121,45 +121,46 @@ void gate()
     lcd.print("press left or");
     lcd.setCursor(0, 1);
     lcd.print("right button");
-    if (!digitalRead(BUTTON_A) || !digitalRead(BUTTON_D))
+    if (!digitalRead(BUTTON_LEFT) || !digitalRead(BUTTON_RIGHT))
       break;
   }
 }
 
 void ccheck()//проверка координат
 {
-  chell[0] = constrain(chell[0], 0 , 19);//ограниение куда может ходить человек
-  chell[1] = constrain(chell[1], 0, 3);
+//  chell[0] = constrain(chell[0], 0 , 19);//ограниение куда может ходить человек
+//  chell[1] = constrain(chell[1], 0, 3);
+if (player.getCurrentX() < 0 ) player.setCurrentX(0);
+if (player.getCurrentX() > 19 ) player.setCurrentX(19);
+if (player.getCurrentY() < 0 ) player.setCurrentY(0);
+if (player.getCurrentY() > 3 ) player.setCurrentY(3);
+
 
   if (flashEnabled)
   {
-    flashlight[0] = chell[0] - 2;//поле видимости фонарика
-    flashlight[1] = chell[0] + 2;//поле видимости фонарика
+    flashlight[0] = player.getCurrentX() - 2;//поле видимости фонарика
+    flashlight[1] = player.getCurrentX() + 2;//поле видимости фонарика
 
     flashlight[0] = constrain(flashlight[0], 0, 17);//от куда до куда может показывать фонарик
     flashlight[1] = constrain(flashlight[1], 2, 19);
   }
-  if (wall[chell[1]][chell[0]] == 0)//сравнивание координат человека и стены
+ 
+  if (wall[player.getCurrentY()][player.getCurrentX()] == 1)//возвращени координат человек на прежнюю координату
   {
-    last_free[0] = chell[0];
-    last_free[1] = chell[1];
-  }
-  if (wall[chell[1]][chell[0]] == 1)//возвращени координат человек на прежнюю координату
-  {
-    chell[0] = last_free[0];
-    chell[1] = last_free[1];
+    player.setCurrentX(player.getPreviousX());
+    player.setCurrentY(player.getPreviousY());
   }
   //*
 
   // -------------------------------------------------------------------------------------------------------------------
-  if (chell[0] == trap[0] && chell[1] == trap[1]) //столкновение со статичной ловушкой
+  if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1]) //столкновение со статичной ловушкой
   {
-    chell[2]--;
+    player.getDamage(1);
   }
 
-  if (chell[0] == monster[0] && chell[1] == monster[1]) //столкновение с движущимся монстром
+  if (player.getCurrentX() == monster[0] && player.getCurrentY() == monster[1]) //столкновение с движущимся монстром
   {
-    chell[2]--;
+     player.getDamage(1);
   }
 
 }
@@ -200,8 +201,8 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-      chell[0] = 1;
-      chell[1] = 1;
+      player.setCurrentX(1);
+      player.setCurrentY(1);
 
       trap[0] = 3;
       trap[1] = 1;
@@ -230,8 +231,8 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-      chell[0] = 1;
-      chell[1] = 1;
+      player.setCurrentX(1);
+      player.setCurrentY(1);
 
       heart[2] = 0;
       trap[2] = 0;
@@ -248,8 +249,8 @@ void lvl_design()//вызываем в начале/конце каждого у
     case 3:
       flashEnabled = 1;
 
-      chell[0] = 1;
-      chell[1] = 1;
+      player.setCurrentX(1);
+      player.setCurrentY(1);
 
       trap[0] = 7;
       trap[1] = 0;
@@ -269,9 +270,7 @@ void lvl_design()//вызываем в начале/конце каждого у
           wall[y][x] = wall_3[y][x];
         }
       }
-      //  default:
-      // выполняется, если не выбрана ни одна альтернатива
-      // default необязателен
+      break;
   }
 }
 void draw()
@@ -339,28 +338,32 @@ void draw()
 
 byte cbuttons()
 {
-  if (up.click()) { //++x
+  if (up.click()) { //++y
     //chell[0]++;
+    player.move(UP_DIR);
+    Serial.print("UPCLICK\t");
     return 1;
-    player.move(0);
   }
-  if (down.click()) { //++y {
+  if (down.click()) { //--y {
     //chell[1]++;
-    player.move(1);
+    player.move(DOWN_DIR);
+    Serial.print("DOWNCLICK\t");
     return 1;
   }
   if (left.click()) { //--x {
     //chell[0]--;
-    player.move(2);
+    player.move(LEFT_DIR);
+    Serial.print("LEFTCLICK\t");
     return 1;
   }
-  if (right.click()) { //--y {
+  if (right.click()) { //++x {
     //chell[1]--;
-    player.move(3);
+    player.move(RIGHT_DIR);
+    Serial.print("RIGHTCLICK\t");
     return 1;
   }
 
-  if (down.hold() && chell[0] == key[0] && chell[1] == key[1] && key[2] > 0) { //подбор ключа
+  if (down.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0) { //подбор ключа
     //chell[3]++;//прибавляем ключ в карман
     key[2]--;//вычитаем ключ из карты
     all_tone(0);//0-4(?)
@@ -368,7 +371,7 @@ byte cbuttons()
     return 1;
   }
 
-  if (down.hold() && chell[0] == heart[0] && chell[1] == heart[1] && heart[2] > 0) { //подбор жизни
+  if (down.hold() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0) { //подбор жизни
    // chell[2]++;//прибавляем ХП в карман
     heart[2]--;//вычитаем аптечкуиз карты
     player.getHeal(1);
@@ -376,7 +379,7 @@ byte cbuttons()
     return 1;
   }
 
-  if (down.hold() && chell[0] == door[0] && chell[1] == door[1] && door[2] > 0 && chell[3] > 0 )
+  if (down.hold() && player.getCurrentX() == door[0] && player.getCurrentY() == door[1] && door[2] > 0 && player.getNumberOfKeys() > 0 )
   {
     //chell[3]--;//вычиттаем ключи из кармана
     player.dropKeys(1);//
@@ -394,11 +397,13 @@ byte cbuttons()
 
 void debug()
 {
-  Serial.print(player.getCurrentX());
-  Serial.print("\t");
-  Serial.print(player.getCurrentY());
-  Serial.print("\t");
-  Serial.println(player.getHp());
+ // Serial.print(up.read() + "\t");
+
+  // Serial.print(player.getCurrentX());
+  // Serial.print("\t");
+  // Serial.println(player.getCurrentY());
+  //Serial.print("\t");
+  //Serial.println(player.getHp());
   //  Serial.print(pole_zrenia_2);
   // Serial.print("\t");
   // Serial.print(lvl);
@@ -425,11 +430,6 @@ void setup()
   lcd.backlight();
 
   pinMode(BUZZER_PIN, OUTPUT);
-  // pinMode( BUTTON_W, INPUT_PULLUP);
-  // pinMode( BUTTON_A, INPUT_PULLUP);
-  // pinMode( BUTTON_S, INPUT_PULLUP);
-  // pinMode( BUTTON_D, INPUT_PULLUP);
-
   all_tone(3);
   lvl_design();
 }
