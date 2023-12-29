@@ -1,27 +1,30 @@
-//сделать систему жизней
+/*
+Проект Идиатуллина Руслана - Игра лабиринт 
+Педагог - Гайнутдинов Р.Р.
+*/
 
-//сдеать переход с уровня на уровень +
-//сделать надпись с кол-во ресурсов между уровнями   +
-//сделать систему с фонариком ccheck, draw +
-//сделать монстра      +
+//несколько концовок
+//добавть уровень на котором игрок теряет жизнь(1), и находит новую(1)
+//ловушки меняющие свое состояние при каждом нажтии
+//добавить ловушки+-
+//создать класс для монстра
 
 //сделать две двери на одном уровне
 //сделать уровень в 2 экрана
 //добавить 0 уровень(проверка кнопок)   +-
 
-//добавть уровень на котором игрок теряет жизнь(1), и находит новую(1)
-//ловушки меняющие свое состояние при каждом нажтии
-
-//добавить ловушки+-
-
-//При переходе на след уровень координаты чела менять   +
+//int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
+//byte flashlight[2] = {0, 4}; //область видимости фонаря по x
+//boolean flashEnabled = 0;
+//byte pole_zrenia_1 = 0;
+//byte pole_zrenia_2 = 19;
 
 #include <GyverTimer.h>   // подключаем библиотеку
 #include <EncButton.h>   // подключаем библиотеку
 #include "sprites.h"  //файл с рисунками карт и символов
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include "../lib/Player/player.h"
+#include "../lib/Player/player.h" //Класс персонажа
 
 #define  BUTTON_UP    4
 #define  BUTTON_DOWN  5  
@@ -35,22 +38,16 @@ Button down(BUTTON_DOWN);
 Button left( BUTTON_LEFT);
 Button right(BUTTON_RIGHT);
 
-Player player(0, 0);
-
-//создать класс для монстра
-//int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
+Player player(0, 0);//инициализация с координатами персонажа
 
 byte key[3] = {0, 3, 1};//0-x,1-y,2-сколько ключей in map
 byte door[3] = {19, 2, 1}; //1-закрытаб, 0-открыта
-byte flashlight[2] = {0, 4}; //область видимости фонаря по x
 byte hearts[3] = {0, 0, 1}; //0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0}; //0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; //0-x,1-y,2-кол-во аптечек на карте
 
 byte lvl = 0;
-boolean flashEnabled = 0;
-byte pole_zrenia_1 = 0;
-byte pole_zrenia_2 = 19;
+boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte life = 5;
 byte  monster[4] = {5, 5, 9, 3}; //5x текущая, 5x-9x,3y
 boolean dir = 0;//направление движ монстра
@@ -97,21 +94,21 @@ void monstep()
   if (monster[0] < monster[1] || monster[0] > monster[2])
     dir = !dir;
 }
-void gate()
+void gate(int8_t level)
 {
-  //  ------------
-  //ошибочный вывод 2 раза
-
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("level:");
-  lcd.print(lvl);
+  lcd.print(level);
+
   lcd.setCursor(0, 1);
   lcd.print("hp:");
-  lcd.print(player.getHp());
+  lcd.print(player.hp);
+
   lcd.setCursor(0, 2);
   lcd.print("keys:");
   lcd.print(player.getNumberOfKeys());
+ 
   delay(3000);
   lcd.clear();
   while (1)
@@ -127,30 +124,16 @@ void gate()
 
 void ccheck()//проверка координат
 {
-//  chell[0] = constrain(chell[0], 0 , 19);//ограниение куда может ходить человек
-//  chell[1] = constrain(chell[1], 0, 3);
 if (player.getCurrentX() < 0 ) player.setCurrentX(0);
 if (player.getCurrentX() > 19 ) player.setCurrentX(19);
 if (player.getCurrentY() < 0 ) player.setCurrentY(0);
 if (player.getCurrentY() > 3 ) player.setCurrentY(3);
 
-
-  if (flashEnabled)
-  {
-    flashlight[0] = player.getCurrentX() - 2;//поле видимости фонарика
-    flashlight[1] = player.getCurrentX() + 2;//поле видимости фонарика
-
-    flashlight[0] = constrain(flashlight[0], 0, 17);//от куда до куда может показывать фонарик
-    flashlight[1] = constrain(flashlight[1], 2, 19);
-  }
- 
-  if (wall[player.getCurrentY()][player.getCurrentX()] == 1)//возвращени координат человек на прежнюю координату
+  if (wall[player.getCurrentY()][player.getCurrentX()] == 1)//возвращени координат человек на прежнюю координату при столкновении со стеной
   {
     player.setCurrentX(player.getPreviousX());
     player.setCurrentY(player.getPreviousY());
   }
-  //*
-
   // -------------------------------------------------------------------------------------------------------------------
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1]) //столкновение со статичной ловушкой
   {
@@ -165,9 +148,10 @@ if (player.getCurrentY() > 3 ) player.setCurrentY(3);
 }
 void lvl_design()//вызываем в начале/конце каждого уровня
 {
-  gate();//переход(должен принимать номер уровня
+  gate(lvl);//переход(должен принимать номер уровня
   switch (lvl) {
     case 0:
+    player.flashlight(1);
       lcd.setCursor(0, 0);
       lcd.print("press down button");
       lcd.setCursor(0, 1);
@@ -182,13 +166,10 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-
       monster[1] = 0;
       monster[2] = 17;
       monster[0] = monster[0]+1 ;
-      
       monster[3] = 3;
-
       break;
 
     case 1:
@@ -200,8 +181,7 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-      player.setCurrentX(1);
-      player.setCurrentY(1);
+      player.setCurrentXY(1, 1);
 
       trap[0] = 3;
       trap[1] = 1;
@@ -221,7 +201,6 @@ void lvl_design()//вызываем в начале/конце каждого у
       }
       break;
     case 2:
-
       key[0] = 15;
       key[1] = 1;
       key[2] = 1;
@@ -230,12 +209,9 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-      player.setCurrentX(1);
-      player.setCurrentY(1);
-
+      player.setCurrentXY(1, 1);
       heart[2] = 0;
       trap[2] = 0;
-
 
       for (int y = 0; y < 4; y++)
       {
@@ -246,10 +222,8 @@ void lvl_design()//вызываем в начале/конце каждого у
       }
       break;
     case 3:
-      flashEnabled = 1;
-
-      player.setCurrentX(1);
-      player.setCurrentY(1);
+      player.flashlight(1);
+      player.setCurrentXY(1, 1);
 
       trap[0] = 7;
       trap[1] = 0;
@@ -277,19 +251,9 @@ void draw()
   ccheck();
   lcd.clear();
 
-  //if flashlight enabled
-  if (flashEnabled)
-  {
-    pole_zrenia_1 =  flashlight[0];
-    pole_zrenia_2 = flashlight[1];
-  } else {
-    pole_zrenia_1 =  0;
-    pole_zrenia_2 = 19;
-  }
-
   for (int y = 0; y < 4; y++)
   {
-    for (int x = pole_zrenia_1; x < pole_zrenia_2 ; x++)//если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
+    for (int x = player.fieldOfViewStart; x < player.fieldOfViewEnd ; x++)//если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
     {
       if (wall[y][x] > 0 )//и стена есть, торисуем её
       {
@@ -300,10 +264,9 @@ void draw()
   }
 
   //вывод персонажа
-  //lcd.setCursor(chell[0], chell[1]);
   lcd.setCursor(player.getCurrentX(), player.getCurrentY());
-  
   lcd.write(0);
+
   if (key[2] > 0)//вывод ключа
   {
     lcd.setCursor(key[0], key[1]);
@@ -316,7 +279,7 @@ void draw()
   }
   //вывод количества hp в кармане
   lcd.setCursor(19, 0);
-  lcd.print(player.getHp());
+  lcd.print(player.hp);
 
   //вывод монстра
   lcd.setCursor(monster[0], monster[3] );
@@ -338,27 +301,19 @@ void draw()
 byte cbuttons()
 {
   if (up.click()) { //++y
-    //chell[0]++;
     player.move(UP_DIR);
-    Serial.print("UPCLICK\t");
     return 1;
   }
-  if (down.click()) { //--y {
-    //chell[1]++;
+  if (down.click()) { //--y 
     player.move(DOWN_DIR);
-    Serial.print("DOWNCLICK\t");
     return 1;
   }
-  if (left.click()) { //--x {
-    //chell[0]--;
+  if (left.click()) { //--x 
     player.move(LEFT_DIR);
-    Serial.print("LEFTCLICK\t");
     return 1;
   }
-  if (right.click()) { //++x {
-    //chell[1]--;
+  if (right.click()) { //++x 
     player.move(RIGHT_DIR);
-    Serial.print("RIGHTCLICK\t");
     return 1;
   }
 
@@ -373,7 +328,7 @@ byte cbuttons()
   if (down.hold() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0) { //подбор жизни
    // chell[2]++;//прибавляем ХП в карман
     heart[2]--;//вычитаем аптечкуиз карты
-    player.getHeal(1);
+    //player.getHeal(1);
     all_tone(0);
     return 1;
   }
@@ -382,11 +337,12 @@ byte cbuttons()
   {
     //chell[3]--;//вычиттаем ключи из кармана
     player.dropKeys(1);//
+    
     door[2]--;//вычиттаем дчверь из карты
     all_tone(0);
-    lvl++;
+    lvlup = 1;
     lcd.clear();
-    lvl_design();
+    // lvl_design();
     return 1;
   }
   return 0;
@@ -396,20 +352,23 @@ byte cbuttons()
 
 void debug()
 {
- // Serial.print(up.read() + "\t");
-
+//  Serial.print(player.fieldOfViewStart );
+//  Serial.print("\t");
+//  Serial.println(player.fieldOfViewEnd);
   // Serial.print(player.getCurrentX());
   // Serial.print("\t");
   // Serial.println(player.getCurrentY());
   //Serial.print("\t");
-  //Serial.println(player.getHp());
-  //  Serial.print(pole_zrenia_2);
   // Serial.print("\t");
   // Serial.print(lvl);
   // Serial.print("\t");
-  // Serial.print(heart[0]);
-  // Serial.print(heart[1]);
-  // Serial.println(heart[2]);
+ Serial.print(player.hp);
+ Serial.print("\t");
+ Serial.print(heart[0]);
+ Serial.print("\t");
+ Serial.print(heart[1]);
+ Serial.print("\t");
+ Serial.println(heart[2]);
 }
 void setup()
 {
@@ -435,16 +394,23 @@ void setup()
 
 void loop()
 {
+  //опрос кнопок, расчёты, дебаг
   up.tick();
   left.tick();
   down.tick();
   right.tick();
-  //опрос кнопок, расчёты, дебаг
+  //отрисовка тут(если cbuttons вернёт 1)
   if (cbuttons()) { //если любая кнопка была нажата
     monstep();
+    player.setFieldOfView();// обновляем поле видимости
     draw();
   }
-  //отрисовка тут(если cbuttons вернёт 1)
+  if (lvlup)
+  {
+    lvl++;
+    lvl_design();
+    lvlup = 0; //сбрасываем флаг перехода в следующий уровень
+  }
   debug();
 
 }
