@@ -10,12 +10,12 @@ Player::Player(int startX, int startY) :
     flashlightOn(0),
     numberOfKeys(0) {}
 
-// void Player::teleport(int newX, int newY) {
-//     previousX = currentX;
-//     previousY = currentY;
-//     currentX = newX;
-//     currentY = newY;
-// }
+void Player::teleport(int newX, int newY) {
+    previousX = currentX;
+    previousY = currentY;
+    currentX = newX;
+    currentY = newY;
+}
 void Player::move(uint8_t dir) {
     previousX = currentX;
     previousY = currentY;

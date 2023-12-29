@@ -40,7 +40,7 @@ public:
     void getDamage(int damage);
     void getHeal(int heal);
     void getKey(uint8_t keys);
-
+    void teleport(int newX, int newY);
 };
 
 #endif // PLAYER_H
