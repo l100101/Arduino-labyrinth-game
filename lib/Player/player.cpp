@@ -2,15 +2,15 @@
 #include <Arduino.h>
 
 
-Player::Player(int startX, int startY, bool initialFlashlightState, int initialNumberOfKeys) :
+Player::Player(int startX, int startY) :
     currentX(startX),
     currentY(startY),
     previousX(startX),
     previousY(startY),
-    flashlightOn(initialFlashlightState),
-    numberOfKeys(initialNumberOfKeys) {}
+    flashlightOn(0),
+    numberOfKeys(0) {}
 
-// void Player::move(int newX, int newY) {
+// void Player::teleport(int newX, int newY) {
 //     previousX = currentX;
 //     previousY = currentY;
 //     currentX = newX;
@@ -80,29 +80,23 @@ void Player::getHeal(int heal) {
 if (hp > maxHp) hp = maxHp;    
 }
 
-int8_t Player::getCurrentX()
-{
+int8_t Player::getCurrentX(){
     return currentX;    
 }
 
-int8_t Player::getCurrentY()
-{
+int8_t Player::getCurrentY(){
     return currentY;
 }
 
-int8_t Player::getPreviousX()
-{
+int8_t Player::getPreviousX(){
     return previousX;
 }
-int8_t Player::getPreviousY()
-{
+int8_t Player::getPreviousY(){
     return previousY;
 }
- void Player::setCurrentX(int newX)
- {
+ void Player::setCurrentX(int newX) {
      currentX = newX; 
  }
- void Player::setCurrentY(int newY)
- {
+ void Player::setCurrentY(int newY) {
      currentY = newY;
  }

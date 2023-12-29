@@ -8,6 +8,7 @@ enum {
     LEFT_DIR = 2,
     RIGHT_DIR = 3
 };
+
 class Player {
 private:
     int8_t currentX;
@@ -20,7 +21,7 @@ private:
     int8_t maxHp;
     
 public:
-    Player(int startX, int startY, bool initialFlashlightState, int initialNumberOfKeys);
+    Player(int startX, int startY);
     void addKeys(int keysToAdd);
     void dropKeys(int keysToDrop);
     void toggleFlashlight();

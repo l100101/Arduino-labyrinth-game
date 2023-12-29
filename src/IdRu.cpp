@@ -23,11 +23,11 @@
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Player/player.h"
 
-#define  BUTTON_UP 4
+#define  BUTTON_UP    4
 #define  BUTTON_DOWN  5  
 #define  BUTTON_LEFT  7
-#define  BUTTON_RIGHT  6
-#define BUZZER_PIN 8
+#define  BUTTON_RIGHT 6
+#define  BUZZER_PIN   8
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 Button up (BUTTON_UP);
@@ -35,12 +35,11 @@ Button down(BUTTON_DOWN);
 Button left( BUTTON_LEFT);
 Button right(BUTTON_RIGHT);
 
-Player player(0, 0, true, 0);
+Player player(0, 0);
 
-//создать класс для персонажа [V]
 //создать класс для монстра
 //int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
-//byte last_free[2] = {0, 0}; //0-x, 1-y, последняя свободняя координата
+
 byte key[3] = {0, 3, 1};//0-x,1-y,2-сколько ключей in map
 byte door[3] = {19, 2, 1}; //1-закрытаб, 0-открыта
 byte flashlight[2] = {0, 4}; //область видимости фонаря по x
