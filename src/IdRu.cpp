@@ -13,11 +13,6 @@
 //сделать уровень в 2 экрана
 //добавить 0 уровень(проверка кнопок)   +-
 
-//int chell[4] = {1, 1, 5, 0};// 0-x,1-y,2-hp,3-haveKeys
-//byte flashlight[2] = {0, 4}; //область видимости фонаря по x
-//boolean flashEnabled = 0;
-//byte pole_zrenia_1 = 0;
-//byte pole_zrenia_2 = 19;
 
 #include <GyverTimer.h>   // подключаем библиотеку
 #include <EncButton.h>   // подключаем библиотеку
@@ -78,12 +73,6 @@ void all_tone(byte val) { //общий звук который будет исп
       break;
   }
 }
-
-//void lvl_design();
-//void debug();
-//byte cbuttons();
-//void ccheck();
-
 
 void monstep()
 {
@@ -248,7 +237,6 @@ void lvl_design()//вызываем в начале/конце каждого у
 }
 void draw()
 {
-  ccheck();
   lcd.clear();
 
   for (int y = 0; y < 4; y++)
@@ -401,6 +389,7 @@ void loop()
   right.tick();
   //отрисовка тут(если cbuttons вернёт 1)
   if (cbuttons()) { //если любая кнопка была нажата
+    ccheck();
     monstep();
     player.setFieldOfView();// обновляем поле видимости
     draw();
