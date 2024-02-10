@@ -22,7 +22,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Player/player.h"   //Класс персонажа
 #include "../lib/Monster/monster.h" //Класс монстра
-#include "alldefs.h"
+#include "alldefs.h"  //все найстройки define
 
 /*
 #define BUTTON_UP 4
@@ -82,8 +82,6 @@ byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на кар�
 byte lvl = 0;
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte life = 5;
-// byte  monster[4] = {5, 5, 9, 3}; //5x текущая, 5x-9x,3y
-boolean dir = 0; // направление движ монстра
 
 void all_tone(byte val)
 { // общий звук который будет использоваться часто (подбор и использование ключа, открытие двери и т.к)
@@ -112,15 +110,6 @@ void all_tone(byte val)
   }
 }
 
-void monstep()
-{
-  // if (dir)
-  //   monster[0]++;
-  // else
-  //   monster[0]--;
-  // if (monster[0] < monster[1] || monster[0] > monster[2])
-  //   dir = !dir;
-}
 void gate(int8_t level)
 {
   lcd.clear();
@@ -136,7 +125,7 @@ void gate(int8_t level)
   lcd.print("keys:");
   lcd.print(player.getNumberOfKeys());
 
-  delay(3000);
+  delay(2000);
   lcd.clear();
   while (1)
   {
@@ -167,19 +156,11 @@ void ccheck() // проверка координат
   }
   // -------------------------------------------------------------------------------------------------------------------
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1]) // столкновение со статичной ловушкой
-  {
     player.getDamage(1);
-  }
-
-  // if (player.getCurrentX() == monster[0] && player.getCurrentY() == monster[1]) //столкновение с движущимся монстром
-  // {
-  //    player.getDamage(1);
-  // }
-
+  
   if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY()) // столкновение с движущимся монстром
-  {
     player.getDamage(1);
-  }
+  
 }
 
 void writeFaceOfGod(uint8_t pos)
@@ -228,7 +209,7 @@ void chelSays(uint8_t num)
   {
   case 1:
     lcd.setCursor(0, 0);
-    lcd.print("4to 3a");
+    lcd.print("4to 3a...");
     lcd.setCursor(0, 1);
     lcd.print("Eto uGPa?");
     break;
@@ -253,9 +234,10 @@ void chelSays(uint8_t num)
     lcd.print("9I npuMy ETOT BbI3oB");
     lcd.setCursor(0, 2);
     lcd.print("yKA)I(u MHE nyTb!");
-
     break;
   }
+  delay(3000);
+  lcd.clear();
 }
 void godSays(uint8_t num)
 {
@@ -298,7 +280,7 @@ void godSays(uint8_t num)
     lcd.setCursor(0, 1);
     lcd.print("o 4eM 9I GoBOPI0.");
     lcd.setCursor(0, 2);
-    lcd.print("ETo 6yDET HE/|eGKO");
+    lcd.print("6yDET HEnpoCTO");
     lcd.setCursor(0, 3);
     lcd.print("Ho To/|bko Tak ");
     mouth_animation();
@@ -307,12 +289,14 @@ void godSays(uint8_t num)
     lcd.setCursor(0, 0);
     lcd.print("BbI 6yDeTE DocTouHbI");
     lcd.setCursor(0, 1);
-    lcd.print("Bo3BpaLLLEHu9I .");
+    lcd.print("Bo3BpaLLLEHu9I");
     lcd.setCursor(0, 2);
     lcd.print("DoMou");
     mouth_animation();
     break;
   }
+  delay(3000);
+  lcd.clear();
 }
 void charsCreate(uint8_t num)
 {
@@ -356,58 +340,37 @@ void play_animation(uint8_t num)
     lcd.write(SKIN_CHEL);
     chelSays(1); // ETO IGRA?
 
-    delay(5000);
-    lcd.clear();
     charsCreate(ANIMATION_OPENING);
-
     writeFaceOfGod(16); // 16-x
     godSays(1);         // 3dpaBcTbyu Tbl nona/| c|0da ne c/|y4auHo
-
-    delay(2000);
-    lcd.clear();
 
     charsCreate(ANIMATION_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
     chelSays(2); // no4eMy 9I 3decb?
 
-    delay(2000);
-    lcd.clear();
-
     charsCreate(ANIMATION_OPENING);
     writeFaceOfGod(16); // 16-x
     godSays(2);         // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
 
-    delay(2000);
-    lcd.clear();
-
     charsCreate(ANIMATION_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
-    chelSays(3); // no4eMy 9I 3decb?
-
-    delay(2000);
-    lcd.clear();
+    chelSays(3); // HO 9I BceGda
 
     charsCreate(ANIMATION_OPENING);
     writeFaceOfGod(16); // 16-x
-    godSays(3);         // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
-    delay(1000);
-    lcd.clear();
+    godSays(3);         // у вас свои особенности
     godSays(4); // вы должны пройти Исптытания
-    delay(1000);
-    lcd.clear();
     writeFaceOfGod(16);
-    godSays(5); // Вы будете дойстойны возвращения домой
+    godSays(5); // тогда вы будете дойстойны возвращения домой
 
-    delay(2000);
-    lcd.clear();
     charsCreate(ANIMATION_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
     chelSays(4); // Хорошо, я приму этот вызов
 
-    delay(3000); // 3 sec
+    delay(1000); // 3 sec
     break;
 
   case ANIMATION_DEFAULT:
