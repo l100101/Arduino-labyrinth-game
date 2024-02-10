@@ -206,9 +206,25 @@ void writeFaceOfGod(uint8_t pos)
     lcd.print("#");
   }
 }
+void mouth_animation()
+{
+  for (int i = 1; i <= 8; i++) // говорим ртом
+  {
+    lcd.setCursor(17, 2);
+    if (i % 2 == 0)
+    {
+      lcd.write(SKIN_MOUTH);
+    }
+    else
+    {
+      lcd.write(SKIN_MOUTH_OPEN);
+    }
+    delay(500);
+  }
+}
 void chelSays(uint8_t num)
 {
-  switch  (num)
+  switch (num)
   {
   case 1:
     lcd.setCursor(0, 0);
@@ -221,6 +237,23 @@ void chelSays(uint8_t num)
     lcd.print("no4eMy");
     lcd.setCursor(0, 1);
     lcd.print("9I 3decb?");
+    break;
+  case 3:
+    lcd.setCursor(0, 0);
+    lcd.print("HO 9I BceGda");
+    lcd.setCursor(0, 1);
+    lcd.print("CTAPA/|c9");
+    lcd.setCursor(0, 2);
+    lcd.print("6blTb do6pbIM...");
+    break;
+  case 4:
+    lcd.setCursor(0, 0);
+    lcd.print("XopoIIIo...");
+    lcd.setCursor(0, 1);
+    lcd.print("9I npuMy ETOT BbI3oB");
+    lcd.setCursor(0, 2);
+    lcd.print("yKA)I(u MHE nyTb!");
+
     break;
   }
 }
@@ -235,19 +268,7 @@ void godSays(uint8_t num)
     lcd.print("Tbl nona/| c|0da");
     lcd.setCursor(0, 2);
     lcd.print(" ne c/|y4auHo");
-    for (int i = 1; i <= 8; i++) // говорим ртом
-    {
-      lcd.setCursor(17, 2);
-      if (i % 2 == 0)
-      {
-        lcd.write(SKIN_MOUTH);
-      }
-      else
-      {
-        lcd.write(SKIN_MOUTH_OPEN);
-      }
-      delay(500);
-    }
+    mouth_animation();
     break;
   case 2:
     lcd.setCursor(0, 0);
@@ -258,21 +279,39 @@ void godSays(uint8_t num)
     lcd.print(" onpede/|u/|u ");
     lcd.setCursor(0, 3);
     lcd.print("BaLLIy cyDb6y");
-    lcd.setCursor(17, 2);
-    for (int i = 1; i <= 8; i++) // говорим ртом
-    {
-      lcd.setCursor(17, 2);
-      if (i % 2 == 0)
-      {
-        lcd.write(SKIN_MOUTH);
-      }
-      else
-      {
-        lcd.write(SKIN_MOUTH_OPEN);
-      }
-      delay(500);
-      break;
-    }
+    mouth_animation();
+    break;
+  case 3:
+    lcd.setCursor(0, 0);
+    lcd.print("y Bac ecTb CBou");
+    lcd.setCursor(0, 1);
+    lcd.print(" oco6eHHOCTu.");
+    lcd.setCursor(0, 2);
+    lcd.print("Bbl do/|)I(Hbl ");
+    lcd.setCursor(0, 3);
+    lcd.print("npouTu ucnbITaHu9I");
+    mouth_animation();
+    break;
+  case 4:
+    lcd.setCursor(0, 0);
+    lcd.print("4To6bI noH9ITb");
+    lcd.setCursor(0, 1);
+    lcd.print("o 4eM 9I GoBOPI0.");
+    lcd.setCursor(0, 2);
+    lcd.print("ETo 6yDET HE/|eGKO");
+    lcd.setCursor(0, 3);
+    lcd.print("Ho To/|bko Tak ");
+    mouth_animation();
+    break;
+  case 5:
+    lcd.setCursor(0, 0);
+    lcd.print("BbI 6yDeTE DocTouHbI");
+    lcd.setCursor(0, 1);
+    lcd.print("Bo3BpaLLLEHu9I .");
+    lcd.setCursor(0, 2);
+    lcd.print("DoMou");
+    mouth_animation();
+    break;
   }
 }
 void charsCreate(uint8_t num)
@@ -315,21 +354,60 @@ void play_animation(uint8_t num)
     charsCreate(ANIMATION_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
-    chelSays(1);        //ETO IGRA?
-    
+    chelSays(1); // ETO IGRA?
+
     delay(5000);
     lcd.clear();
     charsCreate(ANIMATION_OPENING);
+
     writeFaceOfGod(16); // 16-x
-    godSays(1);// 3dpaBcTbyu Tbl nona/| c|0da ne c/|y4auHo
-    // writeMouthAnimation(16);
-    
+    godSays(1);         // 3dpaBcTbyu Tbl nona/| c|0da ne c/|y4auHo
+
     delay(2000);
     lcd.clear();
-    godSays(2); // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
-    writeFaceOfGod(16); // 16-x
 
-    delay(300000); // 30 sec
+    charsCreate(ANIMATION_DEFAULT);
+    lcd.setCursor(0, 3);
+    lcd.write(SKIN_CHEL);
+    chelSays(2); // no4eMy 9I 3decb?
+
+    delay(2000);
+    lcd.clear();
+
+    charsCreate(ANIMATION_OPENING);
+    writeFaceOfGod(16); // 16-x
+    godSays(2);         // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
+
+    delay(2000);
+    lcd.clear();
+
+    charsCreate(ANIMATION_DEFAULT);
+    lcd.setCursor(0, 3);
+    lcd.write(SKIN_CHEL);
+    chelSays(3); // no4eMy 9I 3decb?
+
+    delay(2000);
+    lcd.clear();
+
+    charsCreate(ANIMATION_OPENING);
+    writeFaceOfGod(16); // 16-x
+    godSays(3);         // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
+    delay(1000);
+    lcd.clear();
+    godSays(4); // вы должны пройти Исптытания
+    delay(1000);
+    lcd.clear();
+    writeFaceOfGod(16);
+    godSays(5); // Вы будете дойстойны возвращения домой
+
+    delay(2000);
+    lcd.clear();
+    charsCreate(ANIMATION_DEFAULT);
+    lcd.setCursor(0, 3);
+    lcd.write(SKIN_CHEL);
+    chelSays(4); // Хорошо, я приму этот вызов
+
+    delay(3000); // 3 sec
     break;
 
   case ANIMATION_DEFAULT:
