@@ -48,12 +48,12 @@
 #define SKIN_MONSTER 7
 
 #define SKIN_EYE 1
-#define SKIN_NOSE_2 2
+#define SKIN_NOSE_2 2 // nop
 #define SKIN_NOSE 3
-#define SKIN_FACE_1 4
-#define SKIN_FACE_2 5
-#define SKIN_FACE_3 6
-#define SKIN_MOUTH 7
+#define SKIN_FACE_1 4 // ЛОб
+#define SKIN_FACE_2 5 //
+#define SKIN_FACE_3 6 // Шея
+#define SKIN_MOUTH 7  // РОТ
 #define SKIN_MOUTH_OPEN 0
 
 #define ANIMATION_OPENING 0
@@ -178,6 +178,99 @@ void ccheck() // проверка координат
   }
 }
 
+void writeFaceOfGod(uint8_t pos)
+{
+  lcd.setCursor(pos, 1);
+  lcd.write(SKIN_NOSE);
+  lcd.setCursor(pos + 1, 0);
+  lcd.write(SKIN_FACE_1);
+  lcd.setCursor(pos + 1, 1);
+  lcd.write(SKIN_EYE);
+  lcd.setCursor(pos + 1, 2);
+  lcd.write(SKIN_MOUTH);
+
+  for (int i = 0; i <= 2; i++)
+  {
+    lcd.setCursor(pos + 2, i);
+    lcd.print("#");
+  }
+  lcd.setCursor(pos + 2, 3);
+  lcd.write(SKIN_FACE_3);
+  for (int i = 0; i <= 3; i++)
+  {
+    lcd.setCursor(pos + 3, i);
+    lcd.print("#");
+  }
+}
+void chelSays(uint8_t num)
+{
+  switch  (num)
+  {
+  case 1:
+    lcd.setCursor(0, 0);
+    lcd.print("4to 3a");
+    lcd.setCursor(0, 1);
+    lcd.print("Eto uGPa?");
+    break;
+  case 2:
+    lcd.setCursor(0, 0);
+    lcd.print("no4eMy");
+    lcd.setCursor(0, 1);
+    lcd.print("9I 3decb?");
+    break;
+  }
+}
+void godSays(uint8_t num)
+{
+  switch (num)
+  {
+  case 1:
+    lcd.setCursor(0, 0);
+    lcd.print("3dpaBcTbyu");
+    lcd.setCursor(0, 1);
+    lcd.print("Tbl nona/| c|0da");
+    lcd.setCursor(0, 2);
+    lcd.print(" ne c/|y4auHo");
+    for (int i = 1; i <= 8; i++) // говорим ртом
+    {
+      lcd.setCursor(17, 2);
+      if (i % 2 == 0)
+      {
+        lcd.write(SKIN_MOUTH);
+      }
+      else
+      {
+        lcd.write(SKIN_MOUTH_OPEN);
+      }
+      delay(500);
+    }
+    break;
+  case 2:
+    lcd.setCursor(0, 0);
+    lcd.print("BaLLI XapakTep");
+    lcd.setCursor(0, 1);
+    lcd.print("u noctynku");
+    lcd.setCursor(0, 2);
+    lcd.print(" onpede/|u/|u ");
+    lcd.setCursor(0, 3);
+    lcd.print("BaLLIy cyDb6y");
+    lcd.setCursor(17, 2);
+    for (int i = 1; i <= 8; i++) // говорим ртом
+    {
+      lcd.setCursor(17, 2);
+      if (i % 2 == 0)
+      {
+        lcd.write(SKIN_MOUTH);
+      }
+      else
+      {
+        lcd.write(SKIN_MOUTH_OPEN);
+      }
+      delay(500);
+      break;
+    }
+  }
+}
 void charsCreate(uint8_t num)
 {
   switch (num)
@@ -215,64 +308,27 @@ void play_animation(uint8_t num)
   switch (num)
   {
   case ANIMATION_OPENING:
-    // загрузить героев
-    // нарисовать героев, написать диалог
-
+    charsCreate(ANIMATION_DEFAULT);
+    lcd.setCursor(0, 3);
+    lcd.write(SKIN_CHEL);
+    chelSays(1);        //ETO IGRA?
+    
+    delay(5000);
+    lcd.clear();
     charsCreate(ANIMATION_OPENING);
-    // writeFaceOfGod(16); //16-x
-    lcd.setCursor(16, 1);
-    lcd.write(SKIN_NOSE);
-    lcd.setCursor(16, 2);
-    // lcd.write(SKIN_NOSE_2); не нужен
+    writeFaceOfGod(16); // 16-x
+    godSays(1);// 3dpaBcTbyu Tbl nona/| c|0da ne c/|y4auHo
+    // writeMouthAnimation(16);
+    
+    delay(2000);
+    lcd.clear();
+    godSays(2); // BaLLI XapakTep u noctynku onpede/|u/|u BaLLIy cyDb6y
+    writeFaceOfGod(16); // 16-x
 
-    lcd.setCursor(17, 0);
-    lcd.write(SKIN_FACE_1);
-    lcd.setCursor(17, 1);
-    lcd.write(SKIN_EYE);
-
-    lcd.setCursor(17, 2);
-    lcd.write(SKIN_MOUTH);
-
-    for (int i = 0; i <= 2; i++)
-    {
-      lcd.setCursor(18, i);
-      lcd.print("#");
-    }
-    lcd.setCursor(18, 3);
-    lcd.write(SKIN_FACE_3);
-    for (int i = 0; i <= 3; i++)
-    {
-      lcd.setCursor(19, i);
-      lcd.print("#");
-    }
-
-
-    for (int i = 1; i <= 8; i++) // говорим ртом
-    {
-      lcd.setCursor(0,0);
-      lcd.print("Hello, playername");
-      lcd.setCursor(0,1);
-      lcd.print("Tbl nona/| c|0da");
-      lcd.setCursor(0,2);
-      lcd.print(" ne c/|y4auHo");
-      
-
-      lcd.setCursor(17, 2);
-      if (i % 2 == 0)
-      {
-        lcd.write(SKIN_MOUTH);
-      }
-      else
-      {
-        lcd.write(SKIN_MOUTH_OPEN);
-      }
-      delay(500);
-    }
-    // lcd.write(SKIN_FACE_2);
-
-    // lcd.setCursor(17, 1);
-    // lcd.write(SKIN_MOUTH_OPEN);
     delay(300000); // 30 sec
+    break;
+
+  case ANIMATION_DEFAULT:
     break;
   }
 }
@@ -280,6 +336,7 @@ void play_animation(uint8_t num)
 void lvl_design() // вызываем в начале/конце каждого уровня
 {
   gate(lvl); // переход(должен принимать номер уровня/ или нет, оставить lvl глобальной?
+  lcd.clear();
   switch (lvl)
   {
   case 0:
