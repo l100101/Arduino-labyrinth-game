@@ -1,6 +1,7 @@
 #include "monster.h"
 #include <Arduino.h>
 
+#define DEBUG
 Monster::Monster(int startX, int startY) : currentX(startX),
                                            currentY(startY),
                                            previousX(startX),
@@ -29,17 +30,28 @@ void Monster::setFieldMoving(int8_t xLim1, int8_t xLim2, int8_t yLim1, int8_t yL
     yLimit1 = yLim1;
     yLimit2 = yLim2;
 }
+
+void Monster::check_step()
+{
+    previousX = currentX;
+    previousY = currentY;
+    if (currentX <= xLimit1 || currentX >= xLimit2)
+    {
+        currentX = previousX;
+        dir = !dir;
+    }
+    if (currentY < yLimit1 || currentY > yLimit2)
+    {
+        currentY = previousY;
+        dir = !dir;
+    }
+#ifdef DEBUG
+    Serial.println("check_step X1:" + String(xLimit1) + " X2" + String(xLimit2) + " Y1" + String(yLimit1) + " Y2" + String(yLimit2));
+#endif
+}
 void Monster::autoStep(uint8_t _orient) // 0 - horizontal, 1 - vertical, 2 - diagonal, 3 - square
 {
     orientation = _orient;
-    if (currentX > xLimit2)
-        currentX = xLimit2;
-    if (currentX < xLimit1)
-        currentX = xLimit1;
-    if (currentY > yLimit2)
-        currentY = yLimit2;
-    if (currentY < yLimit1)
-        currentY = yLimit1;
 
     switch (orientation)
     {
@@ -68,6 +80,7 @@ void Monster::autoStep(uint8_t _orient) // 0 - horizontal, 1 - vertical, 2 - dia
         }
         break;
     }
+    check_step();
 }
 
 int8_t Monster::getCurrentX()

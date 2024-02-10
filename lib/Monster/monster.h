@@ -28,6 +28,7 @@ private:
     int8_t xLimit2;
     int8_t yLimit1;
     int8_t yLimit2;
+    void  check_step();
 public:
     Monster(int startX, int startY);
     int8_t hp;
@@ -48,6 +49,7 @@ public:
     void teleport(int newX, int newY);
     void setFieldMoving(int8_t xLim1, int8_t xLim2, int8_t yLim1, int8_t yLim2 );
     int8_t getHp();
+
 //takers
     void takeDamage(int damage);
     void takeHeal(int heal);
