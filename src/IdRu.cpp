@@ -22,7 +22,9 @@
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Player/player.h"   //Класс персонажа
 #include "../lib/Monster/monster.h" //Класс монстра
+#include "alldefs.h"
 
+/*
 #define BUTTON_UP 4
 #define BUTTON_DOWN 5
 #define BUTTON_LEFT 7
@@ -59,6 +61,8 @@
 #define ANIMATION_OPENING 0
 #define ANIMATION_ENDING 1
 #define ANIMATION_DEFAULT 2
+*/
+
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 Button up(BUTTON_UP);
 Button down(BUTTON_DOWN);
