@@ -1,85 +1,149 @@
 #include "monster.h"
 #include <Arduino.h>
 
+Monster::Monster(int startX, int startY) : currentX(startX),
+                                           currentY(startY),
+                                           previousX(startX),
+                                           previousY(startY),
+                                           dir(0),
+                                           orientation(0),
+                                           hp(0),
+                                           xLimit1(0),
+                                           xLimit2(20),
+                                           yLimit1(0),
+                                           yLimit2(3)
+{
+}
 
-Monster::Monster(int startX, int startY) :
-    currentX(startX),
-    currentY(startY),
-    previousX(startX),
-    previousY(startY),
-    flashlightOn(0),
-    numberOfKeys(0),
-    hp(0)
-     {}
-
-void Monster::teleport(int newX, int newY) {
+void Monster::teleport(int newX, int newY)
+{
     previousX = currentX;
     previousY = currentY;
     currentX = newX;
     currentY = newY;
 }
+void Monster::setFieldMoving(int8_t xLim1, int8_t xLim2, int8_t yLim1, int8_t yLim2)
+{
+    xLimit1 = xLim1;
+    xLimit2 = xLim2;
+    yLimit1 = yLim1;
+    yLimit2 = yLim2;
+}
+void Monster::autoStep(uint8_t _orient) // 0 - horizontal, 1 - vertical, 2 - diagonal, 3 - square
+{
+    orientation = _orient;
+    if (currentX > xLimit2)
+        currentX = xLimit2;
+    if (currentX < xLimit1)
+        currentX = xLimit1;
+    if (currentY > yLimit2)
+        currentY = yLimit2;
+    if (currentY < yLimit1)
+        currentY = yLimit1;
 
-int8_t Monster::getCurrentX(){
-    return currentX;    
+    switch (orientation)
+    {
+    case HORIZONTAL:
+        if (dir)
+            currentX++;
+        else
+            currentX--;
+        break;
+    case VERTICAL:
+        if (dir)
+            currentY++;
+        else
+            currentY--;
+        break;
+    case DIAGONAL:
+        if (dir)
+        {
+            currentX++;
+            currentY++;
+        }
+        else
+        {
+            currentX--;
+            currentY--;
+        }
+        break;
+    }
 }
 
-int8_t Monster::getCurrentY(){
+int8_t Monster::getCurrentX()
+{
+    return currentX;
+}
+
+int8_t Monster::getCurrentY()
+{
     return currentY;
 }
 
-int8_t Monster::getPreviousX(){
+int8_t Monster::getPreviousX()
+{
     return previousX;
 }
-int8_t Monster::getPreviousY(){
+int8_t Monster::getPreviousY()
+{
     return previousY;
 }
- void Monster::setCurrentX(int newX) {
-     currentX = newX; 
- }
- void Monster::setCurrentY(int newY) {
-     currentY = newY;
- }
-void Monster::setCurrentXY(int newX, int newY){
+void Monster::setCurrentX(int newX)
+{
+    currentX = newX;
+}
+void Monster::setCurrentY(int newY)
+{
+    currentY = newY;
+}
+void Monster::setCurrentXY(int newX, int newY)
+{
     currentX = newX;
     currentY = newY;
 }
-void Monster::move(uint8_t dir) {
+void Monster::move(uint8_t dir)
+{
     previousX = currentX;
     previousY = currentY;
     switch (dir)
     {
     case UP_DIR:
-    currentY--;
+        currentY--;
         break;
     case DOWN_DIR:
-    currentY++;
+        currentY++;
         break;
     case LEFT_DIR:
-    currentX--;
+        currentX--;
         break;
     case RIGHT_DIR:
-    currentX++;
+        currentX++;
         break;
-    
+
     default:
         break;
     }
 }
 
-void Monster::getPreviousCoordinates(int& x, int& y) const {
+void Monster::getPreviousCoordinates(int &x, int &y)
+{
     x = previousX;
     y = previousY;
 }
 
-void Monster::getHeal(int heal) {
-    hp+=heal;
-if (hp > maxHp) hp = maxHp;    
+void Monster::takeHeal(int heal)
+{
+    hp += heal;
+    if (hp > maxHp)
+        hp = maxHp;
 }
-void Monster::getDamage(int damage) {
-    hp+=damage;
-if (hp < 0) hp = 0;
+void Monster::takeDamage(int damage)
+{
+    hp += damage;
+    if (hp < 0)
+        hp = 0;
 }
-int8_t Monster::getHp() const {
+int8_t Monster::getHp()
+{
     return hp;
 }
-

@@ -20,6 +20,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Player/player.h" //Класс персонажа
+#include "../lib/Monster/monster.h" //Класс монстра
 
 #define  BUTTON_UP    4
 #define  BUTTON_DOWN  5  
@@ -34,6 +35,7 @@ Button left( BUTTON_LEFT);
 Button right(BUTTON_RIGHT);
 
 Player player(0, 0);//инициализация с координатами персонажа
+Monster monster(0, 0);//инициализация с координатами монстра
 
 byte key[3] = {0, 3, 1};//0-x,1-y,2-сколько ключей in map
 byte door[3] = {19, 2, 1}; //1-закрытаб, 0-открыта
@@ -44,10 +46,19 @@ byte heart[3] = {17, 3, 1}; //0-x,1-y,2-кол-во аптечек на карт
 byte lvl = 0;
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte life = 5;
-byte  monster[4] = {5, 5, 9, 3}; //5x текущая, 5x-9x,3y
+// byte  monster[4] = {5, 5, 9, 3}; //5x текущая, 5x-9x,3y
 boolean dir = 0;//направление движ монстра
 
 //Объединить все tone//заdefinить номер звука
+#define TONE_KEY 0
+#define TONE_OPEN 1
+#define TONE_LOSE 2
+#define TONE_WIN 2
+#define TONE_HEART 4
+#define TONE_TRAP 5
+#define TONE_LOVE 6
+#define TONE_LVLUP 7
+
 void all_tone(byte val) { //общий звук который будет использоваться часто (подбор и использование ключа, открытие двери и т.к)
   switch (val)
   {
@@ -58,10 +69,10 @@ void all_tone(byte val) { //общий звук который будет исп
       delay(200);
       tone(BUZZER_PIN, 3000, 300);
       break;
-    case 1://звук открытия ложной двери
+    case TONE_OPEN://звук открытия ложной двери
       tone(BUZZER_PIN, 7000, 150);
       break;
-    case 2://звук проигрыша
+    case TONE_LOSE://звук проигрыша
       tone(BUZZER_PIN, 2500, 500);
       break;
     case 3:
@@ -76,12 +87,16 @@ void all_tone(byte val) { //общий звук который будет исп
 
 void monstep()
 {
-  if (dir)
-    monster[0]++;
-  else
-    monster[0]--;
-  if (monster[0] < monster[1] || monster[0] > monster[2])
-    dir = !dir;
+  // if (dir)
+  //   monster[0]++;
+  // else
+  //   monster[0]--;
+  // if (monster[0] < monster[1] || monster[0] > monster[2])
+  //   dir = !dir;
+
+
+
+
 }
 void gate(int8_t level)
 {
@@ -129,15 +144,21 @@ if (player.getCurrentY() > 3 ) player.setCurrentY(3);
     player.getDamage(1);
   }
 
-  if (player.getCurrentX() == monster[0] && player.getCurrentY() == monster[1]) //столкновение с движущимся монстром
+  // if (player.getCurrentX() == monster[0] && player.getCurrentY() == monster[1]) //столкновение с движущимся монстром
+  // {
+  //    player.getDamage(1);
+  // }
+
+if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY()) //столкновение с движущимся монстром
   {
      player.getDamage(1);
   }
 
+
 }
 void lvl_design()//вызываем в начале/конце каждого уровня
 {
-  gate(lvl);//переход(должен принимать номер уровня
+  gate(lvl);//переход(должен принимать номер уровня/ или нет, оставить lvl глобальной?
   switch (lvl) {
     case 0:
     player.flashlight(1);
@@ -155,10 +176,8 @@ void lvl_design()//вызываем в начале/конце каждого у
       door[1] = 2;
       door[2] = 1;
 
-      monster[1] = 0;
-      monster[2] = 17;
-      monster[0] = monster[0]+1 ;
-      monster[3] = 3;
+      monster.setFieldMoving(0, 17, 0, 3);
+      monster.setCurrentXY(5, 3);
       break;
 
     case 1:
@@ -179,7 +198,7 @@ void lvl_design()//вызываем в начале/конце каждого у
       heart[1] = 2;
       heart[2] = 1;
 
-      monster[2] = 0;
+      // monster[2] = 0;
 
       for (int y = 0; y < 4; y++)
       {
@@ -270,7 +289,8 @@ void draw()
   lcd.print(player.hp);
 
   //вывод монстра
-  lcd.setCursor(monster[0], monster[3] );
+  lcd.setCursor(monster.getCurrentX(), monster.getCurrentY());
+  
   lcd.write(7);
 
   if (trap[2] > 0)
@@ -308,7 +328,7 @@ byte cbuttons()
   if (down.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0) { //подбор ключа
     //chell[3]++;//прибавляем ключ в карман
     key[2]--;//вычитаем ключ из карты
-    all_tone(0);//0-4(?)
+    all_tone(TONE_KEY);//звук подбора
     player.addKeys(1);//добавляем ключ в карман
     return 1;
   }
@@ -317,7 +337,7 @@ byte cbuttons()
    // chell[2]++;//прибавляем ХП в карман
     heart[2]--;//вычитаем аптечкуиз карты
     //player.getHeal(1);
-    all_tone(0);
+    all_tone(TONE_HEART);
     return 1;
   }
 
@@ -327,7 +347,7 @@ byte cbuttons()
     player.dropKeys(1);//
     
     door[2]--;//вычиттаем дчверь из карты
-    all_tone(0);
+    all_tone(TONE_OPEN);//звук открытия двери
     lvlup = 1;
     lcd.clear();
     // lvl_design();
@@ -335,8 +355,6 @@ byte cbuttons()
   }
   return 0;
 }
-
-
 
 void debug()
 {
@@ -387,19 +405,19 @@ void loop()
   left.tick();
   down.tick();
   right.tick();
-  //отрисовка тут(если cbuttons вернёт 1)
   if (cbuttons()) { //если любая кнопка была нажата
-    ccheck();
-    monstep();
+    // monstep();
+    monster.autoStep(HORIZONTAL);
     player.setFieldOfView();// обновляем поле видимости
-    draw();
+    ccheck();
+    draw();  //отрисовка карты
   }
   if (lvlup)
   {
+    all_tone(TONE_LVLUP);//звук перехода в следующий уровень
     lvl++;
-    lvl_design();
+    lvl_design();//поменять декорации
     lvlup = 0; //сбрасываем флаг перехода в следующий уровень
   }
   debug();
-
 }

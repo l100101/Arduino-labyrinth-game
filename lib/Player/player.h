@@ -2,12 +2,13 @@
 #define PLAYER_H
 #include <stdint.h>
 
-enum {
-    UP_DIR = 0,
-    DOWN_DIR = 1,
-    LEFT_DIR = 2,
-    RIGHT_DIR = 3
-};
+#ifndef DIRS
+#define DIRS
+#define UP_DIR 0
+#define DOWN_DIR 1
+#define LEFT_DIR 2
+#define RIGHT_DIR 3
+#endif
 
 class Player {
 private:
