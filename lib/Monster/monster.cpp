@@ -1,7 +1,7 @@
 #include "monster.h"
 #include <Arduino.h>
 
-#define DEBUG
+// #define DEBUG
 Monster::Monster(int startX, int startY) : currentX(startX),
                                            currentY(startY),
                                            previousX(startX),
