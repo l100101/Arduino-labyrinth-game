@@ -28,12 +28,12 @@ private:
     int8_t xLimit2;
     int8_t yLimit1;
     int8_t yLimit2;
+    int8_t hp;
+    int8_t orientation;
     void  check_step();
 public:
-    Monster(int startX, int startY);
-    int8_t hp;
+    Monster(int startX, int startY, uint8_t startHp);
     int8_t dir;
-    int8_t orientation;
     //координаты
     void move(int newX, int newY);
     void move(uint8_t dir);
@@ -49,7 +49,7 @@ public:
     void teleport(int newX, int newY);
     void setFieldMoving(int8_t xLim1, int8_t xLim2, int8_t yLim1, int8_t yLim2 );
     int8_t getHp();
-
+    void setHp(uint8_t newHp);
 //takers
     void takeDamage(int damage);
     void takeHeal(int heal);

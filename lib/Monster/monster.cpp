@@ -2,19 +2,19 @@
 #include <Arduino.h>
 
 // #define DEBUG
-Monster::Monster(int startX, int startY) : currentX(startX),
-                                           currentY(startY),
-                                           previousX(startX),
-                                           previousY(startY),
-                                           dir(0),
-                                           orientation(0),
-                                           hp(0),
-                                           xLimit1(0),
-                                           xLimit2(20),
-                                           yLimit1(0),
-                                           yLimit2(3)
-{
-}
+Monster::Monster(int startX, int startY, uint8_t startHp): 
+currentX(startX),
+currentY(startY),
+previousX(startX),
+previousY(startY),
+dir(0),
+orientation(0),
+hp(startHp),
+xLimit1(0),
+xLimit2(19),
+yLimit1(0),
+yLimit2(3)
+{}
 
 void Monster::teleport(int newX, int newY)
 {
@@ -42,7 +42,8 @@ void Monster::check_step()
     }
     if (currentY < yLimit1 || currentY > yLimit2)
     {
-        currentY = previousY;
+        // currentY = previousY;
+        currentY = 0;
         dir = !dir;
     }
 #ifdef DEBUG
@@ -159,4 +160,9 @@ void Monster::takeDamage(int damage)
 int8_t Monster::getHp()
 {
     return hp;
+}
+
+void Monster::setHp(uint8_t newHp)
+{
+    hp  = newHp;
 }

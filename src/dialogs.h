@@ -13,11 +13,10 @@ const char str7[] PROGMEM = "XopoIIIo...";
 const char str8[] PROGMEM = "9I npuMy ETOT BbI3oB";
 const char str9[] PROGMEM = "yKA}I{u MHE nyTb!";
 
-// объявляем массив строк/ //4To 3a.../ETo uGPa?"/"no4eMy"/ 9I 3decb? 
+// объявляем массив строк//Что за... Это игра? Почему я здеь? 
 const char* const strChel_opening[] PROGMEM = {str0, str1, str2, str3, str4, str5, str6, str7, str8, str9
 };
-
-
+//--------------------------------------------------------------------
 //объявляем "строки Бога"
 const char str10[] PROGMEM = "3DPABCTByu";//Здравствуй
 const char str11[] PROGMEM = "Tbl nona/I cI0da";//
@@ -40,9 +39,22 @@ const char str23[] PROGMEM = "6yDET HEnpoCTO";
 const char str24[] PROGMEM = "Ho To/|bko Tak";
 const char str25[] PROGMEM = "BbI 6yDeTE DocTouHb|";
 const char str26[] PROGMEM = "Bo3BpaLLLEHu9I Domou";
-// const char str27[] PROGMEM =
-// const char str28[] PROGMEM =
 
-// объявляем массив строк/ //4To 3a.../ETo uGPa?"/"no4eMy"/ 9I 3decb? 
+// объявляем массив строк/ //Здравствуй, ты попал сюда не случайно. 
 const char* const strGod_opening[] PROGMEM = {
   str10, str11, str12, str13, str14, str15, str16, str17, str18, str19, str20, str21, str22, str23, str24, str25, str26};
+
+//--------------------------------------------------------------------
+/*
+const char str30[] PROGMEM = "";
+const char str31[] PROGMEM = "";
+const char str32[] PROGMEM = "";
+const char str33[] PROGMEM = "";
+const char str34[] PROGMEM = "";
+const char str35[] PROGMEM = "";
+const char str36[] PROGMEM = "";
+const char str37[] PROGMEM = "";
+const char str38[] PROGMEM = "";
+const char str39[] PROGMEM = "";
+const char str40[] PROGMEM = "";
+*/

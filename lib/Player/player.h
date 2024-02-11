@@ -18,11 +18,11 @@ private:
     int8_t previousY;
     bool flashlightOn;
     int8_t numberOfKeys;
-    int8_t maxHp;
+    int8_t maxHp=10;
+    int8_t hp;
     
 public:
-    Player(int startX, int startY);
-    int8_t hp;
+    Player(int startX, int startY, uint8_t startHp);
     //координаты
     void move(int newX, int newY);
     void move(uint8_t dir);
@@ -33,15 +33,15 @@ public:
     void setCurrentXY(int newX, int newY);
     int8_t getPreviousX();
     int8_t getPreviousY();
-    void getPreviousCoordinates(int& x, int& y) const;
+    void getPreviousCoordinates(int& x, int& y);
     void teleport(int newX, int newY);
-
+    
+    void takeDamage(int damage);
+    void takeHeal(int heal);
+    void setHp(uint8_t newHp);
 //getters
-    int8_t getNumberOfKeys() const;
-    int8_t getHp() const;
-    void getDamage(int damage);
-    void getHeal(int heal);
-    void getKey(uint8_t keys);
+    int8_t getNumberOfKeys();
+    int8_t getHp();
 
 //область видимости
     int8_t fieldOfViewStart=0;//стандартное 
@@ -53,8 +53,8 @@ public:
     void flashlight(bool enabled);
     void toggleFlashlight();
 //ключи
-    void addKeys(int keysToAdd);
-    void dropKeys(int keysToDrop);
+    void takeKeys(uint8_t keys);
+    void dropKeys(uint8_t keysToDrop);
 };
 
 #endif // PLAYER_H
