@@ -35,3 +35,8 @@
 #define ANIMATION_OPENING 0
 #define ANIMATION_ENDING 1
 #define ANIMATION_DEFAULT 2
+
+#define FPSTR(pstr) (const __FlashStringHelper*)(pstr) // макрос для печати строк из PROGMEM на дисплей
+#define CHEL_STR_OPEN(x) FPSTR(strChel_opening[(x)]) //упрощенный вид макроса выше. Для строк чела
+#define GOD_STR_OPEN(x) FPSTR(strGod_opening[(x)]) //упрощенный вид макроса выше. Для строк Бога
+
