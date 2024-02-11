@@ -48,6 +48,6 @@
 #define GOD_STR_OPEN(x) FPSTR(strGod_opening[(x)]) //упрощенный вид макроса выше. Для строк Бога. OPENING
 
 // #define CHEL_STR_OPEN(x) FPSTR(strChel_flashlight[(x)]) //Для строк чела. FLASHLIGHT 
-// #define GOD_STR_OPEN(x) FPSTR(strGod_flashlight[(x)]) //Для строк Бога. FLASHLIGHT
+#define GOD_STR_FLASHLIGHT(x) FPSTR(strGod_flashlight[(x)]) //Для строк Бога. FLASHLIGHT
 
 

@@ -55,4 +55,4 @@ public:
     void takeHeal(int heal);
 };
 
-#endif // PLAYER_H
+#endif // MONSTER_H

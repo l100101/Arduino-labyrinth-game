@@ -16,10 +16,10 @@
 // неблокирующий красивый ЗВУК  без delay
 
 #include <GyverTimer.h> // подключаем библиотеки
-#include <EncButton.h>  
+#include <EncButton.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include "sprites.h"    //файл с рисунками карт и символов
+#include "sprites.h"                //файл с рисунками карт и символов
 #include "../lib/Player/player.h"   //Класс персонажа
 #include "../lib/Monster/monster.h" //Класс монстра
 #include "alldefs.h"                //все найстройки define
@@ -42,7 +42,7 @@ byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = 3;      // 0
+byte lvl = 0;      // 0
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 
 void all_tone(byte val)
@@ -76,13 +76,12 @@ void all_tone(byte val)
     delay(200);
     tone(BUZZER_PIN, 3000, 500);
     break;
-  case TONE_MONSTER_DAMAGE: //Урон от монстра
+  case TONE_MONSTER_DAMAGE: // Урон от монстра
     tone(BUZZER_PIN, 500, 250);
     delay(300);
     tone(BUZZER_PIN, 100, 100);
     delay(150);
     break;
-    
   }
 }
 
@@ -90,7 +89,7 @@ void gate(int8_t level)
 {
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("level");
+  lcd.print("level ");
   lcd.print(level);
 
   lcd.setCursor(0, 1);
@@ -132,21 +131,34 @@ void ccheck() // проверка координат
   }
   // -------------------------------------------------------------------------------------------------------------------
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1] && trap[2] > 0) // столкновение со статичной ловушкой
-    {
-      player.takeDamage(1);
-      // all_tone(TONE_TRAP_ACTIVATE);
-    }
+  {
+    player.takeDamage(1);
+    // all_tone(TONE_TRAP_ACTIVATE);
+  }
   // столкновение с движущимся монстром
   if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY() && monster.getHp() > 0)
-    {
-      player.takeDamage(1);
-      // all_tone(TONE_MONSTER_DAMAGE);
-    }
-  // столкновение с дополнительным движущимся монстром 
+  {
+    player.takeDamage(1);
+    // all_tone(TONE_MONSTER_DAMAGE);
+  }
+  // столкновение с дополнительным движущимся монстром
   if (player.getCurrentX() == monster_3.getCurrentX() && player.getCurrentY() == monster_3.getCurrentY() && monster_3.getHp() > 0)
     player.takeDamage(1);
 }
-
+void drawMap()
+{
+  for (int y = 0; y < 4; y++)
+  {
+    for (int x = player.fieldOfViewStart; x < player.fieldOfViewEnd; x++) // если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
+    {
+      if (wall[y][x] > 0) // и стена есть, торисуем её
+      {
+        lcd.setCursor(x, y);
+        lcd.write(SKIN_WALL);
+      }
+    }
+  }
+}
 void writeFaceOfGod(uint8_t pos)
 {
   lcd.setCursor(pos, 1);
@@ -173,7 +185,7 @@ void writeFaceOfGod(uint8_t pos)
 }
 void mouth_animation()
 {
-  for (int i = 1; i <= 10; i++) // говорим ртом
+  for (int i = 1; i <= 12; i++) // говорим ртом
   {
     lcd.setCursor(17, 2);
     if (i % 2 == 0)
@@ -184,7 +196,7 @@ void mouth_animation()
     {
       lcd.write(SKIN_MOUTH_OPEN);
     }
-    delay(400);
+    delay(300);
   }
 }
 void chelSays(uint8_t num)
@@ -278,8 +290,29 @@ void godSays(uint8_t num)
     mouth_animation();
     break;
   case 6:
-    break;
+    lcd.setCursor(0, 0);
+    lcd.print(GOD_STR_FLASHLIGHT(0)); // 
+    lcd.setCursor(0, 1);
+    lcd.print(GOD_STR_FLASHLIGHT(1)); // 
+    lcd.setCursor(0, 2);
+    lcd.print(GOD_STR_FLASHLIGHT(2)); //
+    lcd.setCursor(0, 3);
+    lcd.print(GOD_STR_FLASHLIGHT(3)); //
+    mouth_animation();
+    break;  
+  case 7:
+    lcd.setCursor(0, 0);
+    lcd.print(GOD_STR_FLASHLIGHT(4)); // Здесь 
+    lcd.setCursor(0, 1);
+    lcd.print(GOD_STR_FLASHLIGHT(5)); // могут быть
+    lcd.setCursor(0, 2);
+    lcd.print(GOD_STR_FLASHLIGHT(6)); // ловушки
+    lcd.setCursor(0, 3);
+    lcd.print(GOD_STR_FLASHLIGHT(7)); //Будь осторожен
+    mouth_animation();
+    break;  
   }
+  
   delay(3000);
   lcd.clear();
 }
@@ -305,7 +338,7 @@ void charsCreate(uint8_t num)
     lcd.createChar(SKIN_FACE_2, faceTwoChar);
     lcd.createChar(SKIN_FACE_3, faceThreeChar);
     lcd.createChar(SKIN_MOUTH, rotChar);
-    lcd.createChar(SKIN_MOUTH, openRotChar);
+    lcd.createChar(SKIN_MOUTH_OPEN, openRotChar);
     break;
   }
 }
@@ -348,11 +381,26 @@ void play_animation(uint8_t num)
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
     chelSays(4); // Хорошо, я приму этот вызов
-    delay(1000); // 3 sec
+    delay(1000); // 
     break;
   case ANIMATION_FLASHLIGHT:
+    charsCreate(CHARS_DEFAULT);
+    for (int i = 0; i < 12; i++)// мигаем фонариком
+    {
+      lcd.clear();
+      lcd.setCursor(2, 1);
+      lcd.write(SKIN_CHEL);
+      drawMap();
+      player.toggleFlashlight();
+      delay(280);
+    }
+    lcd.clear();
 
-    // в подземелье тебе понадобится фонарик, он освещает лишь небольшую область
+    charsCreate(CHARS_GOD);
+    writeFaceOfGod(16); // 17-x
+    godSays(6);         // в подземелье тебе понадобится фонарик, он освещает лишь небольшую область
+    godSays(7);         // Ещё здесь могут быть ловушки
+    charsCreate(CHARS_DEFAULT);
     break;
   case ANIMATION_ENDING:
     break;
@@ -375,13 +423,15 @@ void lvl_design() // вызываем в начале/конце каждого 
     lcd.print("you have 5 lives");
 
     player.flashlight(0);
+    //Есть ли на карте
+    key[2] = 1;
+    door[2] = 1;
+    //x , y
     key[0] = 2;
     key[1] = 3;
-    key[2] = 1;
 
     door[0] = 19;
     door[1] = 2;
-    door[2] = 1;
 
     monster.setHp(1);
     monster.setFieldMoving(0, 17, 0, 3);
@@ -389,30 +439,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     break;
 
   case 1:
-    play_animation(ANIMATION_FLASHLIGHT);
-    player.flashlight(1);
-    player.setCurrentXY(1, 1);
-    
-    //add set orientation
-    monster.setHp(1);
-    monster.setFieldMoving(0, 9, 0, 3);
-    monster.setCurrentXY(5, 2);
-    key[0] = 0;
-    key[1] = 3;
-    key[2] = 1;
-
-    door[0] = 19;
-    door[1] = 2;
-    door[2] = 1;
-
-    trap[0] = 3;
-    trap[1] = 1;
-    trap[2] = 1;
-
-    heart[0] = 12;
-    heart[1] = 2;
-    heart[2] = 1;
-
+  //change map 1
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -420,25 +447,34 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_1[y][x];
       }
     }
-    break;
-  case 2:
-    // play_animation(ANIMATION_);
-    player.flashlight(0);
-    player.setCurrentXY(1, 1);
+    play_animation(ANIMATION_FLASHLIGHT);
+    player.flashlight(1);
+    player.setCurrentXY(2, 1);
+
+    // add set orientation
     monster.setHp(1);
-    monster.setFieldMoving(0, 19, 0, 3);
-    monster.setCurrentXY(6, 1);
-    key[0] = 15;
-    key[1] = 1;
+    monster.setFieldMoving(0, 18, 0, 3);
+    monster.setCurrentXY(5, 3);
+    //Есть ли на карте
     key[2] = 1;
+    door[2] = 1;
+    trap[2] = 1;
+    heart[2] = 1;
+    //x , y
+    key[0] = 0;
+    key[1] = 3;
 
     door[0] = 19;
     door[1] = 2;
-    door[2] = 1;
 
-    heart[2] = 0;
-    trap[2] = 0;
+    trap[0] = 9;
+    trap[1] = 2;
 
+    heart[0] = 12;
+    heart[1] = 2;
+    break;
+  case 2:
+    //change map 2
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -446,8 +482,34 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_2[y][x];
       }
     }
+    // play_animation(ANIMATION_);
+    player.flashlight(0);
+    player.setCurrentXY(1, 1);
+    monster.setHp(1);
+    monster.setFieldMoving(0, 17, 0, 3);
+    monster.setCurrentXY(6, 1);
+    //Есть ли на карте
+    key[2] = 1;
+    door[2] = 1;
+    heart[2] = 0;
+    trap[2] = 0;
+    //x , y
+    key[0] = 15;
+    key[1] = 1;
+
+    door[0] = 19;
+    door[1] = 2;
+
     break;
   case 3:
+    //change map 3
+    for (int y = 0; y < 4; y++)
+    {
+      for (int x = 0; x < 20; x++)
+      {
+        wall[y][x] = wall_3[y][x];
+      }
+    }
     player.flashlight(1);
     player.setCurrentXY(19, 2);
     monster.setHp(1);
@@ -456,45 +518,28 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setHp(1);
     monster_3.setFieldMoving(3, 19, 0, 3);
     monster_3.setCurrentXY(8, 3);
-    
+    //Есть ли на карте
+    trap[2] = 1;
+    key[2] = 1;
+    door[2] = 1;
+    //x , y
     trap[0] = 4;
     trap[1] = 1;
-    trap[2] = 1;
 
     key[0] = 2;
     key[1] = 3;
-    key[2] = 1;
 
     door[0] = 1;
     door[1] = 3;
-    door[2] = 1;
-
-    for (int y = 0; y < 4; y++)
-    {
-      for (int x = 0; x < 20; x++)
-      {
-        wall[y][x] = wall_3[y][x];
-      }
-    }
     break;
   }
 }
+
 void draw()
 {
   lcd.clear();
-
-  for (int y = 0; y < 4; y++)
-  {
-    for (int x = player.fieldOfViewStart; x < player.fieldOfViewEnd; x++) // если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
-    {
-      if (wall[y][x] > 0) // и стена есть, торисуем её
-      {
-        lcd.setCursor(x, y);
-        lcd.write(SKIN_WALL);
-      }
-    }
-  }
-
+  // вывод карты
+  drawMap();
   // вывод персонажа
   lcd.setCursor(player.getCurrentX(), player.getCurrentY());
   lcd.write(SKIN_CHEL);
@@ -515,12 +560,12 @@ void draw()
 
   // вывод основного монстра
   if (monster.getHp() > 0)
-{
-  lcd.setCursor(monster.getCurrentX(), monster.getCurrentY());
-  lcd.write(SKIN_MONSTER);
-}
+  {
+    lcd.setCursor(monster.getCurrentX(), monster.getCurrentY());
+    lcd.write(SKIN_MONSTER);
+  }
 
-  if (monster_3.getHp() > 0) // вывод доп. монстра 
+  if (monster_3.getHp() > 0) // вывод доп. монстра
   {
     lcd.setCursor(monster_3.getCurrentX(), monster_3.getCurrentY());
     lcd.write(SKIN_MONSTER);
@@ -562,16 +607,16 @@ byte cbuttons()
 
   if (down.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
   {                         // подбор ключа
-    player.takeKeys(1);      // добавляем ключ в карман
+    player.takeKeys(1);     // добавляем ключ в карман
     key[2]--;               // вычитаем ключ из карты
     all_tone(TONE_PICK_UP); // звук подбора
     return 1;
   }
 
   if (down.hold() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
-  {             // подбор жизни
-    heart[2]--; // вычитаем аптечкуиз карты
-    player.takeHeal(1);//лечим перса
+  {                     // подбор жизни
+    heart[2]--;         // вычитаем аптечкуиз карты
+    player.takeHeal(1); // лечим перса
     all_tone(TONE_HEAL);
     return 1;
   }

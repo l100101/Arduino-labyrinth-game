@@ -45,15 +45,20 @@ const char* const strGod_opening[] PROGMEM = {
   str10, str11, str12, str13, str14, str15, str16, str17, str18, str19, str20, str21, str22, str23, str24, str25, str26};
 
 //--------------------------------------------------------------------
+const char str30[] PROGMEM = "B nOD3eME/IbE O4EHb";
+const char str31[] PROGMEM = "TEMHO, Te6e";
+const char str32[] PROGMEM = "noHADO6uTC9I";
+const char str33[] PROGMEM = "FOHAPuK";
+
+const char str34[] PROGMEM = "A TAK}I{E, 3DECb";
+const char str35[] PROGMEM = "MoryT 6b|Tb";
+const char str36[] PROGMEM = "/IOByIIIKu";
+const char str37[] PROGMEM = "6yDb OCTOPO}I{EH";
+const char* const strGod_flashlight[] PROGMEM = {
+  str30, str31, str32, str33, str34, str35, str36, str37};
+
+
 /*
-const char str30[] PROGMEM = "";
-const char str31[] PROGMEM = "";
-const char str32[] PROGMEM = "";
-const char str33[] PROGMEM = "";
-const char str34[] PROGMEM = "";
-const char str35[] PROGMEM = "";
-const char str36[] PROGMEM = "";
-const char str37[] PROGMEM = "";
 const char str38[] PROGMEM = "";
 const char str39[] PROGMEM = "";
 const char str40[] PROGMEM = "";

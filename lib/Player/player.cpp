@@ -119,6 +119,13 @@ bool Player::isFlashlightOn() const {
 }
 void Player::toggleFlashlight() {
     flashlightOn = !flashlightOn;
+    if (flashlightOn) {
+        fieldOfViewStart = getCurrentX() - flashlightRadius;
+        fieldOfViewEnd = getCurrentX() + flashlightRadius;
+    }else{
+        fieldOfViewStart = 0;
+        fieldOfViewEnd = 19;
+    }
 }
 
 void Player::takeKeys(uint8_t keys) {
