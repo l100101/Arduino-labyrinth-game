@@ -38,13 +38,17 @@
 #define ANIMATION_FLASHLIGHT    1
 #define ANIMATION_MONSTER       2
 
+//DIALOGS
+#define CHEL_CHILL_DIALOG             100
+#define MONSTER_SLABAK_DIALOG         600
+
 #define ANIMATION_ENDING        99
 
 //CREATE CHARS (in "playAnimation")
 #define CHARS_DEFAULT   2
 #define CHARS_GOD       3
 #define CHARS_MONSTER   4
-#define CHARS_END       5
+#define CHARS_ENDING    5
 
 
 //STRINGS FOR DIALOGUee
@@ -55,4 +59,6 @@
 // #define CHEL_STR_OPEN(x) FPSTR(strChel_flashlight[(x)]) //Для строк чела. FLASHLIGHT 
 #define GOD_STR_FLASHLIGHT(x) FPSTR(strGod_flashlight[(x)]) //Для строк Бога. FLASHLIGHT
 
+#define MONSTER_STR_SLABAK(x) FPSTR(strMonster_slabak[(x)])//У тебя не выйдет ничего
+#define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
 

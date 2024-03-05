@@ -61,6 +61,9 @@ const char* const strGod_flashlight[] PROGMEM = {
 const char str38[] PROGMEM = "y TE69I Hu4ero";
 const char str39[] PROGMEM = "HE Bblu'DeT,";
 const char str40[] PROGMEM = "CJIa6ak!";
+const char str0041[] PROGMEM = "AxAxAxA";
+const char* const strMonster_slabak[] PROGMEM = {
+  str38, str39, str40, str0041};
 //--------------------------------------------------------------------
 // Персонаж: Меня не беспокоят твои убеждения, демон.  
 const char str41[] PROGMEM = "MEH9I HE 6ecnoKO9IT";
@@ -68,8 +71,8 @@ const char str42[] PROGMEM = "TBOu y6e}I{DEHu9I,";
 //--
 const char str43[] PROGMEM = "DEMOH";
 
-const char* const strMonster[] PROGMEM = {
-  str38, str39, str40, str41, str42, str43};
+const char* const strChel_chill[] PROGMEM = {
+  str41, str42, str43};
 //--------------------------------------------------------------------
 // Ты завершил игру
 const char str44[] PROGMEM = "Tbl 3aBepwuJI";

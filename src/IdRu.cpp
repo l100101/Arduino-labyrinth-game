@@ -220,6 +220,14 @@ void chelSays(uint8_t num)
     lcd.setCursor(0, 2);
     lcd.print(CHEL_STR_OPEN(9)); // Укажи мне путь!
     break;
+  case CHEL_CHILL_DIALOG:
+    lcd.setCursor(0, 0);
+    lcd.print(CHEL_STR_CHILL(0)); // Меня не беспокоят
+    lcd.setCursor(0, 1);
+    lcd.print(CHEL_STR_CHILL(1)); //Твои убеждения
+    lcd.setCursor(3, 3);
+    lcd.print(CHEL_STR_CHILL(2)); //демон.
+    break;
   }
   delay(3000);
   lcd.clear();
@@ -304,6 +312,22 @@ void godSays(uint8_t num)
   delay(3000);
   lcd.clear();
 }
+void monsterSays(uint16_t num)
+{
+  switch (num)
+  {
+  case MONSTER_SLABAK_DIALOG:
+    lcd.setCursor(0, 0);
+    lcd.print(MONSTER_STR_SLABAK(0));
+    lcd.setCursor(0, 1);
+    lcd.print(MONSTER_STR_SLABAK(1));
+    lcd.setCursor(8, 2);
+    lcd.print(MONSTER_STR_SLABAK(2));
+    lcd.setCursor(0, 2);
+    lcd.print(MONSTER_STR_SLABAK(3));  
+    break;
+  }
+}
 void charsCreate(uint8_t num)
 {
   switch (num)
@@ -329,8 +353,7 @@ void charsCreate(uint8_t num)
     lcd.createChar(SKIN_MOUTH, rotChar);
     lcd.createChar(SKIN_MOUTH_OPEN, openRotChar);
     break;
-  case CHARS_END:
-    
+  case CHARS_ENDING:
     break;  
   }
 }
@@ -395,12 +418,28 @@ void play_animation(uint8_t num)
     charsCreate(CHARS_DEFAULT);
     break;
   case ANIMATION_MONSTER:
+    lcd.clear();
     charsCreate(CHARS_MONSTER);
-  
+    for (int i = 19; i > 6; i--)//идёт справа налево
+    {
+      lcd.setCursor(i, 1);
+      lcd.write(SKIN_MONSTER);
+      lcd.setCursor(2, 1);
+      lcd.write(SKIN_CHEL);
+      delay(300);
+      lcd.clear();
+    }
+    monsterSays(MONSTER_SLABAK_DIALOG);//ты слабак
+    delay(3000);
+    lcd.clear();
+    chelSays(CHEL_CHILL_DIALOG);//не
+    delay(3000);
     lcd.clear();
     break;
-  case ANIMATION_ENDING:
     charsCreate(CHARS_DEFAULT);
+
+  case ANIMATION_ENDING:
+    charsCreate(CHARS_ENDING);
     break;
   }
 }
