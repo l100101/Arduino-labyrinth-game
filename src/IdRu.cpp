@@ -147,7 +147,7 @@ void drawMap()
     }
   }
 }
-void writeFaceOfGod(uint8_t pos)
+void writeFaceOfGod(uint8_t pos) // x position
 {
   lcd.setCursor(pos, 1);
   lcd.write(SKIN_NOSE);
@@ -279,28 +279,28 @@ void godSays(uint8_t num)
     break;
   case 6:
     lcd.setCursor(0, 0);
-    lcd.print(GOD_STR_FLASHLIGHT(0)); // 
+    lcd.print(GOD_STR_FLASHLIGHT(0)); //
     lcd.setCursor(0, 1);
-    lcd.print(GOD_STR_FLASHLIGHT(1)); // 
+    lcd.print(GOD_STR_FLASHLIGHT(1)); //
     lcd.setCursor(0, 2);
     lcd.print(GOD_STR_FLASHLIGHT(2)); //
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_FLASHLIGHT(3)); //
     mouth_animation();
-    break;  
+    break;
   case 7:
     lcd.setCursor(0, 0);
-    lcd.print(GOD_STR_FLASHLIGHT(4)); // Здесь 
+    lcd.print(GOD_STR_FLASHLIGHT(4)); // Здесь
     lcd.setCursor(0, 1);
     lcd.print(GOD_STR_FLASHLIGHT(5)); // могут быть
     lcd.setCursor(0, 2);
     lcd.print(GOD_STR_FLASHLIGHT(6)); // ловушки
     lcd.setCursor(0, 3);
-    lcd.print(GOD_STR_FLASHLIGHT(7)); //Будь осторожен
+    lcd.print(GOD_STR_FLASHLIGHT(7)); // Будь осторожен
     mouth_animation();
-    break;  
+    break;
   }
-  
+
   delay(3000);
   lcd.clear();
 }
@@ -309,6 +309,7 @@ void charsCreate(uint8_t num)
   switch (num)
   {
   case CHARS_DEFAULT:
+  case CHARS_MONSTER:
     lcd.createChar(SKIN_CHEL, people);
     lcd.createChar(SKIN_KEY, keyChar);
     lcd.createChar(SKIN_DOOR, doorChar);
@@ -328,6 +329,9 @@ void charsCreate(uint8_t num)
     lcd.createChar(SKIN_MOUTH, rotChar);
     lcd.createChar(SKIN_MOUTH_OPEN, openRotChar);
     break;
+  case CHARS_END:
+    
+    break;  
   }
 }
 void play_animation(uint8_t num)
@@ -369,11 +373,11 @@ void play_animation(uint8_t num)
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
     chelSays(4); // Хорошо, я приму этот вызов
-    delay(1000); // 
+    delay(1000); //
     break;
   case ANIMATION_FLASHLIGHT:
     charsCreate(CHARS_DEFAULT);
-    for (int i = 0; i < 12; i++)// мигаем фонариком
+    for (int i = 0; i < 12; i++) // мигаем фонариком
     {
       lcd.clear();
       lcd.setCursor(2, 1);
@@ -385,12 +389,18 @@ void play_animation(uint8_t num)
     lcd.clear();
 
     charsCreate(CHARS_GOD);
-    writeFaceOfGod(16); // 17-x
+    writeFaceOfGod(16); // x position
     godSays(6);         // в подземелье тебе понадобится фонарик, он освещает лишь небольшую область
     godSays(7);         // Ещё здесь могут быть ловушки
     charsCreate(CHARS_DEFAULT);
     break;
+  case ANIMATION_MONSTER:
+    charsCreate(CHARS_MONSTER);
+  
+    lcd.clear();
+    break;
   case ANIMATION_ENDING:
+    charsCreate(CHARS_DEFAULT);
     break;
   }
 }
@@ -411,10 +421,10 @@ void lvl_design() // вызываем в начале/конце каждого 
     lcd.print("you have 5 lives");
 
     player.flashlight(0);
-    //Есть ли на карте
+    // Есть ли на карте
     key[2] = 1;
     door[2] = 1;
-    //x , y
+    // x , y
     key[0] = 2;
     key[1] = 3;
 
@@ -427,7 +437,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     break;
 
   case 1:
-  //change map 1
+    // change map 1
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -443,12 +453,12 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster.setHp(1);
     monster.setFieldMoving(0, 18, 0, 3);
     monster.setCurrentXY(5, 3);
-    //Есть ли на карте
+    // Есть ли на карте
     key[2] = 1;
     door[2] = 1;
     trap[2] = 1;
     heart[2] = 1;
-    //x , y
+    // x , y
     key[0] = 0;
     key[1] = 3;
 
@@ -462,7 +472,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     heart[1] = 2;
     break;
   case 2:
-    //change map 2
+    // change map 2
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -470,18 +480,18 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_2[y][x];
       }
     }
-    // play_animation(ANIMATION_);
+    // play_animation(ANIMATION_);//У тебя ничего не получится
     player.flashlight(0);
     player.setCurrentXY(1, 1);
     monster.setHp(1);
     monster.setFieldMoving(0, 17, 0, 3);
     monster.setCurrentXY(6, 1);
-    //Есть ли на карте
+    // Есть ли на карте
     key[2] = 1;
     door[2] = 1;
     heart[2] = 0;
     trap[2] = 0;
-    //x , y
+    // x , y
     key[0] = 15;
     key[1] = 1;
 
@@ -490,7 +500,8 @@ void lvl_design() // вызываем в начале/конце каждого 
 
     break;
   case 3:
-    //change map 3
+    // change map 3
+    //  play_animation(ANIMATION_);//зовёт друга
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -506,11 +517,11 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setHp(1);
     monster_3.setFieldMoving(3, 19, 0, 3);
     monster_3.setCurrentXY(8, 3);
-    //Есть ли на карте
+    // Есть ли на карте
     trap[2] = 1;
     key[2] = 1;
     door[2] = 1;
-    //x , y
+    // x , y
     trap[0] = 4;
     trap[1] = 1;
 
@@ -661,10 +672,10 @@ void loop()
   if (cbuttons())
   {                               // если любая кнопка была нажата
     monster.autoStep(HORIZONTAL); // двигаем монстра по горизонтали
-    monster_3.autoStep(VERTICAL);
-    player.setFieldOfView(); // обновляем поле видимости
+    monster_3.autoStep(VERTICAL); // двигаем монстра на 3 уровне
+    player.setFieldOfView();      // обновляем поле видимости
     ccheck();
-    draw(); // отрисовка карты
+    draw(); // отрисовка карты и всего остального
   }
   if (lvlup)
   {
