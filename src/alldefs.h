@@ -4,6 +4,16 @@
 #define BUTTON_LEFT         7
 #define BUTTON_RIGHT        6
 #define BUZZER_PIN          8
+#define KEYPAD_PIN          A0
+//Считанное с клавиатуры значение
+#define BUTTON_UP_VALUE     30
+#define BUTTON_DOWN_VALUE   86
+#define BUTTON_LEFT_VALUE   0
+#define BUTTON_RIGHT_VALUE  164
+#define BUTTON_SELECT_VALUE 350
+//ширина окна значения с клавиатуры
+#define WINDOW_WIDTH        5
+
 //TONES NUMS
 #define TONE_PICK_UP        0
 #define TONE_OPEN_DOOR      1
@@ -37,12 +47,14 @@
 #define ANIMATION_OPENING       0
 #define ANIMATION_FLASHLIGHT    1
 #define ANIMATION_MONSTER       2
+#define ANIMATION_EVIL_FRIENDS  3 
+
+#define ANIMATION_ENDING        99
 
 //DIALOGS
 #define CHEL_CHILL_DIALOG             100
 #define MONSTER_SLABAK_DIALOG         600
 
-#define ANIMATION_ENDING        99
 
 //CREATE CHARS (in "playAnimation")
 #define CHARS_DEFAULT   2

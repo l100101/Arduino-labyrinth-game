@@ -13,12 +13,20 @@
 #include "alldefs.h"                //все найстройки define
 #include "dialogs.h"                //все диалоги
 
+// создаём массив значений сигналов с кнопок
+int16_t sigs[4] = {1023, 927, 856, 783};
+
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
-Button up(BUTTON_UP);
-Button down(BUTTON_DOWN);
-Button left(BUTTON_LEFT);
-Button right(BUTTON_RIGHT);
-Player player(0, 0, 5);     // инициализация с координатами и ХП персонажа
+// Button up(BUTTON_UP);
+// Button down(BUTTON_DOWN);
+// Button left(BUTTON_LEFT);
+// Button right(BUTTON_RIGHT);
+VirtButton up;
+VirtButton down;
+VirtButton left;
+VirtButton right;
+
+Player player(0, 0, 2);     // инициализация с координатами и ХП персонажа
 Monster monster(0, 0, 1);   // инициализация с координатами осн монстра
 Monster monster_3(8, 0, 0); // инициализация с координатами доп монстра lvl 3
 
@@ -223,7 +231,7 @@ void chelSays(uint8_t num)
   case CHEL_CHILL_DIALOG:
     lcd.setCursor(0, 0);
     lcd.print(CHEL_STR_CHILL(0)); // Меня не беспокоят
-    lcd.setCursor(0, 1);
+    lcd.setCursor(0, 2);
     lcd.print(CHEL_STR_CHILL(1)); //Твои убеждения
     lcd.setCursor(3, 3);
     lcd.print(CHEL_STR_CHILL(2)); //демон.
@@ -319,11 +327,11 @@ void monsterSays(uint16_t num)
   case MONSTER_SLABAK_DIALOG:
     lcd.setCursor(0, 0);
     lcd.print(MONSTER_STR_SLABAK(0));
-    lcd.setCursor(0, 1);
-    lcd.print(MONSTER_STR_SLABAK(1));
-    lcd.setCursor(8, 2);
-    lcd.print(MONSTER_STR_SLABAK(2));
     lcd.setCursor(0, 2);
+    lcd.print(MONSTER_STR_SLABAK(1));
+    lcd.setCursor(8, 3);
+    lcd.print(MONSTER_STR_SLABAK(2));
+    lcd.setCursor(0, 3);
     lcd.print(MONSTER_STR_SLABAK(3));  
     break;
   }
@@ -429,14 +437,21 @@ void play_animation(uint8_t num)
       delay(300);
       lcd.clear();
     }
+    lcd.setCursor(6, 1);
+    lcd.write(SKIN_MONSTER);
     monsterSays(MONSTER_SLABAK_DIALOG);//ты слабак
-    delay(3000);
+    delay(4000);
     lcd.clear();
+    lcd.setCursor(2, 1);
+    lcd.write(SKIN_CHEL);
     chelSays(CHEL_CHILL_DIALOG);//не
-    delay(3000);
+    delay(4000);
     lcd.clear();
-    break;
     charsCreate(CHARS_DEFAULT);
+    break;
+  case ANIMATION_EVIL_FRIENDS:
+    // charsCreate(CHARS_ENDING);
+
 
   case ANIMATION_ENDING:
     charsCreate(CHARS_ENDING);
@@ -519,7 +534,7 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_2[y][x];
       }
     }
-    // play_animation(ANIMATION_);//У тебя ничего не получится
+    play_animation(ANIMATION_MONSTER);//У тебя ничего не получится
     player.flashlight(0);
     player.setCurrentXY(1, 1);
     monster.setHp(1);
@@ -540,7 +555,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     break;
   case 3:
     // change map 3
-    //  play_animation(ANIMATION_);//зовёт друга
+    play_animation(ANIMATION_EVIL_FRIENDS);//зовёт друга
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
@@ -704,10 +719,10 @@ void setup()
 void loop()
 {
   // опрос кнопок, расчёты, дебаг
-  up.tick();
-  left.tick();
-  down.tick();
-  right.tick();
+  up.tick(      BUTTON_UP_VALUE+WINDOW_WIDTH>   analogRead(KEYPAD_PIN) > BUTTON_UP_VALUE-WINDOW_WIDTH);
+  left.tick(    BUTTON_LEFT_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_LEFT_VALUE-WINDOW_WIDTH);
+  down.tick(    BUTTON_DOWN_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_DOWN_VALUE-WINDOW_WIDTH);
+  right.tick(   BUTTON_RIGHT_VALUE+WINDOW_WIDTH>analogRead(KEYPAD_PIN) > BUTTON_RIGHT_VALUE-WINDOW_WIDTH);
   if (cbuttons())
   {                               // если любая кнопка была нажата
     monster.autoStep(HORIZONTAL); // двигаем монстра по горизонтали
