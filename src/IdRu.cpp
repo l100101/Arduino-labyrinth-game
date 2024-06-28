@@ -723,6 +723,7 @@ void loop()
   left.tick(    BUTTON_LEFT_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_LEFT_VALUE-WINDOW_WIDTH);
   down.tick(    BUTTON_DOWN_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_DOWN_VALUE-WINDOW_WIDTH);
   right.tick(   BUTTON_RIGHT_VALUE+WINDOW_WIDTH>analogRead(KEYPAD_PIN) > BUTTON_RIGHT_VALUE-WINDOW_WIDTH);
+  printf("%d", analogRead(KEYPAD_PIN));
   if (cbuttons())
   {                               // если любая кнопка была нажата
     monster.autoStep(HORIZONTAL); // двигаем монстра по горизонтали
