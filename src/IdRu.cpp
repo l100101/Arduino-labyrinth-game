@@ -12,15 +12,10 @@
 #include "../lib/Monster/monster.h" //Класс монстра
 #include "alldefs.h"                //все найстройки define
 #include "dialogs.h"                //все диалоги
-
 // создаём массив значений сигналов с кнопок
 int16_t sigs[4] = {1023, 927, 856, 783};
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
-// VirtButton up;
-// VirtButton down;
-// VirtButton left;
-// VirtButton right;
 EncButton encbut(3, 2, 0);
 
 Player player(0, 0, 2);     // инициализация с координатами и ХП персонажа
@@ -38,6 +33,9 @@ byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на кар�
 byte lvl = 0;      // 0
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 
+void softwareReset() {
+  asm volatile ("jmp 0");
+}
 void all_tone(byte val)
 { // звук
   switch (val)
@@ -84,7 +82,6 @@ void gate(int8_t level)
   lcd.setCursor(0, 0);
   lcd.print("level ");
   lcd.print(level);
-
   lcd.setCursor(0, 1);
   lcd.print("hp:");
   lcd.print(player.getHp());
@@ -464,9 +461,9 @@ void lvl_design() // вызываем в начале/конце каждого 
   switch (lvl)
   {
   case 0:
-    play_animation(ANIMATION_OPENING);
+    // play_animation(ANIMATION_OPENING);
     lcd.setCursor(0, 0);
-    lcd.print("press down button");
+    lcd.print("press button");
     lcd.setCursor(0, 1);
     lcd.print("to pick up items");
     lcd.setCursor(0, 2);
@@ -635,6 +632,9 @@ void draw()
 }
 byte cbuttons()
 {
+  if (encbut.holdFor(RESET_TIME_MS))
+    softwareReset();
+  
   if (encbut.rightH())
   { //++y
     player.move(UP_DIR);

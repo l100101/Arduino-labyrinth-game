@@ -78,3 +78,8 @@
 //Настройки энкодера
 #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
 #define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки)
+
+//LCD
+#define _LCD_TYPE 1
+
+#define RESET_TIME_MS 5000
