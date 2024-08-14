@@ -504,7 +504,7 @@ while (1)
     charsCreate(CHARS_MONSTER);
     for (int i = 19; i > 6; i--)//идёт справа налево
     {
-      lcd.setCursor(i, 1);
+      lcd.setCursor(i, 1+(i%2));
       lcd.write(SKIN_MONSTER);
       lcd.setCursor(2, 1);
       lcd.write(SKIN_CHEL);
