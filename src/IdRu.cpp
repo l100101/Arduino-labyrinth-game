@@ -369,6 +369,9 @@ void charsCreate(uint8_t num)
     lcd.createChar(SKIN_MOUTH, rotChar);
     lcd.createChar(SKIN_MOUTH_OPEN, openRotChar);
     break;
+  case CHARS_EVIL_FRIENDS:
+    
+    break;
   case CHARS_ENDING:
     break;  
   }
@@ -524,9 +527,22 @@ while (1)
     charsCreate(CHARS_DEFAULT);
     break;
   }
-  case ANIMATION_EVIL_FRIENDS:
+  case ANIMATION_EVIL_FRIENDS://TODO
   {
-    // charsCreate(CHARS_ENDING);
+    // charsCreate(CHARS_EVIL_FRIENDS);
+    charsCreate(CHARS_MONSTER);
+    lcd.clear();
+    for (int i = 19; i > 6; i--)//идут справа налево
+    {
+      lcd.setCursor(i, 1+(i%2));
+      lcd.write(SKIN_MONSTER);
+      lcd.setCursor(i, 2+(i%2));
+      lcd.write(SKIN_MONSTER);
+      lcd.setCursor(2, 1);
+      lcd.write(SKIN_CHEL);
+      delay(300);
+      lcd.clear();
+    }
     break;
   }
 

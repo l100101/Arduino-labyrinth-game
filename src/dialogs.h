@@ -86,4 +86,10 @@ const char str50[] PROGMEM = "MyDpocTbIO u cuJIou";
 
 const char* const strEnding[] PROGMEM = {
   str44, str45, str46, str47, str48, str49, str50};
+//--------------------------------------------------------------------
+const char str51[] PROGMEM = "";
+const char str52[] PROGMEM = "MEH9I HE 6ecnoKO9IT";
+const char str53[] PROGMEM = "MEH9I HE 6ecnoKO9IT";
 
+const char* const strMonster_twins[] PROGMEM = {
+  str51, str52, str53};

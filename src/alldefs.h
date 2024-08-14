@@ -1,5 +1,5 @@
 //system
-#define RESET_TIME_MS   8000
+#define RESET_TIME_MS   6000
 
 #define ON              1
 #define OFF             0
@@ -55,6 +55,7 @@
 #define CHARS_GOD       3
 #define CHARS_MONSTER   4
 #define CHARS_ENDING    5
+#define CHARS_EVIL_FRIENDS 66
 
 
 //STRINGS FOR DIALOGUee
@@ -67,6 +68,8 @@
 
 #define MONSTER_STR_SLABAK(x) FPSTR(strMonster_slabak[(x)])//У тебя не выйдет ничего
 #define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
+
+// #define 
 
 // ---------------------------------------------------
 //Настройки энкодера
