@@ -1,17 +1,11 @@
-//BUTTONS PINS
-// #define BUTTON_UP           4
-// #define BUTTON_DOWN         5
-// #define BUTTON_LEFT         7
-// #define BUTTON_RIGHT        6
-// #define KEYPAD_PIN          A0
-//Считанное с клавиатуры значение
-// #define BUTTON_UP_VALUE     30
-// #define BUTTON_DOWN_VALUE   86
-// #define BUTTON_LEFT_VALUE   0
-// #define BUTTON_RIGHT_VALUE  164
-// #define BUTTON_SELECT_VALUE 350
-// //ширина окна значения с клавиатуры
-// #define WINDOW_WIDTH        5
+//system
+#define RESET_TIME_MS   8000
+
+#define ON              1
+#define OFF             0
+//LCD
+#define CENTER_X          7
+#define CENTER_Y          1
 
 #define BUZZER_PIN          8
 //TONES NUMS
@@ -44,12 +38,12 @@
 #define SKIN_MOUTH_OPEN 0
 
 //ANIMATIONS PLAYS (in level design)
-#define ANIMATION_OPENING       0
-#define ANIMATION_FLASHLIGHT    1
-#define ANIMATION_MONSTER       2
-#define ANIMATION_EVIL_FRIENDS  3 
-
-#define ANIMATION_ENDING        99
+#define ANIMATION_OPENING           0
+#define ANIMATION_FLASHLIGHT        1
+#define ANIMATION_MONSTER           2
+#define ANIMATION_EVIL_FRIENDS      3    
+#define ANIMATION_PRESS_AND_TURN    80
+#define ANIMATION_ENDING            99
 
 //DIALOGS
 #define CHEL_CHILL_DIALOG             100
@@ -74,12 +68,19 @@
 #define MONSTER_STR_SLABAK(x) FPSTR(strMonster_slabak[(x)])//У тебя не выйдет ничего
 #define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
 
-
+// ---------------------------------------------------
 //Настройки энкодера
 #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
-#define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки)
+#define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки) 
+// #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
+// #define EB_NO_CALLBACK      // отключить обработчик событий attach (экономит 2 байта оперативки)
+// #define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки)
+// #define EB_NO_BUFFER        // отключить буферизацию энкодера (экономит 1 байт оперативки)
 
-//LCD
-#define _LCD_TYPE 1
+#define EB_STEP_TIME 100    // таймаут импульсного удержания (кнопка)
+// #define EB_DEB_TIME 50      // таймаут гашения дребезга кнопки (кнопка)
+// #define EB_CLICK_TIME 500   // таймаут ожидания кликов (кнопка)
+#define EB_HOLD_TIME 300    // таймаут удержания (кнопка)
+// #define EB_FAST_TIME 30     // таймаут быстрого поворота (энкодер)
 
-#define RESET_TIME_MS 5000
+// ---------------------------------------------------

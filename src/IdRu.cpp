@@ -13,7 +13,7 @@
 #include "alldefs.h"                //все найстройки define
 #include "dialogs.h"                //все диалоги
 // создаём массив значений сигналов с кнопок
-int16_t sigs[4] = {1023, 927, 856, 783};
+// int16_t sigs[4] = {1023, 927, 856, 783};
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 EncButton encbut(3, 2, 0);
@@ -32,7 +32,7 @@ byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на кар�
 
 byte lvl = 0;      // 0
 boolean lvlup = 0; // флаг для перехода в следующий уровень
-
+void draw();
 void softwareReset() {
   asm volatile ("jmp 0");
 }
@@ -90,15 +90,28 @@ void gate(int8_t level)
   lcd.print("keys:");
   lcd.print(player.getNumberOfKeys());
 
-  delay(1500);
+  delay(2000);
   lcd.clear();
+  
+  uint32_t click_timer = millis();
+  uint16_t period = 500;
+  uint8_t click_loc_x = 6;
+  uint8_t click_loc_y = 2;
+  boolean click_is_visible = true;
   while (1)
   {
+    if (millis() - click_timer > period)
+      {
+        lcd.clear();
+        click_timer = millis();
+        click_loc_x = random(0, 16);
+        click_loc_y = random(0, 4);
+        click_is_visible = !click_is_visible;
+      }
+    lcd.setCursor(click_loc_x, click_loc_y);
+    click_is_visible ? lcd.print("Click") : lcd.print("");
+    
     encbut.tick();
-    lcd.setCursor(0, 0);
-    lcd.print("press");
-    lcd.setCursor(0, 1);
-    lcd.print("button");
     if (encbut.press())
       break;
   }
@@ -364,7 +377,61 @@ void play_animation(uint8_t num)
 {
   switch (num)
   {
+  case ANIMATION_PRESS_AND_TURN:
+  {
+  int8_t counter = 0;
+  while (1)
+  {
+    encbut.tick();
+    lcd.setCursor(CENTER_X-counter, CENTER_Y);
+    lcd.print("PRESS");
+    if (encbut.step())
+      counter++;
+    if (counter == 7)
+      break;
+    }
+lcd.clear();
+counter = 0;
+while (1)
+  {
+    encbut.tick();
+    lcd.setCursor(0+counter, CENTER_Y);
+    lcd.print("TURN");
+    if (encbut.turn())
+      counter++;
+    if (counter == 29)
+      break;
+  }
+  lcd.clear();
+  counter = 0;
+  while (1)
+  {
+    encbut.tick();
+    lcd.setCursor(0, 0+(counter/2));
+    lcd.print("PRESS AND TURN");
+    if (encbut.turnH())
+      counter++;
+    if (counter == 9)
+      break;
+  }
+  lcd.clear();
+
+  while (1)
+  {
+    encbut.tick();
+    lcd.setCursor(CENTER_X-7, CENTER_Y);
+    lcd.print("you have 5 lives");
+    delay(1000);
+    lcd.clear();
+    lcd.setCursor(CENTER_X, CENTER_Y+1);
+    lcd.print("TURN");
+    if (encbut.action())
+        break;
+  }
+  break;
+  }
   case ANIMATION_OPENING:
+  {
     charsCreate(CHARS_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
@@ -401,9 +468,11 @@ void play_animation(uint8_t num)
     chelSays(4); // Хорошо, я приму этот вызов
     delay(1000); //
     break;
+  }
   case ANIMATION_FLASHLIGHT:
+  {
     charsCreate(CHARS_DEFAULT);
-    for (int i = 0; i < 12; i++) // мигаем фонариком
+    for (int i = 0; i < 9; i++) // мигаем фонариком
     {
       lcd.clear();
       lcd.setCursor(2, 1);
@@ -420,7 +489,9 @@ void play_animation(uint8_t num)
     godSays(7);         // Ещё здесь могут быть ловушки
     charsCreate(CHARS_DEFAULT);
     break;
+  }
   case ANIMATION_MONSTER:
+  {
     lcd.clear();
     charsCreate(CHARS_MONSTER);
     for (int i = 19; i > 6; i--)//идёт справа налево
@@ -444,12 +515,21 @@ void play_animation(uint8_t num)
     lcd.clear();
     charsCreate(CHARS_DEFAULT);
     break;
+  }
   case ANIMATION_EVIL_FRIENDS:
+  {
     // charsCreate(CHARS_ENDING);
+    break;
+  }
 
 
   case ANIMATION_ENDING:
+  {
     charsCreate(CHARS_ENDING);
+    break;
+  }
+  
+  default:
     break;
   }
 }
@@ -461,15 +541,11 @@ void lvl_design() // вызываем в начале/конце каждого 
   switch (lvl)
   {
   case 0:
-    // play_animation(ANIMATION_OPENING);
-    lcd.setCursor(0, 0);
-    lcd.print("press button");
-    lcd.setCursor(0, 1);
-    lcd.print("to pick up items");
-    lcd.setCursor(0, 2);
-    lcd.print("you have 5 lives");
+    play_animation(ANIMATION_OPENING);
+    delay(1000);
+    play_animation(ANIMATION_PRESS_AND_TURN);
 
-    player.flashlight(0);
+    player.flashlight(OFF);
     // Есть ли на карте
     key[2] = 1;
     door[2] = 1;
@@ -495,7 +571,7 @@ void lvl_design() // вызываем в начале/конце каждого 
       }
     }
     play_animation(ANIMATION_FLASHLIGHT);
-    player.flashlight(1);
+    player.flashlight(ON);
     player.setCurrentXY(2, 1);
 
     // add set orientation
@@ -530,7 +606,7 @@ void lvl_design() // вызываем в начале/конце каждого 
       }
     }
     play_animation(ANIMATION_MONSTER);//У тебя ничего не получится
-    player.flashlight(0);
+    player.flashlight(OFF);
     player.setCurrentXY(1, 1);
     monster.setHp(1);
     monster.setFieldMoving(0, 17, 0, 3);
@@ -558,7 +634,7 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_3[y][x];
       }
     }
-    player.flashlight(1);
+    player.flashlight(ON);
     player.setCurrentXY(19, 2);
     monster.setHp(1);
     monster.setFieldMoving(0, 17, 0, 3);
