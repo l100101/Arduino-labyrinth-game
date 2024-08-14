@@ -22,7 +22,7 @@ const char str10[] PROGMEM = "3DPABCTByu";//Здравствуй
 const char str11[] PROGMEM = "Tbl nonaJI cI0da";//
 const char str12[] PROGMEM = "ne cJIy4auHo";//
 
-const char str13[] PROGMEM = "BaLLI XapakTep";//
+const char str13[] PROGMEM = "BAW XapakTep";//
 const char str14[] PROGMEM = "u noctynku";//
 const char str15[] PROGMEM = "onpeDeJIuJIu";//
 const char str16[] PROGMEM = "Bawy cyDb6y";//

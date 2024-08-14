@@ -382,12 +382,20 @@ void play_animation(uint8_t num)
   int8_t counter = 0;
   while (1)
   {
+    const char press_word[6] = "PRESS";
     encbut.tick();
-    lcd.setCursor(CENTER_X-counter, CENTER_Y);
-    lcd.print("PRESS");
+
+    for(int i = 0; i < 5-counter; i++)
+    {
+      lcd.setCursor(CENTER_X+i, CENTER_Y);
+      lcd.print(press_word[i]);
+    }
     if (encbut.step())
+    {
       counter++;
-    if (counter == 7)
+      lcd.clear();
+    }
+    if (counter == 6)
       break;
     }
 lcd.clear();
@@ -411,7 +419,7 @@ while (1)
     lcd.print("PRESS AND TURN");
     if (encbut.turnH())
       counter++;
-    if (counter == 9)
+    if (counter == 8)
       break;
   }
   lcd.clear();
@@ -528,7 +536,7 @@ while (1)
     charsCreate(CHARS_ENDING);
     break;
   }
-  
+
   default:
     break;
   }
@@ -541,8 +549,8 @@ void lvl_design() // вызываем в начале/конце каждого 
   switch (lvl)
   {
   case 0:
-    play_animation(ANIMATION_OPENING);
-    delay(1000);
+    // play_animation(ANIMATION_OPENING);
+    // delay(1000);
     play_animation(ANIMATION_PRESS_AND_TURN);
 
     player.flashlight(OFF);
