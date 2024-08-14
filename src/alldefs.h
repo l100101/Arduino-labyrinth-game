@@ -1,19 +1,19 @@
 //BUTTONS PINS
-#define BUTTON_UP           4
-#define BUTTON_DOWN         5
-#define BUTTON_LEFT         7
-#define BUTTON_RIGHT        6
-#define BUZZER_PIN          8
-#define KEYPAD_PIN          A0
+// #define BUTTON_UP           4
+// #define BUTTON_DOWN         5
+// #define BUTTON_LEFT         7
+// #define BUTTON_RIGHT        6
+// #define KEYPAD_PIN          A0
 //Считанное с клавиатуры значение
-#define BUTTON_UP_VALUE     30
-#define BUTTON_DOWN_VALUE   86
-#define BUTTON_LEFT_VALUE   0
-#define BUTTON_RIGHT_VALUE  164
-#define BUTTON_SELECT_VALUE 350
-//ширина окна значения с клавиатуры
-#define WINDOW_WIDTH        5
+// #define BUTTON_UP_VALUE     30
+// #define BUTTON_DOWN_VALUE   86
+// #define BUTTON_LEFT_VALUE   0
+// #define BUTTON_RIGHT_VALUE  164
+// #define BUTTON_SELECT_VALUE 350
+// //ширина окна значения с клавиатуры
+// #define WINDOW_WIDTH        5
 
+#define BUZZER_PIN          8
 //TONES NUMS
 #define TONE_PICK_UP        0
 #define TONE_OPEN_DOOR      1
@@ -74,3 +74,7 @@
 #define MONSTER_STR_SLABAK(x) FPSTR(strMonster_slabak[(x)])//У тебя не выйдет ничего
 #define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
 
+
+//Настройки энкодера
+#define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
+#define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки)

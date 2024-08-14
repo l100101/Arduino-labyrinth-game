@@ -17,14 +17,11 @@
 int16_t sigs[4] = {1023, 927, 856, 783};
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
-// Button up(BUTTON_UP);
-// Button down(BUTTON_DOWN);
-// Button left(BUTTON_LEFT);
-// Button right(BUTTON_RIGHT);
-VirtButton up;
-VirtButton down;
-VirtButton left;
-VirtButton right;
+// VirtButton up;
+// VirtButton down;
+// VirtButton left;
+// VirtButton right;
+EncButton encbut(3, 2, 0);
 
 Player player(0, 0, 2);     // инициализация с координатами и ХП персонажа
 Monster monster(0, 0, 1);   // инициализация с координатами осн монстра
@@ -100,11 +97,12 @@ void gate(int8_t level)
   lcd.clear();
   while (1)
   {
+    encbut.tick();
     lcd.setCursor(0, 0);
-    lcd.print("press left or");
+    lcd.print("press");
     lcd.setCursor(0, 1);
-    lcd.print("right button");
-    if (!digitalRead(BUTTON_LEFT) || !digitalRead(BUTTON_RIGHT))
+    lcd.print("button");
+    if (encbut.press())
       break;
   }
 }
@@ -637,28 +635,28 @@ void draw()
 }
 byte cbuttons()
 {
-  if (up.click())
+  if (encbut.rightH())
   { //++y
     player.move(UP_DIR);
     return 1;
   }
-  if (down.click())
+  if (encbut.leftH())
   { //--y
     player.move(DOWN_DIR);
     return 1;
   }
-  if (left.click())
+  if (encbut.left())
   { //--x
     player.move(LEFT_DIR);
     return 1;
   }
-  if (right.click())
+  if (encbut.right())
   { //++x
     player.move(RIGHT_DIR);
     return 1;
   }
 
-  if (down.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
+  if (encbut.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
   {                         // подбор ключа
     player.takeKeys(1);     // добавляем ключ в карман
     key[2]--;               // вычитаем ключ из карты
@@ -666,7 +664,7 @@ byte cbuttons()
     return 1;
   }
 
-  if (down.hold() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
+  if (encbut.hold() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
   {                     // подбор жизни
     heart[2]--;         // вычитаем аптечкуиз карты
     player.takeHeal(1); // лечим перса
@@ -674,7 +672,7 @@ byte cbuttons()
     return 1;
   }
 
-  if (down.hold() && player.getCurrentX() == door[0] && player.getCurrentY() == door[1] && door[2] > 0 && player.getNumberOfKeys() > 0)
+  if (encbut.hold() && player.getCurrentX() == door[0] && player.getCurrentY() == door[1] && door[2] > 0 && player.getNumberOfKeys() > 0)
   {
     player.dropKeys(1);       //       вычитаем ключ из кармана
     door[2]--;                // вычиттаем дчверь из карты
@@ -719,11 +717,7 @@ void setup()
 void loop()
 {
   // опрос кнопок, расчёты, дебаг
-  up.tick(      BUTTON_UP_VALUE+WINDOW_WIDTH>   analogRead(KEYPAD_PIN) > BUTTON_UP_VALUE-WINDOW_WIDTH);
-  left.tick(    BUTTON_LEFT_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_LEFT_VALUE-WINDOW_WIDTH);
-  down.tick(    BUTTON_DOWN_VALUE+WINDOW_WIDTH> analogRead(KEYPAD_PIN) > BUTTON_DOWN_VALUE-WINDOW_WIDTH);
-  right.tick(   BUTTON_RIGHT_VALUE+WINDOW_WIDTH>analogRead(KEYPAD_PIN) > BUTTON_RIGHT_VALUE-WINDOW_WIDTH);
-  printf("%d", analogRead(KEYPAD_PIN));
+  encbut.tick();
   if (cbuttons())
   {                               // если любая кнопка была нажата
     monster.autoStep(HORIZONTAL); // двигаем монстра по горизонтали
