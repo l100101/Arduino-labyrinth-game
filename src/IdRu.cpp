@@ -122,8 +122,11 @@ void gate(int8_t level)
     click_is_visible ? lcd.print("click") : lcd.print("");
 
     encbut.tick();
-    if (encbut.press())
-      break;
+    if (encbut.click())
+      {
+        delay(100);
+        break;
+      }
   }
 }
 
@@ -459,13 +462,13 @@ void play_animation(uint8_t num)
         break;
     }
     lcd.clear();
-
+    
     while (1)
     {
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
       lcd.print("you have 5 lives");
-      // delay(2000);  
+      delay(200);  
       wait_for_action();
       break;
     }
@@ -1016,10 +1019,16 @@ void lvl_design() // вызываем в начале/конце каждого 
   }
 
 void wait_for_action() {
+  // delay(800);
  while(true)
   { 
     encbut.tick();
     if (cbuttons())
        return;
+    if (encbut.click())
+       return;
+    if (encbut.hold())
+       return;
   }
+  return;
 }

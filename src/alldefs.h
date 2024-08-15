@@ -9,8 +9,8 @@
 //---- DEBUG --------------------------------------------
 // #define DEBUG                   1
 // #define OFF_ANIMATIONS          1
-#define OFF_ANIMATION_OPENING   1
-#define DEVELOPER_MODE          1
+// #define OFF_ANIMATION_OPENING   1
+// #define DEVELOPER_MODE          1
 //---- DEBUG --------------------------------------------
 
 #define ON              1
