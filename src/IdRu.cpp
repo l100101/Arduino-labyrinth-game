@@ -4,6 +4,7 @@
 */
 
 #include <GyverTimer.h> // подключаем библиотеки
+#include <Random16.h>
 #include <EncButton.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -15,6 +16,7 @@
 // создаём массив значений сигналов с кнопок
 // int16_t sigs[4] = {1023, 927, 856, 783};
 
+Random16 rnd;
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 EncButton encbut(3, 2, 0);
 
@@ -32,7 +34,7 @@ byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = 3;      
+byte lvl = 0;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, монстр и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
@@ -40,8 +42,6 @@ byte lvl = 3;
 // 4 = сейчас заглушка. без приколов
 
 boolean lvlup = 0; // флаг для перехода в следующий уровень
-
-
 
 void softwareReset(){
   asm volatile("jmp 0");
@@ -114,12 +114,12 @@ void gate(int8_t level)
     {
       lcd.clear();
       click_timer = millis();
-      click_loc_x = random(0, 16);
-      click_loc_y = random(0, 4);
+      click_loc_x = rnd.get(0, 16);
+      click_loc_y = rnd.get(0, 4);
       click_is_visible = !click_is_visible;
     }
     lcd.setCursor(click_loc_x, click_loc_y);
-    click_is_visible ? lcd.print("Click") : lcd.print("");
+    click_is_visible ? lcd.print("click") : lcd.print("");
 
     encbut.tick();
     if (encbut.press())
@@ -256,7 +256,7 @@ void chelSays(uint8_t num)
     lcd.print(CHEL_STR_CHILL(2)); // демон.
     break;
   case EVIL_FRIENDS_DIALOG:
-    lcd.setCursor(0, player.getCurrentY()+1);
+    lcd.setCursor(0, 2);
     lcd.print(MONSTERS_STR_EVIL_FRIENDS(3));
     break;
   }
@@ -364,9 +364,9 @@ void monsterSays(uint16_t num)
     lcd.setCursor(0, 0);
     lcd.print(MONSTERS_STR_EVIL_FRIENDS(0));
     lcd.setCursor(0, 2);
-    lcd.print(MONSTERS_STR_EVIL_FRIENDS(2));
+    lcd.print(MONSTERS_STR_EVIL_FRIENDS(1));
     lcd.setCursor(0, 3);
-    lcd.print(MONSTERS_STR_EVIL_FRIENDS(3));
+    lcd.print(MONSTERS_STR_EVIL_FRIENDS(2));
     break;
   }
   }
@@ -441,7 +441,7 @@ void play_animation(uint8_t num)
       lcd.print("TURN");
       if (encbut.turn())
         counter++;
-      if (counter == 29)
+      if (counter == 16)
         break;
     }
     lcd.clear();
@@ -463,20 +463,20 @@ void play_animation(uint8_t num)
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
       lcd.print("you have 5 lives");
-      delay(1000);
-      lcd.clear();
-      lcd.setCursor(CENTER_X, CENTER_Y + 1);
-      lcd.print("TURN");
-      if (encbut.action())
-        break;
+      delay(2000);   
+      break;
     }
     break;
   }
   case ANIMATION_OPENING:
   {
-    #ifdef OFF_ANIMATIONS
+    #ifdef OFF_ANIMATIONS 
       break;
     #endif
+    #ifdef OFF_ANIMATION_OPENING 
+      break;
+    #endif
+ 
     charsCreate(CHARS_DEFAULT);
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
@@ -612,11 +612,32 @@ void play_animation(uint8_t num)
     #endif
     // charsCreate(CHARS_GATE);
     lcd.clear();
-    for (int i= 0; i < 4; i++)
+    lcd.noBacklight();
+    for (int i= 0; i < 19; i++)
     {
-      
+      lcd.setCursor(i, 0);
+      lcd.write(SKIN_DOOR);
+      lcd.setCursor(i, 1);
+      lcd.write(SKIN_DOOR);
+      lcd.setCursor(i, 2);
+      lcd.write(SKIN_DOOR);
+      lcd.setCursor(i, 3);
+      lcd.write(SKIN_DOOR);
+      delay(40+i*5);
     }
-    //off backlight
+    lcd.backlight();
+    for (int i= 19; i >= 0; i--)
+    {
+      lcd.setCursor(i, 0);
+      lcd.print(" ");
+      lcd.setCursor(i, 1);
+      lcd.print(" ");
+      lcd.setCursor(i, 2);
+      lcd.print(" ");
+      lcd.setCursor(i, 3);
+      lcd.print(" ");
+      delay(30+i*5);
+    }
     break;
   }
   case ANIMATION_ENDING:
@@ -640,6 +661,7 @@ void lvl_design() // вызываем в начале/конце каждого 
   switch (lvl)
   {
   case OPENING_LVL:
+  {
     play_animation(ANIMATION_OPENING);
     delay(200);
     play_animation(ANIMATION_PRESS_AND_TURN);
@@ -660,8 +682,9 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster.setFieldMoving(0, 17, 0, 3);
     monster.setCurrentXY(5, 3);
     break;
-
+  }
   case FLASHLIGHT_LVL:
+  {
     // change map 1
     for (int y = 0; y < 4; y++)
     {
@@ -696,7 +719,9 @@ void lvl_design() // вызываем в начале/конце каждого 
     heart[0] = 12;
     heart[1] = 2;
     break;
+  }
   case 2:
+  {
     // change map 2
     for (int y = 0; y < 4; y++)
     {
@@ -706,7 +731,6 @@ void lvl_design() // вызываем в начале/конце каждого 
       }
     }
     play_animation(ANIMATION_MONSTER); // У тебя ничего не получится
-    lcd.backlight();
     player.flashlight(OFF);
     player.setCurrentXY(1, 1);
     monster.setHp(1);
@@ -723,9 +747,10 @@ void lvl_design() // вызываем в начале/конце каждого 
 
     door[0] = 19;
     door[1] = 2;
-
     break;
+  }
   case EVIL_FRIENDS_LVL:
+  {
     // change map 3
     play_animation(ANIMATION_EVIL_FRIENDS); // зовёт друга
     for (int y = 0; y < 4; y++)
@@ -761,6 +786,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     fake_door[1] = 1;
 
     break;
+  }
   case 4:
   {
     // change map 4
@@ -799,6 +825,7 @@ void lvl_design() // вызываем в начале/конце каждого 
   default:
   {break;}
   }
+  draw();
 }
 
   void draw()
@@ -856,9 +883,6 @@ void lvl_design() // вызываем в начале/конце каждого 
   }
   byte cbuttons()
   {
-    if (encbut.holdFor(RESET_TIME_MS))
-      softwareReset();
-
     if (encbut.rightH())
     { //++y
       player.move(UP_DIR);
@@ -880,13 +904,6 @@ void lvl_design() // вызываем в начале/конце каждого 
       return 1;
     }
 
-    // if (encbut.hold() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
-    // {                         // подбор ключа
-    //   player.takeKeys(1);     // добавляем ключ в карман
-    //   key[2]--;               // вычитаем ключ из карты
-    //   all_tone(TONE_PICK_UP); // звук подбора
-    //   return 1;
-    // }
     if (encbut.click() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
     {                         // подбор ключа
       player.takeKeys(1);     // добавляем ключ в карман
@@ -912,6 +929,13 @@ void lvl_design() // вызываем в начале/конце каждого 
       lcd.clear();
       return 1;
     }
+    #ifdef DEVELOPER_MODE
+      if (encbut.hold(2))//получить уровень 
+       lvlup = true;
+    if (encbut.holdFor(RESET_TIME_MS))//Сброс
+      softwareReset();
+    #endif
+
     return 0;
   }
   void toggleBacklight()
@@ -950,6 +974,7 @@ void lvl_design() // вызываем в начале/конце каждого 
   }
   void setup()
   {
+    rnd.setSeed(analogRead(0));
     Serial.begin(9600);
     lcd.init(); // initialize the lcd
     lcd.init();

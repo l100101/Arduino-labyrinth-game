@@ -89,7 +89,7 @@ const char* const strEnding[] PROGMEM = {
 //--------------------------------------------------------------------
 // Нас двое и двери тоже две
 const char str51[] PROGMEM = "Hac DBoe u DBepeu";
-const char str52[] PROGMEM = "To}I{e DBe";
+const char str52[] PROGMEM = "To}I{e DBe.";
 const char str53[] PROGMEM = "TbI He cnpaBuwbc9I!";
 const char str54[] PROGMEM = "wac o6a oxpeHeeTe";
 
