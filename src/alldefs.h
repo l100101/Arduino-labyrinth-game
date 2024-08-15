@@ -1,6 +1,15 @@
 //system
 #define RESET_TIME_MS   6000
 
+#define OPENING_LVL         0
+#define FLASHLIGHT_LVL      1
+#define EVIL_FRIENDS_LVL    3
+
+
+//---- DEBUG --------------------------------------------
+// #define DEBUG           1
+// #define OFF_ANIMATIONS  1
+
 #define ON              1
 #define OFF             0
 //LCD
@@ -43,12 +52,12 @@
 #define ANIMATION_MONSTER           2
 #define ANIMATION_EVIL_FRIENDS      3    
 #define ANIMATION_PRESS_AND_TURN    80
+#define ANIMATION_GATE              81                      
 #define ANIMATION_ENDING            99
-
 //DIALOGS
 #define CHEL_CHILL_DIALOG             100
-#define MONSTER_SLABAK_DIALOG         600
-
+#define MONSTER_SLABAK_DIALOG         66
+#define EVIL_FRIENDS_DIALOG           67
 
 //CREATE CHARS (in "playAnimation")
 #define CHARS_DEFAULT   2
@@ -56,6 +65,7 @@
 #define CHARS_MONSTER   4
 #define CHARS_ENDING    5
 #define CHARS_EVIL_FRIENDS 66
+#define CHARS_GATE      81
 
 
 //STRINGS FOR DIALOGUee
@@ -69,10 +79,8 @@
 #define MONSTER_STR_SLABAK(x) FPSTR(strMonster_slabak[(x)])//У тебя не выйдет ничего
 #define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
 
-// #define 
-
-// ---------------------------------------------------
-//Настройки энкодера
+#define MONSTERS_STR_EVIL_FRIENDS(x) FPSTR(strEvil_friends[(x)])//Нас двое
+// ---- encoder -----------------------------------------------
 #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
 #define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки) 
 // #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
@@ -86,4 +94,7 @@
 #define EB_HOLD_TIME 300    // таймаут удержания (кнопка)
 // #define EB_FAST_TIME 30     // таймаут быстрого поворота (энкодер)
 
-// ---------------------------------------------------
+// ---- prototypes -----------------------------------------------
+void draw();
+void play_animation(uint8_t num);
+void toggleBacklight();

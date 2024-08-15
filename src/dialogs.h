@@ -87,9 +87,11 @@ const char str50[] PROGMEM = "MyDpocTbIO u cuJIou";
 const char* const strEnding[] PROGMEM = {
   str44, str45, str46, str47, str48, str49, str50};
 //--------------------------------------------------------------------
-const char str51[] PROGMEM = "";
-const char str52[] PROGMEM = "MEH9I HE 6ecnoKO9IT";
-const char str53[] PROGMEM = "MEH9I HE 6ecnoKO9IT";
+// Нас двое и двери тоже две
+const char str51[] PROGMEM = "Hac DBoe u DBepeu";
+const char str52[] PROGMEM = "To}I{e DBe";
+const char str53[] PROGMEM = "TbI He cnpaBuwbc9I!";
+const char str54[] PROGMEM = "wac o6a oxpeHeeTe";
 
-const char* const strMonster_twins[] PROGMEM = {
-  str51, str52, str53};
+const char* const strEvil_friends[] PROGMEM = {
+  str51, str52, str53, str54};
