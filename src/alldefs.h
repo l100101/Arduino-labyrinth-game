@@ -100,4 +100,5 @@
 // ---- prototypes -----------------------------------------------
 void draw();
 void play_animation(uint8_t num);
-void toggleBacklight();
+void toggleBacklight(void);
+void wait_for_action(void);

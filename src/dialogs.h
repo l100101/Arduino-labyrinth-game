@@ -10,8 +10,10 @@ const char str5[] PROGMEM = "CTAPA/|c9";
 const char str6[] PROGMEM = "6blTb do6pbIM...";
 
 const char str7[] PROGMEM = "XopoIIIo...";
-const char str8[] PROGMEM = "9I npuMy ETOT BbI3oB";
-const char str9[] PROGMEM = "yKA}I{u MHE nyTb!";
+// const char str8[] PROGMEM = "9I npuMy ETOT BbI3oB";
+const char str8[] PROGMEM = "9I npoudy ETOT nyTb";
+// const char str9[] PROGMEM = "yKA}I{u MHE nyTb!";
+const char str9[] PROGMEM = "yKA}I{u MHE dopory!";
 
 // объявляем массив строк//Что за... Это игра? Почему я здеь? 
 const char* const strChel_opening[] PROGMEM = {str0, str1, str2, str3, str4, str5, str6, str7, str8, str9

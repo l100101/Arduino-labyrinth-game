@@ -260,7 +260,8 @@ void chelSays(uint8_t num)
     lcd.print(MONSTERS_STR_EVIL_FRIENDS(3));
     break;
   }
-  delay(3000);
+  // delay(3000);
+  wait_for_action();
   lcd.clear();
 }
 void godSays(uint8_t num)
@@ -340,7 +341,8 @@ void godSays(uint8_t num)
     break;
   }
 
-  delay(3000);
+  // delay(3000);
+  wait_for_action();
   lcd.clear();
 }
 void monsterSays(uint16_t num)
@@ -463,7 +465,8 @@ void play_animation(uint8_t num)
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
       lcd.print("you have 5 lives");
-      delay(2000);   
+      // delay(2000);  
+      wait_for_action();
       break;
     }
     break;
@@ -511,7 +514,8 @@ void play_animation(uint8_t num)
     lcd.setCursor(0, 3);
     lcd.write(SKIN_CHEL);
     chelSays(4); // Хорошо, я приму этот вызов
-    delay(1000); //
+    // delay(1000); //
+    wait_for_action();
     break;
   }
   case ANIMATION_FLASHLIGHT:
@@ -560,12 +564,14 @@ void play_animation(uint8_t num)
     lcd.setCursor(6, 1);
     lcd.write(SKIN_MONSTER);
     monsterSays(MONSTER_SLABAK_DIALOG); // ты слабак
-    delay(4000);
+    // delay(4000);
+    wait_for_action();
     lcd.clear();
     lcd.setCursor(2, 1);
     lcd.write(SKIN_CHEL);
     chelSays(CHEL_CHILL_DIALOG); // не
-    delay(4000);
+    // delay(4000);
+    wait_for_action();
     lcd.clear();
     charsCreate(CHARS_DEFAULT);
     break;
@@ -595,7 +601,8 @@ void play_animation(uint8_t num)
     lcd.write(SKIN_MONSTER);
 
     monsterSays(EVIL_FRIENDS_DIALOG); // Нас 2
-    delay(4000);
+    // delay(4000);
+    wait_for_action();
     lcd.clear();
     lcd.setCursor(2, 1);
     lcd.write(SKIN_CHEL);
@@ -1007,3 +1014,12 @@ void lvl_design() // вызываем в начале/конце каждого 
     }
     debug();
   }
+
+void wait_for_action() {
+ while(true)
+  { 
+    encbut.tick();
+    if (cbuttons())
+       return;
+  }
+}
