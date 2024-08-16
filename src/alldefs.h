@@ -126,8 +126,8 @@
 
 // ---- prototypes -----------------------------------------------
 boolean immortality = false;
-int8_t enterOm[2]={12,2};//x,y
-int8_t exitOm[2]={18,2};//x,y
+int8_t enterOm[3]={12,2, 0};//x,y| есть ли
+int8_t exitOm[3]={18,2, 0};//x,y| есть ли
 void draw();
 void play_animation(uint8_t num);
 void toggleBacklight(void);

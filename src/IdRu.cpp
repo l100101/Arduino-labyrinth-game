@@ -930,6 +930,35 @@ void lvl_design() // вызываем в начале/конце каждого 
     fake_door[2] = 0;  
    break; 
   }
+  case END_LVL:
+  {
+    // play_animation(ANIMATION_END_LVL);
+    for (int y = 0; y < 4; y++)
+    {
+      for (int x = 0; x < 20; x++)
+      {
+        wall[y][x] = wall_108[y][x];
+      }
+    }
+    player.flashlight(OFF);
+    player.setCurrentXY(CENTER_X, 3);
+    monster.setHp(0);
+    trap[2] = 0;
+    key[2] = 0;
+    door[2] = 0;
+    fake_door[2] = 0;  
+    restart_door[2] = 1;
+    gg_door[2] = 1;
+
+    // x , y
+    restart_door[0] = 2;
+    restart_door[1] = 3;
+    gg_door[0] = 17;
+    gg_door[1] = 3;
+
+    
+    break;
+  }
   default:
   {break;}
   }
@@ -955,14 +984,24 @@ void draw()
       lcd.setCursor(door[0], door[1]);
       lcd.write(SKIN_DOOR);
     }
+    if (gg_door[2] > 0) // вывод двери выхода
+    {
+      lcd.setCursor(gg_door[0], gg_door[1]);
+      lcd.write(SKIN_DOOR);
+    }
+    if (restart_door[2] > 0) // вывод двери рестарта
+    {
+      lcd.setCursor(restart_door[0], restart_door[1]);
+      lcd.write(SKIN_DOOR);
+    }
+    if (fake_door[2] > 0) // вывод фальшивой двери
+    {
+      lcd.setCursor(fake_door[0], fake_door[1]);
+      lcd.write(SKIN_DOOR);
+    }
     if (lvl == OM_LVL)
     {
       lcd.setCursor(exitOm[0], exitOm[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (fake_door[2] > 0) // вывод двери
-    {
-      lcd.setCursor(fake_door[0], fake_door[1]);
       lcd.write(SKIN_DOOR);
     }
     if (lvl == OM_LVL)
