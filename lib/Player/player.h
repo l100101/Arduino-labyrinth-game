@@ -55,6 +55,8 @@ public:
 //ключи
     void takeKeys(uint8_t keys);
     void dropKeys(uint8_t keysToDrop);
+//game over
+    void gameOver();
 };
 
 #endif // PLAYER_H

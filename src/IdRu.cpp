@@ -30,17 +30,19 @@ Monster monster_4(8, 0, 0); // инициализация с координат�
 byte key[3] = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
 byte door[3] = {19, 2, 1};  // x,y, 1-закрыта/0-открыта
 byte fake_door[3] = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
+byte restart_door[3] = {0, 0, 0};
+byte gg_door[3] = {0, 0, 0};
 byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = 0;      
+byte lvl = OM_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, монстр и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
 // 3 =  фонарь и 2 монстра. посветка не моргает. 2 двери. близнецовый уровень
 // 4 = сейчас заглушка. без приколов
-
+// 108 
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 
 void softwareReset(){
@@ -162,17 +164,43 @@ void ccheck() // проверка координат
   // столкновение с дополнительным движущимся монстром
   if (player.getCurrentX() == monster_3.getCurrentX() && player.getCurrentY() == monster_3.getCurrentY() && monster_3.getHp() > 0)
     player.takeDamage(1);
+ 
+   if (player.getCurrentX() == exitOm[0] && player.getCurrentY() == exitOm[1] && lvl == OM_LVL)
+  // if (player.getCurrentX() == 18 && player.getCurrentY() == 2 && lvl == OM_LVL)
+    {
+      lvl = 0;
+      lvlup = true;
+    }
+ 
+
+  if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == 0)
+    {
+      lvlup = true;
+      lvl = OM_LVL;
+    }
+
+  if (immortality == true)
+    return;
+
+  if (player.getHp() <= 0)
+  {
+    gameOver();
+  }  
 }
 void drawMap()
 {
   for (int y = 0; y < 4; y++)
   {
-    for (int x = player.fieldOfViewStart; x < player.fieldOfViewEnd; x++) // если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
+    for (int x = player.fieldOfViewStart; x <= player.fieldOfViewEnd; x++) // если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
     {
       if (wall[y][x] > 0) // и стена есть, торисуем её
       {
         lcd.setCursor(x, y);
-        lcd.write(SKIN_WALL);
+        if (lvl == OM_LVL )
+          lcd.write(SKIN_HEART);
+        else
+          lcd.write(SKIN_WALL);
+           
       }
     }
   }
@@ -404,6 +432,20 @@ void charsCreate(uint8_t num)
   case CHARS_EVIL_FRIENDS:
 
     break;
+  case CHARS_GAME_OVER:
+
+    break;
+  case CHARS_OM_LVL:
+    lcd.createChar(SKIN_CHEL, people);
+    lcd.createChar(SKIN_KEY, keyChar);
+    lcd.createChar(SKIN_DOOR, doorChar);
+    lcd.createChar(SKIN_WALL, wallChar);
+    
+    lcd.createChar(SKIN_HEART, heartChar);
+    lcd.createChar(SKIN_OM_L, OmCharL);
+    lcd.createChar(SKIN_OM_R, OmCharR);
+
+    break;
   case CHARS_ENDING:
     break;
   }
@@ -415,6 +457,9 @@ void play_animation(uint8_t num)
   case ANIMATION_PRESS_AND_TURN:
   {
     #ifdef OFF_ANIMATIONS
+      break;
+    #endif
+    #ifdef OFF_ANIMATION_TRAINING
       break;
     #endif
 
@@ -622,7 +667,6 @@ void play_animation(uint8_t num)
     #endif
     // charsCreate(CHARS_GATE);
     lcd.clear();
-    lcd.noBacklight();
     for (int i= 0; i < 19; i++)
     {
       lcd.setCursor(i, 0);
@@ -635,6 +679,8 @@ void play_animation(uint8_t num)
       lcd.write(SKIN_DOOR);
       delay(40+i*5);
     }
+    lcd.noBacklight();
+    delay(300);
     lcd.backlight();
     for (int i= 19; i >= 0; i--)
     {
@@ -658,7 +704,47 @@ void play_animation(uint8_t num)
     charsCreate(CHARS_ENDING);
     break;
   }
-
+  case ANIMATION_GAME_OVER:
+  {
+    #ifdef OFF_ANIMATIONS
+      break;
+    #endif
+    // charsCreate(CHARS_GAME_OVER);
+    for(int i = 1; i < 16; i++)
+    {
+      toggleBacklight();
+      delay(i*40);
+    }
+    lcd.noBacklight();
+    break;
+  }
+  case ANIMATION_OM_LVL:
+  {
+    #ifdef OFF_ANIMATIONS
+      break;
+    #endif
+    charsCreate(CHARS_OM_LVL);
+    lcd.clear();
+    for (int i= 0; i < 2; i++)
+    {
+      lcd.setCursor(CENTER_X, i);
+      lcd.write(SKIN_OM_L);
+      lcd.setCursor(CENTER_X+1, i);
+      lcd.write(SKIN_OM_R);
+      lcd.setCursor(CENTER_X, 3);
+      lcd.write(SKIN_CHEL);
+      delay(1500);
+      lcd.clear();
+    }
+    lcd.setCursor(CENTER_X, 2);
+    lcd.write(SKIN_OM_L);
+    lcd.setCursor(CENTER_X+1, 2);
+    lcd.write(SKIN_OM_R);
+    lcd.setCursor(CENTER_X, 3);
+    lcd.write(SKIN_CHEL);
+    
+    break;
+  }
   default:
     break;
   }
@@ -832,13 +918,34 @@ void lvl_design() // вызываем в начале/конце каждого 
     door[1] = 3;
     break;
   }
+  case OM_LVL:
+  {
+    play_animation(ANIMATION_OM_LVL);
+    immortality = true;
+    for (int y = 0; y < 4; y++)
+    {
+      for (int x = 0; x < 20; x++)
+      {
+        wall[y][x] = wall_108[y][x];
+      }
+    }
+    player.flashlight(OFF);
+    player.setCurrentXY(CENTER_X, 3);
+     // Есть ли на карте
+    monster.setHp(0);
+    trap[2] = 0;
+    key[2] = 0;
+    door[2] = 0;
+    fake_door[2] = 0;  
+   break; 
+  }
   default:
   {break;}
   }
   draw();
 }
 
-  void draw()
+void draw()
   {
     lcd.clear();
     // вывод карты
@@ -857,16 +964,30 @@ void lvl_design() // вызываем в начале/конце каждого 
       lcd.setCursor(door[0], door[1]);
       lcd.write(SKIN_DOOR);
     }
+    if (lvl == OM_LVL)
+    {
+      lcd.setCursor(exitOm[0], exitOm[1]);
+      lcd.write(SKIN_DOOR);
+    }
     if (fake_door[2] > 0) // вывод двери
     {
       lcd.setCursor(fake_door[0], fake_door[1]);
       lcd.write(SKIN_DOOR);
     }
+    if (lvl == OM_LVL)
+    {
+      lcd.setCursor(CENTER_X, 1);
+      lcd.write(SKIN_OM_L);
+      lcd.setCursor(CENTER_X+1, 1);
+      lcd.write(SKIN_OM_R);
+    }
     
-    // вывод количества hp в кармане
-    lcd.setCursor(19, 0);
-    lcd.print(player.getHp());
-
+    // вывод количества hp персонажа
+    if (lvl != OM_LVL)
+    {
+      lcd.setCursor(19, 0);
+      lcd.print(player.getHp());
+    }
     // вывод основного монстра
     if (monster.getHp() > 0)
     {
@@ -935,10 +1056,11 @@ void lvl_design() // вызываем в начале/конце каждого 
       player.dropKeys(1);       //       вычитаем ключ из кармана
       door[2]--;                // вычиттаем дчверь из карты
       all_tone(TONE_OPEN_DOOR); // звук открытия двери
-      lvlup = 1;
+      lvlup = true;
       lcd.clear();
       return 1;
     }
+
     #ifdef DEVELOPER_MODE
       if (encbut.hold(2))//получить уровень 
        lvlup = true;
@@ -1010,10 +1132,16 @@ void lvl_design() // вызываем в начале/конце каждого 
     }
     if (lvlup)
     {
+      if(lvl == OM_LVL)
+      {
+        // all_tone(OM_TONE);
+        lvl_design();
+        lvlup = false;
+      }
       all_tone(TONE_LVLUP); // звук перехода в следующий уровень
       lvl++;
       lvl_design(); // поменять декорации
-      lvlup = 0;    // сбрасываем флаг перехода в следующий уровень
+      lvlup = false;    // сбрасываем флаг перехода в следующий уровень
     }
     debug();
   }
@@ -1031,4 +1159,9 @@ void wait_for_action() {
        return;
   }
   return;
+}
+
+void gameOver() {
+  play_animation(ANIMATION_GAME_OVER);//togglebacklight
+  softwareReset();
 }

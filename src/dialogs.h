@@ -6,7 +6,7 @@ const char str2[] PROGMEM = "no4eMy";
 const char str3[] PROGMEM = "9I 3decb?";
 
 const char str4[] PROGMEM = "HO 9I BceGda";
-const char str5[] PROGMEM = "CTAPA/|c9";
+const char str5[] PROGMEM = "CTAPAJIc9";
 const char str6[] PROGMEM = "6blTb do6pbIM...";
 
 const char str7[] PROGMEM = "XopoIIIo...";

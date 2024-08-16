@@ -4,13 +4,15 @@
 #define OPENING_LVL         0
 #define FLASHLIGHT_LVL      1
 #define EVIL_FRIENDS_LVL    3
-
+#define OM_LVL              108
 
 //---- DEBUG --------------------------------------------
 // #define DEBUG                   1
 // #define OFF_ANIMATIONS          1
-// #define OFF_ANIMATION_OPENING   1
-// #define DEVELOPER_MODE          1
+#define OFF_ANIMATION_OPENING   1
+#define OFF_ANIMATION_TRAINING      1
+#define DEVELOPER_MODE          1
+// #define IMMORTAL                1
 //---- DEBUG --------------------------------------------
 
 #define ON              1
@@ -49,6 +51,8 @@
 #define SKIN_MOUTH      7  // РОТ
 #define SKIN_MOUTH_OPEN 0
 
+#define SKIN_OM_L       6
+#define SKIN_OM_R       7
 //ANIMATIONS PLAYS (in level design)
 #define ANIMATION_OPENING           0
 #define ANIMATION_FLASHLIGHT        1
@@ -56,21 +60,23 @@
 #define ANIMATION_EVIL_FRIENDS      3    
 #define ANIMATION_PRESS_AND_TURN    80
 #define ANIMATION_GATE              81                      
+#define ANIMATION_GAME_OVER         98
 #define ANIMATION_ENDING            99
+#define ANIMATION_OM_LVL            108
 //DIALOGS
 #define CHEL_CHILL_DIALOG             100
 #define MONSTER_SLABAK_DIALOG         66
 #define EVIL_FRIENDS_DIALOG           67
 
 //CREATE CHARS (in "playAnimation")
-#define CHARS_DEFAULT   2
-#define CHARS_GOD       3
-#define CHARS_MONSTER   4
-#define CHARS_ENDING    5
-#define CHARS_EVIL_FRIENDS 66
-#define CHARS_GATE      81
-
-
+#define CHARS_DEFAULT       2
+#define CHARS_GOD           3
+#define CHARS_MONSTER       4
+#define CHARS_ENDING        5
+#define CHARS_EVIL_FRIENDS  66
+#define CHARS_GATE          81
+#define CHARS_GAME_OVER     98
+#define CHARS_OM_LVL        108
 //STRINGS FOR DIALOGUee
 #define FPSTR(pstr) (const __FlashStringHelper*)(pstr) // макрос для печати строк из PROGMEM на дисплей
 #define CHEL_STR_OPEN(x) FPSTR(strChel_opening[(x)]) //упрощенный вид макроса выше. Для строк чела. OPENING
@@ -98,7 +104,11 @@
 // #define EB_FAST_TIME 30     // таймаут быстрого поворота (энкодер)
 
 // ---- prototypes -----------------------------------------------
+boolean immortality = false;
+int8_t enterOm[2]={12,2};//x,y
+int8_t exitOm[2]={18,2};//x,y
 void draw();
 void play_animation(uint8_t num);
 void toggleBacklight(void);
 void wait_for_action(void);
+void gameOver();
