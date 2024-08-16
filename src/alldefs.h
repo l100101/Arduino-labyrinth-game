@@ -1,9 +1,30 @@
+#ifndef ALLDEFS_H
+#define ALLDEFS_H
+
+//includes
+#include <Arduino.h>
+// #include "sound.h"                  //Звуки
+// #include "../lib/GyverTimer/GyverTimer.h" //Таймеры и пр> // подключаем библиотеки
+#include <GyverTimer.h>
+// #include <Random16.h>
+// #include "../lib/random16/Random16.h"
+#include <Random16.h>
+// #include "../lib/EncButton/EncButton.h
+#include <EncButton.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include "sprites.h"                //файл с рисунками карт и символов
+#include "../lib/Player/player.h"   //Класс персонажа
+#include "../lib/Monster/monster.h" //Класс монстра
+#include "../lib/animations/animations.h"             //Все анимации
+#include "dialogs.h"                //все диалоги
 //system
 #define RESET_TIME_MS   6000
 
 #define OPENING_LVL         0
 #define FLASHLIGHT_LVL      1
 #define EVIL_FRIENDS_LVL    3
+#define END_LVL             99
 #define OM_LVL              108
 
 //---- DEBUG --------------------------------------------
@@ -112,3 +133,5 @@ void play_animation(uint8_t num);
 void toggleBacklight(void);
 void wait_for_action(void);
 void gameOver();
+
+#endif

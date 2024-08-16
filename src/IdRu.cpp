@@ -3,18 +3,7 @@
 Педагог - Гайнутдинов Р.Р.
 */
 
-#include <GyverTimer.h> // подключаем библиотеки
-#include <Random16.h>
-#include <EncButton.h>
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include "sprites.h"                //файл с рисунками карт и символов
-#include "../lib/Player/player.h"   //Класс персонажа
-#include "../lib/Monster/monster.h" //Класс монстра
-#include "alldefs.h"                //все найстройки define
-#include "dialogs.h"                //все диалоги
-// создаём массив значений сигналов с кнопок
-// int16_t sigs[4] = {1023, 927, 856, 783};
+#include <alldefs.h>                //все найстройки define & includes
 
 Random16 rnd;
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
@@ -48,7 +37,6 @@ boolean lvlup = 0; // флаг для перехода в следующий у�
 void softwareReset(){
   asm volatile("jmp 0");
 }
-
 void all_tone(byte val)
 { // звук
   switch (val)
@@ -89,6 +77,31 @@ void all_tone(byte val)
   }
 }
 
+
+void writeFaceOfGod(uint8_t pos) // x position
+{
+  lcd.setCursor(pos, 1);
+  lcd.write(SKIN_NOSE);
+  lcd.setCursor(pos + 1, 0);
+  lcd.write(SKIN_FACE_1);
+  lcd.setCursor(pos + 1, 1);
+  lcd.write(SKIN_EYE);
+  lcd.setCursor(pos + 1, 2);
+  lcd.write(SKIN_MOUTH);
+
+  for (int i = 0; i <= 2; i++)
+  {
+    lcd.setCursor(pos + 2, i);
+    lcd.print("#");
+  }
+  lcd.setCursor(pos + 2, 3);
+  lcd.write(SKIN_FACE_3);
+  for (int i = 0; i <= 3; i++)
+  {
+    lcd.setCursor(pos + 3, i);
+    lcd.print("#");
+  }
+}
 void gate(int8_t level)
 {
   // lcd.clear();
@@ -205,30 +218,7 @@ void drawMap()
     }
   }
 }
-void writeFaceOfGod(uint8_t pos) // x position
-{
-  lcd.setCursor(pos, 1);
-  lcd.write(SKIN_NOSE);
-  lcd.setCursor(pos + 1, 0);
-  lcd.write(SKIN_FACE_1);
-  lcd.setCursor(pos + 1, 1);
-  lcd.write(SKIN_EYE);
-  lcd.setCursor(pos + 1, 2);
-  lcd.write(SKIN_MOUTH);
 
-  for (int i = 0; i <= 2; i++)
-  {
-    lcd.setCursor(pos + 2, i);
-    lcd.print("#");
-  }
-  lcd.setCursor(pos + 2, 3);
-  lcd.write(SKIN_FACE_3);
-  for (int i = 0; i <= 3; i++)
-  {
-    lcd.setCursor(pos + 3, i);
-    lcd.print("#");
-  }
-}
 void mouth_animation()
 {
   for (int i = 1; i <= 12; i++) // говорим ртом
@@ -702,6 +692,7 @@ void play_animation(uint8_t num)
       break;
     #endif
     charsCreate(CHARS_ENDING);
+
     break;
   }
   case ANIMATION_GAME_OVER:

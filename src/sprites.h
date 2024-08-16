@@ -1,5 +1,7 @@
 // файл с рисунками карт и символов
 // Нужно переместить в PROGMEM. RAM -> Flash
+#ifndef SPRITES_H
+#define SPRITES_H
 uint8_t keyChar[8]  =
 {
   0b01110,
@@ -294,3 +296,5 @@ byte opening_0[4][20] = {
     0,
     0,
 }; // начало анимации и конца
+
+#endif
