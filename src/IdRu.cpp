@@ -25,7 +25,7 @@ byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = OM_LVL;      
+byte lvl = END_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, монстр и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
@@ -946,15 +946,16 @@ void lvl_design() // вызываем в начале/конце каждого 
     trap[2] = 0;
     key[2] = 0;
     door[2] = 0;
+    heart[2] = 0;
     fake_door[2] = 0;  
     restart_door[2] = 1;
     gg_door[2] = 1;
 
     // x , y
     restart_door[0] = 2;
-    restart_door[1] = 3;
+    restart_door[1] = 2;
     gg_door[0] = 17;
-    gg_door[1] = 3;
+    gg_door[1] = 2;
 
     
     break;
@@ -1088,6 +1089,25 @@ void draw()
       all_tone(TONE_OPEN_DOOR); // звук открытия двери
       lvlup = true;
       lcd.clear();
+      return 1;
+    }
+    if (encbut.click() && player.getCurrentX() == restart_door[0] && player.getCurrentY() == restart_door[1] && restart_door[2] > 0)
+    {
+      restart_door[2]--;                // вычиттаем дчверь из карты
+      all_tone(TONE_OPEN_DOOR); // звук открытия двери
+      lcd.clear();
+      softwareReset();
+      return 1;
+    }
+    if (encbut.click() && player.getCurrentX() == gg_door[0] && player.getCurrentY() == gg_door[1] && gg_door[2] > 0)
+    {
+      gg_door[2]--;                // вычиттаем дчверь из карты
+      all_tone(TONE_OPEN_DOOR); // звук открытия двери
+      lcd.clear();
+      play_animation(ANIMATION_ENDING);
+      
+      lcd.noBacklight();
+      while (true){}
       return 1;
     }
 
