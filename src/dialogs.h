@@ -5,7 +5,7 @@ const char str1[] PROGMEM = "ETo uGPa?";
 const char str2[] PROGMEM = "no4eMy";
 const char str3[] PROGMEM = "9I 3decb?";
 
-const char str4[] PROGMEM = "HO 9I BceGda";
+const char str4[] PROGMEM = "HO 9I Bcerda";
 const char str5[] PROGMEM = "CTAPAJIc9";
 const char str6[] PROGMEM = "6blTb do6pbIM...";
 
@@ -20,9 +20,9 @@ const char* const strChel_opening[] PROGMEM = {str0, str1, str2, str3, str4, str
 };
 //--------------------------------------------------------------------
 //объявляем "строки Бога"
-const char str10[] PROGMEM = "3DPABCTByu";//Здравствуй
+const char str10[] PROGMEM = "CHOBA 3DPABCTByu";//Здравствуй
 const char str11[] PROGMEM = "Tbl nonaJI cI0da";//
-const char str12[] PROGMEM = "ne cJIy4auHo";//
+const char str12[] PROGMEM = "He cJIy4auHo";//
 
 const char str13[] PROGMEM = "BAW XapakTep";//
 const char str14[] PROGMEM = "u noctynku";//

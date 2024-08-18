@@ -30,8 +30,8 @@
 //---- DEBUG --------------------------------------------
 // #define DEBUG                   1
 // #define OFF_ANIMATIONS          1
-#define OFF_ANIMATION_OPENING   1
-#define OFF_ANIMATION_TRAINING      1
+// #define OFF_ANIMATION_OPENING   1
+// #define OFF_ANIMATION_TRAINING      1
 #define DEVELOPER_MODE          1
 // #define IMMORTAL                1
 //---- DEBUG --------------------------------------------

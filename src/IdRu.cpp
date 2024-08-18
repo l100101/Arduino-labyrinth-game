@@ -9,7 +9,7 @@ Random16 rnd;
 LiquidCrystal_I2C lcd(0x27, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
 EncButton encbut(3, 2, 0);
 
-Player player(0, 0, 2);     // инициализация с координатами и ХП персонажа
+Player player(0, 0, 1);     // инициализация с координатами и ХП персонажа
 Monster monster(0, 0, 1);   // инициализация с координатами осн монстра
 Monster monster_3(8, 0, 0); // инициализация с координатами доп монстра lvl 3
 Monster monster_4(8, 0, 0); // инициализация с координатами доп монстра lvl 4
@@ -25,7 +25,7 @@ byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = END_LVL;      
+byte lvl = 0;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, монстр и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
@@ -502,7 +502,7 @@ void play_animation(uint8_t num)
     {
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
-      lcd.print("you have 5 lives");
+      lcd.print("you have 1 live");
       delay(200);  
       wait_for_action();
       break;
@@ -700,13 +700,22 @@ void play_animation(uint8_t num)
     #ifdef OFF_ANIMATIONS
       break;
     #endif
-    // charsCreate(CHARS_GAME_OVER);
-    for(int i = 1; i < 16; i++)
+    switch (lvl)
     {
-      toggleBacklight();
-      delay(i*40);
+    case 50:
+      break;
+    default:
+      {
+        // charsCreate(CHARS_GAME_OVER);
+        for(int i = 1; i < 16; i++)
+        {
+          toggleBacklight();
+          delay(i*40);
+        }
+        lcd.noBacklight();
+        break;
+      }
     }
-    lcd.noBacklight();
     break;
   }
   case ANIMATION_OM_LVL:
@@ -753,6 +762,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     delay(200);
     play_animation(ANIMATION_PRESS_AND_TURN);
 
+    player.setCurrentXY(2, 1);
     player.flashlight(OFF);
     // Есть ли на карте
     key[2] = 1;
