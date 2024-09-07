@@ -34,6 +34,7 @@
 // #define OFF_ANIMATION_TRAINING      1
 #define DEVELOPER_MODE          1
 // #define IMMORTAL                1
+// #define SOUNDS_ON               1
 //---- DEBUG --------------------------------------------
 
 #define ON              1
@@ -42,7 +43,7 @@
 #define CENTER_X          7
 #define CENTER_Y          1
 
-#define BUZZER_PIN          8
+#define BUZZER_PIN          8//9 //off sound
 //TONES NUMS
 #define TONE_PICK_UP        0
 #define TONE_OPEN_DOOR      1

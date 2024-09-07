@@ -33,6 +33,7 @@ byte lvl = 0;
 // 4 = сейчас заглушка. без приколов
 // 108 
 boolean lvlup = 0; // флаг для перехода в следующий уровень
+byte cbuttons();
 
 void softwareReset(){
   asm volatile("jmp 0");
@@ -166,13 +167,13 @@ void ccheck() // проверка координат
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1] && trap[2] > 0) // столкновение со статичной ловушкой
   {
     player.takeDamage(1);
-    // all_tone(TONE_TRAP_ACTIVATE);
+    all_tone(TONE_TRAP_ACTIVATE);
   }
   // столкновение с движущимся монстром
   if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY() && monster.getHp() > 0)
   {
     player.takeDamage(1);
-    // all_tone(TONE_MONSTER_DAMAGE);
+    all_tone(TONE_MONSTER_DAMAGE);
   }
   // столкновение с дополнительным движущимся монстром
   if (player.getCurrentX() == monster_3.getCurrentX() && player.getCurrentY() == monster_3.getCurrentY() && monster_3.getHp() > 0)
@@ -219,9 +220,9 @@ void drawMap()
   }
 }
 
-void mouth_animation()
+void mouth_animation(int8_t num)//TODO: delete delay, add timer
 {
-  for (int i = 1; i <= 12; i++) // говорим ртом
+  for (int i = 1; i <= num; i++) // говорим ртом
   {
     lcd.setCursor(17, 2);
     if (i % 2 == 0)
@@ -296,7 +297,7 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_OPEN(1)); // ты попал сюда
     lcd.setCursor(0, 2);
     lcd.print(GOD_STR_OPEN(2)); // не случайно
-    mouth_animation();
+    mouth_animation(6);
     break;
   case 2:
     lcd.setCursor(0, 0);
@@ -307,14 +308,14 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_OPEN(5));
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_OPEN(6));
-    mouth_animation();
+    mouth_animation(8);
     break;
   case 3:
     lcd.setCursor(0, 0);
     lcd.print(GOD_STR_OPEN(7)); // str17 - У вас есть свои
     lcd.setCursor(0, 1);
     lcd.print(GOD_STR_OPEN(8)); // 18 - особенности
-    mouth_animation();
+    mouth_animation(8);
     break;
   case 4:
     lcd.setCursor(0, 0);
@@ -325,7 +326,7 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_OPEN(11)); // Чтобы понять
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_OPEN(12)); // о чем я говорю.
-    mouth_animation();
+    mouth_animation(10);
     break;
   case 5:
     lcd.setCursor(0, 0);
@@ -336,7 +337,7 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_OPEN(15)); // вы будете достойны
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_OPEN(16)); // возвращения домой
-    mouth_animation();
+    mouth_animation(12);
     break;
   case 6:
     lcd.setCursor(0, 0);
@@ -347,7 +348,7 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_FLASHLIGHT(2)); //
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_FLASHLIGHT(3)); //
-    mouth_animation();
+    mouth_animation(10);
     break;
   case 7:
     lcd.setCursor(0, 0);
@@ -358,7 +359,7 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_FLASHLIGHT(6)); // ловушки
     lcd.setCursor(0, 3);
     lcd.print(GOD_STR_FLASHLIGHT(7)); // Будь осторожен
-    mouth_animation();
+    mouth_animation(10);
     break;
   }
 
