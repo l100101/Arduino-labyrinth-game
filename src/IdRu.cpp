@@ -177,6 +177,40 @@ void ccheck() // проверка координат
   //   player.setCurrentY(3);
   player.checkMoveField();
 
+    //NEW 
+    // if (check_collision(&player, &key_obj))
+    //   {
+    //     player.takeKeys(1);     // добавляем ключ в карман
+    //     key_obj.set_exist(0);   // вычитаем ключ из карты
+    //     all_tone(TONE_PICK_UP); // звук подбора
+    //   }
+
+    // if (check_collision(&player, &heart_obj))
+    //   {
+    //     player.Heal(1);     // добавляем ключ в карман
+    //     heart_obj.set_exist(0);   // вычитаем ключ из карты
+    //     all_tone(TONE_HEAL); // звук подбора
+    //   }
+
+    // if (check_collision(&player, &door_obj))
+    //   {
+    //  switch (door_obj.get_type())
+    //  {
+    //  case NORM_DOOR:
+      //  player.dropKeys(1);       //       вычитаем ключ из кармана
+      //  door.set_exist(0);        //       вычитаем дверь из карты
+      //  all_tone(TONE_OPEN_DOOR); // звук открытия двери
+      //  vlup = true;
+      //  lcd.clear();
+    //    break;
+    //  case RESTART_DOOR:
+    //   break;
+    //  case GG_DOOR:
+    //   break;
+    //  default:
+    //   break;
+    //  }   
+
   if (wall[player.getCurrentY()][player.getCurrentX()] == 1) // возвращени координат человек на прежнюю координату при столкновении со стеной
   {
     player.setCurrentX(player.getPreviousX());
