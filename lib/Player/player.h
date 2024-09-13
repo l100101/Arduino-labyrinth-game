@@ -8,6 +8,11 @@
 #define DOWN_DIR 1
 #define LEFT_DIR 2
 #define RIGHT_DIR 3
+
+#define MIN_COORD_X 0
+#define MAX_COORD_X 19
+#define MIN_COORD_Y 0
+#define MAX_COORD_Y 3
 #endif
 
 class Player {
@@ -35,7 +40,8 @@ public:
     int8_t getPreviousY();
     void getPreviousCoordinates(int& x, int& y);
     void teleport(int newX, int newY);
-    
+    void checkMoveField();
+
     void takeDamage(int damage);
     void takeHeal(int heal);
     void setHp(uint8_t newHp);

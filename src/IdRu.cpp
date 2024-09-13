@@ -14,6 +14,8 @@ Monster monster(0, 0, 1);   // инициализация с координат�
 Monster monster_3(8, 0, 0); // инициализация с координатами доп монстра lvl 3
 Monster monster_4(8, 0, 0); // инициализация с координатами доп монстра lvl 4
 
+KeyMapObject key_obj(0,0,1);  // инициализация с координатами ключа
+
 // Написать класс карты?(объектов на карте). Случайное расположение 1/0
 
 byte key[3] = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
@@ -149,20 +151,22 @@ void gate(int8_t level)
 ///@brief check coords
 void ccheck() // проверка координат
 {
-  if (player.getCurrentX() < 0)
-    player.setCurrentX(0);
-  if (player.getCurrentX() > 19)
-    player.setCurrentX(19);
-  if (player.getCurrentY() < 0)
-    player.setCurrentY(0);
-  if (player.getCurrentY() > 3)
-    player.setCurrentY(3);
+  // if (player.getCurrentX() < 0)
+  //   player.setCurrentX(0);
+  // if (player.getCurrentX() > 19)
+  //   player.setCurrentX(19);
+  // if (player.getCurrentY() < 0)
+  //   player.setCurrentY(0);
+  // if (player.getCurrentY() > 3)
+  //   player.setCurrentY(3);
+  player.checkMoveField();
 
   if (wall[player.getCurrentY()][player.getCurrentX()] == 1) // возвращени координат человек на прежнюю координату при столкновении со стеной
   {
     player.setCurrentX(player.getPreviousX());
     player.setCurrentY(player.getPreviousY());
   }
+
   // -------------------------------------------------------------------------------------------------------------------
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1] && trap[2] > 0) // столкновение со статичной ловушкой
   {
@@ -1084,6 +1088,16 @@ void draw()
       all_tone(TONE_PICK_UP); // звук подбора
       return 1;
     }
+    //NEW 
+    // if (encbut.click() && player.getCurrentX() == key.getCurrentX() && player.getCurrentY() == key.getCurrentY() && key.is_exist())
+    // {                         // подбор ключа
+    //   player.takeKeys(1);     // добавляем ключ в карман
+    //   key.set_exist(0);       // вычитаем ключ из карты
+    //   all_tone(TONE_PICK_UP); // звук подбора
+    //   return 1;
+    // }
+
+
 
     if (encbut.click() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
     {                     // подбор жизни

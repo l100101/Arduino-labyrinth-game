@@ -13,8 +13,10 @@
 #include <EncButton.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include "../lib/Map_obj/Map_obj.h"
+#include "../lib/Map_obj/Key_obj.h"
 #include "sprites.h"                //файл с рисунками карт и символов
-#include "../lib/Player/player.h"   //Класс персонажа
+#include "../lib/Player/Player.h"   //Класс персонажа
 #include "../lib/Monster/monster.h" //Класс монстра
 #include "../lib/animations/animations.h"             //Все анимации
 #include "dialogs.h"                //все диалоги
@@ -122,7 +124,7 @@
 #define EB_STEP_TIME 100    // таймаут импульсного удержания (кнопка)
 // #define EB_DEB_TIME 50      // таймаут гашения дребезга кнопки (кнопка)
 // #define EB_CLICK_TIME 500   // таймаут ожидания кликов (кнопка)
-#define EB_HOLD_TIME 300    // таймаут удержания (кнопка)
+#define EB_HOLD_TIME 200    // таймаут удержания (кнопка)
 // #define EB_FAST_TIME 30     // таймаут быстрого поворота (энкодер)
 
 // ---- prototypes -----------------------------------------------

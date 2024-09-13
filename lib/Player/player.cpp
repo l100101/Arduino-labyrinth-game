@@ -72,6 +72,16 @@ void Player::getPreviousCoordinates(int& x, int& y)  {
     y = previousY;
 }
 
+void Player::checkMoveField() {
+  if (this->getCurrentX() < MIN_COORD_X)
+    this->setCurrentX(MIN_COORD_X);
+  if (this->getCurrentX() > MAX_COORD_X)
+    this->setCurrentX(MAX_COORD_X);
+  if (this->getCurrentY() < MIN_COORD_Y)
+    this->setCurrentY(MIN_COORD_Y);
+  if (this->getCurrentY() > MAX_COORD_Y)
+    this->setCurrentY(MAX_COORD_Y);    
+}
 void Player::flashlight(bool enabled){
     if (enabled)
     {
