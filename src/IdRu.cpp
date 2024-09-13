@@ -37,6 +37,16 @@ byte lvl = 0;
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte cbuttons();
 
+bool check_collision(Player* obj1, MapObject* obj2) {
+  if (obj2->get_exist()) {
+    if (obj1->getCurrentX() == obj2->getX() && obj1->getCurrentY() == obj2->getY()) {
+        return true;
+    }
+  }
+  return false;
+}
+
+
 void softwareReset(){
   asm volatile("jmp 0");
 }
@@ -769,7 +779,13 @@ void lvl_design() // вызываем в начале/конце каждого 
 
     player.setCurrentXY(2, 1);
     player.flashlight(OFF);
+    // KeyMapObject key_o(2, 3, 1);
+    // DoorMapObject door_o(19, 2, 1);
+    // FakeDoorMapObject fake_door_o(19, 2, 0);
+    
     // Есть ли на карте
+    // door_obj.set_exist(1);
+    // fake_door_obj.set_exist(1);
     key[2] = 1;
     door[2] = 1;
     fake_door[2] = 0;
@@ -803,6 +819,8 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster.setHp(1);
     monster.setFieldMoving(0, 18, 0, 3);
     monster.setCurrentXY(5, 3);
+
+    // KeyMapObject key_o(0, 3, 1);
     // Есть ли на карте
     key[2] = 1;
     door[2] = 1;
@@ -1088,17 +1106,6 @@ void draw()
       all_tone(TONE_PICK_UP); // звук подбора
       return 1;
     }
-    //NEW 
-    // if (encbut.click() && player.getCurrentX() == key.getCurrentX() && player.getCurrentY() == key.getCurrentY() && key.is_exist())
-    // {                         // подбор ключа
-    //   player.takeKeys(1);     // добавляем ключ в карман
-    //   key.set_exist(0);       // вычитаем ключ из карты
-    //   all_tone(TONE_PICK_UP); // звук подбора
-    //   return 1;
-    // }
-
-
-
     if (encbut.click() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
     {                     // подбор жизни
       heart[2]--;         // вычитаем аптечкуиз карты
@@ -1106,6 +1113,49 @@ void draw()
       all_tone(TONE_HEAL);
       return 1;
     }
+    //NEW 
+    // if (check_collision(&player, &key_obj))
+    //   {
+    //     player.takeKeys(1);     // добавляем ключ в карман
+    //     key_obj.set_exist(0);   // вычитаем ключ из карты
+    //     all_tone(TONE_PICK_UP); // звук подбора
+    //     return 1;
+    //   }
+
+    // if (check_collision(&player, &heart_obj))
+    //   {
+    //     player.Heal(1);     // добавляем ключ в карман
+    //     heart_obj.set_exist(0);   // вычитаем ключ из карты
+    //     all_tone(TONE_HEAL); // звук подбора
+    //     return 1;
+    //   }
+
+    // if (check_collision(&player, &door_obj))
+    //   {
+    //  switch (door_obj.get_type())
+    //  {
+    //  case NORM_DOOR:
+      //  player.dropKeys(1);       //       вычитаем ключ из кармана
+      //  door.set_exist(0);        //       вычитаем дверь из карты
+      //  all_tone(TONE_OPEN_DOOR); // звук открытия двери
+      //  vlup = true;
+      //  lcd.clear();
+      //  return 1;
+    //    break;
+    //  case RESTART_DOOR:
+    //   break;
+    //  case GG_DOOR:
+    //   break;
+    //  default:
+    //   break;
+    //  }   
+   
+    
+    //     player.Heal(1);     // добавляем ключ в карман
+    //     heart_obj.set_exist(0);   // вычитаем ключ из карты
+    //     all_tone(TONE_HEAL); // звук подбора
+    //     return 1;
+    //   }
 
     if (encbut.click() && player.getCurrentX() == door[0] && player.getCurrentY() == door[1] && door[2] > 0 && player.getNumberOfKeys() > 0)
     {

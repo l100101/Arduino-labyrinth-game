@@ -52,10 +52,12 @@ public:
         return exist ? 1 : 0;
     }
 
-    bool set_exist() override {
-        exist = !exist;
+    void set_exist(bool newExist) override {
+        exist = newExist;
     }
-
+    uint8_t get_type(){
+        return TYPE_KEY_OBJECT;
+    }
     ~KeyMapObject() override {
         // Дополнительные действия при уничтожении объекта, если необходимо
     }
