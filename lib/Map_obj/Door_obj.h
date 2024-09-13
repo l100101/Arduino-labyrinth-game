@@ -1,17 +1,17 @@
-#ifndef KEY_OBJ_H
-#define KEY_OBJ_H
+#ifndef DOOR_OBJ_H
+#define DOOR_OBJ_H
 
 #include "Map_obj.h"
-#include "Player.h"
+// #include "Player.h"
 
-class KeyMapObject : public MapObject {
+class DoorMapObject : public MapObject {
 private:
     uint8_t x, y;
-    bool exist;
-
+    bool _exist;
+    uint8_t _type;
 public:
-    KeyMapObject(uint8_t startX, uint8_t startY, bool exists)
-        : x(startX), y(startY), exist(exists) {}
+    DoorMapObject(uint8_t startX, uint8_t startY, bool exists, uint8_t type)
+        : x(startX), y(startY), _exist(exists), _type(type) {}
 
 
     void collision(Player& player) override {
@@ -38,16 +38,16 @@ public:
     }
 
     bool get_exist() override {
-        return exist ? 1 : 0;
+        return _exist ? 1 : 0;
     }
 
     void set_exist(bool newExist) override {
-        exist = newExist;
+        _exist = newExist;
     }
     uint8_t get_type(){
-        return TYPE_KEY_OBJECT;
+        return _type;
     }
-    ~KeyMapObject() override {
+    ~DoorMapObject() override {
         // Дополнительные действия при уничтожении объекта, если необходимо
     }
 };

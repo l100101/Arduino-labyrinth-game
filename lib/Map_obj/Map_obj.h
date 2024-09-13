@@ -9,13 +9,12 @@
 #define TYPE_GG_DOOR_OBJECT     4
 #define TYPE_RESTART_DOOR_OBJECT 5
 #define TYPE_HEART_OBJECT       6
-
+#define TYPE_TRAP_OBJECT        7
+#define TYPE_OM_DOOR_OBJECT     8
 
 
 class MapObject {
   public:
-    virtual void draw(LiquidCrystal_I2C& lcd) = 0;
-    virtual void update(LiquidCrystal_I2C& lcd) = 0;
     virtual void collision(Player& player) = 0;
     virtual uint8_t setX(uint8_t x) = 0;
     virtual uint8_t setY(uint8_t y) = 0;

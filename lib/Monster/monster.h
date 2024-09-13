@@ -30,10 +30,10 @@ private:
     int8_t yLimit2;
     int8_t hp;
     int8_t orientation;
+    int8_t dir;
     void  check_step();
 public:
     Monster(int startX, int startY, uint8_t startHp);
-    int8_t dir;
     //координаты
     void move(int newX, int newY);
     void move(uint8_t dir);

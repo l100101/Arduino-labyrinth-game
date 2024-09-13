@@ -15,6 +15,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "../lib/Map_obj/Map_obj.h"
 #include "../lib/Map_obj/Key_obj.h"
+#include "../lib/Map_obj/Door_obj.h"
 #include "sprites.h"                //файл с рисунками карт и символов
 #include "../lib/Player/Player.h"   //Класс персонажа
 #include "../lib/Monster/monster.h" //Класс монстра
