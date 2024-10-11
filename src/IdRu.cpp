@@ -558,8 +558,8 @@ void play_animation(uint8_t num)
     {
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
-      lcd.print("you have 1 live");
-      delay(200);  
+      lcd.print("1 }|{u3Hb");
+      delay(50);  //чтобы случайно не пропустить    
       wait_for_action();
       break;
     }
