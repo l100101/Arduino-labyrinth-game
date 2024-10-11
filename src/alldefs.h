@@ -28,7 +28,10 @@
 #define FLASHLIGHT_LVL      1
 #define EVIL_FRIENDS_LVL    3
 #define END_LVL             99
+#define END_LVL_CHOICE      100
 #define OM_LVL              108
+#define OM_LVL_PLAY         109
+
 
 //---- DEBUG --------------------------------------------
 // #define DEBUG                   1

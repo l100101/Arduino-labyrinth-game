@@ -30,10 +30,11 @@ byte fake_door[3] = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
 byte restart_door[3] = {0, 0, 0};
 byte gg_door[3] = {0, 0, 0};
 byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
+byte hp_pos_x = 19;
 byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
-byte lvl = 0;      
+byte lvl = OPENING_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, монстр и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
@@ -142,7 +143,7 @@ void gate(int8_t level)
   uint8_t click_loc_x = 6;
   uint8_t click_loc_y = 2;
   boolean click_is_visible = true;
-  while (1)
+  while (true)
   {
     if (millis() - click_timer > period)
     {
@@ -241,7 +242,7 @@ void ccheck() // проверка координат
     }
  
 
-  if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == 0)
+  if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == OPENING_LVL)
     {
       lvlup = true;
       lvl = OM_LVL;
@@ -509,7 +510,7 @@ void play_animation(uint8_t num)
     #endif
 
     int8_t counter = 0;
-    while (1)
+    while (true)
     {
       const char press_word[6] = "PRESS";
       encbut.tick();
@@ -529,7 +530,7 @@ void play_animation(uint8_t num)
     }
     lcd.clear();
     counter = 0;
-    while (1)
+    while (true)
     {
       encbut.tick();
       lcd.setCursor(0 + counter, CENTER_Y);
@@ -541,7 +542,7 @@ void play_animation(uint8_t num)
     }
     lcd.clear();
     counter = 0;
-    while (1)
+    while (true)
     {
       encbut.tick();
       lcd.setCursor(0, 0 + (counter / 2));
@@ -553,7 +554,7 @@ void play_animation(uint8_t num)
     }
     lcd.clear();
     
-    while (1)
+    while (true)
     {
       encbut.tick();
       lcd.setCursor(CENTER_X - 7, CENTER_Y);
@@ -1088,9 +1089,9 @@ void draw()
     }
     
     // вывод количества hp персонажа
-    if (lvl != OM_LVL)
+    if (lvl != END_LVL && lvl != OM_LVL)
     {
-      lcd.setCursor(19, 0);
+      lcd.setCursor(hp_pos_x, 0);
       lcd.print(player.getHp());
     }
     // вывод основного монстра
@@ -1264,11 +1265,10 @@ void draw()
     // Serial.print("\t");
     Serial.print(player.getHp());
     Serial.print("\t");
-    Serial.print(heart[0]);
+    Serial.print(hp_pos_x);
     Serial.print("\t");
-    Serial.print(heart[1]);
-    Serial.print("\t");
-    Serial.println(heart[2]);
+    Serial.println(lvl);
+    
   }
   void setup()
   {
@@ -1298,16 +1298,20 @@ void draw()
     }
     if (lvlup)
     {
-      if(lvl == OM_LVL)
+      if (lvl == OM_LVL)
       {
         // all_tone(OM_TONE);
-        lvl_design();
-        lvlup = false;
+        hp_pos_x = 17;
+        // lvl_design();
+        // lvlup = false;
       }
-      all_tone(TONE_LVLUP); // звук перехода в следующий уровень
-      lvl++;
-      lvl_design(); // поменять декорации
-      lvlup = false;    // сбрасываем флаг перехода в следующий уровень
+      else
+      {
+        all_tone(TONE_LVLUP); // звук перехода в следующий уровень
+        lvl++;
+      }
+      lvl_design();  // поменять декорации
+      lvlup = false; // сбрасываем флаг перехода в следующий уровень
     }
     debug();
   }
