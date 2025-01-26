@@ -14,25 +14,26 @@ Monster monster(0, 0, 1);   // инициализация с координат�
 Monster monster_3(8, 0, 0); // инициализация с координатами доп монстра lvl 3
 Monster monster_4(8, 0, 0); // инициализация с координатами доп монстра lvl 4
 
-KeyMapObject key_obj(0,3,1);  // инициализация с координатами ключа
-DoorMapObject door_obj_lvlup(19, 2, 0, TYPE_DOOR_OBJECT);  // инициализация с координатами двери
-DoorMapObject door_obj_restart(0,0,0, TYPE_RESTART_DOOR_OBJECT); // инициализация с координатами двери
-DoorMapObject door_obj_gg(0,0,0, TYPE_GG_DOOR_OBJECT); // инициализация с координатами двери
-DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT); // инициализация с координатами двери
+KeyMapObject key_obj(0,3,1);                                      // инициализация с координатами ключа
+DoorMapObject door_obj_lvlup(19, 2, 0, TYPE_DOOR_OBJECT);         // инициализация с координатами двери
+DoorMapObject door_obj_restart(0,0,0, TYPE_RESTART_DOOR_OBJECT);  //
+DoorMapObject door_obj_gg(0,0,0, TYPE_GG_DOOR_OBJECT);            //
+DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT);            //
+
 // TrapMapObject trap_obj(0,0,0); // инициализация с координатами ловушки
 // HeartMapObject heart_obj(0,0,1); // инициализация с координатами сердца
 
 // Написать класс карты?(объектов на карте). Случайное расположение 1/0
 
-byte key[3] = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
-byte door[3] = {19, 2, 1};  // x,y, 1-закрыта/0-открыта
-byte fake_door[3] = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
-byte restart_door[3] = {0, 0, 0};
+byte fake_door[3]     = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
+byte restart_door[3]  = {0, 0, 0};
+byte key[3]     = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
+byte door[3]    = {19, 2, 1};  // x,y, 1-закрыта/0-открыта
 byte gg_door[3] = {0, 0, 0};
-byte hearts[3] = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
-byte hp_pos_x = 19;
-byte trap[3] = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
-byte heart[3] = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
+byte hearts[3]  = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
+byte hp_pos_x   = 19;
+byte trap[3]    = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
+byte heart[3]   = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 
 byte lvl = OPENING_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
@@ -44,9 +45,9 @@ byte lvl = OPENING_LVL;
 boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte cbuttons();
 
-bool check_collision(Player* obj1, MapObject* obj2) {
+bool check_collision(Player* playerObj, MapObject* obj2) {
   if (obj2->get_exist()) {
-    if (obj1->getCurrentX() == obj2->getX() && obj1->getCurrentY() == obj2->getY()) {
+    if (playerObj->getCurrentX() == obj2->getX() && playerObj->getCurrentY() == obj2->getY()) {
         return true;
     }
   }
@@ -97,7 +98,6 @@ void all_tone(byte val)
   }
 }
 
-
 void writeFaceOfGod(uint8_t pos) // x position
 {
   lcd.setCursor(pos, 1);
@@ -122,6 +122,7 @@ void writeFaceOfGod(uint8_t pos) // x position
     lcd.print("#");
   }
 }
+
 void gate(int8_t level)
 {
   // lcd.clear();
@@ -168,18 +169,10 @@ void gate(int8_t level)
 ///@brief check coords
 void ccheck() // проверка координат
 {
-  // if (player.getCurrentX() < 0)
-  //   player.setCurrentX(0);
-  // if (player.getCurrentX() > 19)
-  //   player.setCurrentX(19);
-  // if (player.getCurrentY() < 0)
-  //   player.setCurrentY(0);
-  // if (player.getCurrentY() > 3)
-  //   player.setCurrentY(3);
   player.checkMoveField();
 
-    //NEW 
-    // if (check_collision(&player, &key_obj))
+    // NEW 
+    // if (check_collision(&player, &key_obj)) // Это без нажатия
     //   {
     //     player.takeKeys(1);     // добавляем ключ в карман
     //     key_obj.set_exist(0);   // вычитаем ключ из карты
@@ -234,14 +227,15 @@ void ccheck() // проверка координат
   if (player.getCurrentX() == monster_3.getCurrentX() && player.getCurrentY() == monster_3.getCurrentY() && monster_3.getHp() > 0)
     player.takeDamage(1);
  
-   if (player.getCurrentX() == exitOm[0] && player.getCurrentY() == exitOm[1] && lvl == OM_LVL)
+  //Выход из Ом команаты
+  if (player.getCurrentX() == exitOm[0] && player.getCurrentY() == exitOm[1] && lvl == OM_LVL)
   // if (player.getCurrentX() == 18 && player.getCurrentY() == 2 && lvl == OM_LVL)
-    {
-      lvl = 0;
-      lvlup = true;
-    }
- 
+  {
+    lvl = 0;
+    lvlup = true;
+  }
 
+  //Вход в Ом команату
   if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == OPENING_LVL)
     {
       lvlup = true;
@@ -1050,11 +1044,13 @@ void draw()
     lcd.setCursor(player.getCurrentX(), player.getCurrentY());
     lcd.write(SKIN_CHEL);
 
-    if (key[2] > 0) // вывод ключа
+
+    if (key_obj.get_exist()) // вывод ключа
     {
-      lcd.setCursor(key[0], key[1]);
+      lcd.setCursor(key_obj.getX(), key_obj.getY());
       lcd.write(SKIN_KEY);
     }
+
     if (door[2] > 0) // вывод двери
     {
       lcd.setCursor(door[0], door[1]);
@@ -1141,13 +1137,16 @@ void draw()
       return 1;
     }
 
-    if (encbut.click() && player.getCurrentX() == key[0] && player.getCurrentY() == key[1] && key[2] > 0)
+    //New realization
+    if (encbut.click() && check_collision(&player, &key_obj))
     {                         // подбор ключа
       player.takeKeys(1);     // добавляем ключ в карман
-      key[2]--;               // вычитаем ключ из карты
+      // key[2]--;               // вычитаем ключ из карты
+      key_obj.set_exist(0);   // вычитаем ключ из карты
       all_tone(TONE_PICK_UP); // звук подбора
       return 1;
     }
+
     if (encbut.click() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
     {                     // подбор жизни
       heart[2]--;         // вычитаем аптечкуиз карты
