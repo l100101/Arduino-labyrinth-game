@@ -3,15 +3,16 @@
 #include "LiquidCrystal_I2C.h"
 #include "Player.h"
 
-#define TYPE_DOOR_OBJECT        1
-#define TYPE_KEY_OBJECT         2
-#define TYPE_FAKE_DOOR_OBJECT   3
-#define TYPE_GG_DOOR_OBJECT     4
-#define TYPE_RESTART_DOOR_OBJECT 5
-#define TYPE_HEART_OBJECT       6
-#define TYPE_TRAP_OBJECT        7
-#define TYPE_OM_DOOR_OBJECT     8
-
+enum type_map_obj {
+    TYPE_DOOR_OBJECT          = 1,
+    TYPE_KEY_OBJECT           = 2,
+    TYPE_FAKE_DOOR_OBJECT     = 3,
+    TYPE_GG_DOOR_OBJECT       = 4,
+    TYPE_RESTART_DOOR_OBJECT  = 5,
+    TYPE_HEART_OBJECT         = 6,
+    TYPE_TRAP_OBJECT          = 7,
+    TYPE_OM_DOOR_OBJECT       = 8
+};
 
 class MapObject {
   public:

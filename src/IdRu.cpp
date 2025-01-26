@@ -27,7 +27,6 @@ DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT);            //
 
 byte fake_door[3]     = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
 byte restart_door[3]  = {0, 0, 0};
-// byte key[3]     = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
 byte door[3]    = {19, 2, 1};  // x,y, 1-закрыта/0-открыта
 byte gg_door[3] = {0, 0, 0};
 byte hearts[3]  = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
@@ -171,14 +170,7 @@ void ccheck() // проверка координат
 {
   player.checkMoveField();
 
-    // NEW 
-    // if (check_collision(&player, &key_obj)) // Это без нажатия
-    //   {
-    //     player.takeKeys(1);     // добавляем ключ в карман
-    //     key_obj.set_exist(0);   // вычитаем ключ из карты
-    //     all_tone(TONE_PICK_UP); // звук подбора
-    //   }
-
+    // NEW realization
     // if (check_collision(&player, &heart_obj))
     //   {
     //     player.Heal(1);     // добавляем ключ в карман
@@ -1012,13 +1004,13 @@ void lvl_design() // вызываем в начале/конце каждого 
     heart[2] = 0;
     fake_door[2] = 0;  
     restart_door[2] = 1;
-    gg_door[2] = 1;
+    door_obj_gg.set_exist(1);
 
     // x , y
     restart_door[0] = 2;
     restart_door[1] = 2;
-    gg_door[0] = 17;
-    gg_door[1] = 2;
+    door_obj_gg.setX(17);
+    door_obj_gg.setY(2);
 
     break;
   }
@@ -1029,84 +1021,77 @@ void lvl_design() // вызываем в начале/конце каждого 
 }
 
 void draw()
-  {
-    lcd.clear();
-    // вывод карты
-    drawMap();
-    // вывод персонажа
-    lcd.setCursor(player.getCurrentX(), player.getCurrentY());
-    lcd.write(SKIN_CHEL);
-
-
-    if (key_obj.get_exist()) // вывод ключа
-    {
-      lcd.setCursor(key_obj.getX(), key_obj.getY());
-      lcd.write(SKIN_KEY);
-    }
-
-    if (door[2] > 0) // вывод двери
-    {
-      lcd.setCursor(door[0], door[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (gg_door[2] > 0) // вывод двери выхода
-    {
-      lcd.setCursor(gg_door[0], gg_door[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (restart_door[2] > 0) // вывод двери рестарта
-    {
-      lcd.setCursor(restart_door[0], restart_door[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (fake_door[2] > 0) // вывод фальшивой двери
-    {
-      lcd.setCursor(fake_door[0], fake_door[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (lvl == OM_LVL)
-    {
-      lcd.setCursor(exitOm[0], exitOm[1]);
-      lcd.write(SKIN_DOOR);
-    }
-    if (lvl == OM_LVL)
-    {
-      lcd.setCursor(CENTER_X, 1);
-      lcd.write(SKIN_OM_L);
-      lcd.setCursor(CENTER_X+1, 1);
-      lcd.write(SKIN_OM_R);
-    }
-    
-    // вывод количества hp персонажа
-    if (lvl != END_LVL && lvl != OM_LVL)
-    {
-      lcd.setCursor(hp_pos_x, 0);
-      lcd.print(player.getHp());
-    }
-    // вывод основного монстра
-    if (monster.getHp() > 0)
-    {
-      lcd.setCursor(monster.getCurrentX(), monster.getCurrentY());
-      lcd.write(SKIN_MONSTER);
-    }
-
-    if (monster_3.getHp() > 0) // вывод доп. монстра
-    {
-      lcd.setCursor(monster_3.getCurrentX(), monster_3.getCurrentY());
-      lcd.write(SKIN_MONSTER);
-    }
-
-    if (trap[2] > 0)
-    {
-      lcd.setCursor(trap[0], trap[1]);
-      lcd.print("^");
-    }
-    if (heart[2] > 0)
-    {
-      lcd.setCursor(heart[0], heart[1]);
-      lcd.write(SKIN_HEART);
-    }
+{
+  lcd.clear();
+//------------------------------------------ DRAW MAP ---------------------------------------
+  drawMap();
+//------------------------------------------ DRAW PLAYER ---------------------------------------
+  lcd.setCursor(player.getCurrentX(), player.getCurrentY());
+  lcd.write(SKIN_CHEL);
+//------------------------------------------ DRAW KEY ---------------------------------------
+  if (key_obj.get_exist())  {
+    lcd.setCursor(key_obj.getX(), key_obj.getY());
+    lcd.write(SKIN_KEY);
   }
+//------------------------------------------ DRAW DOOR ---------------------------------------
+  if (door[2] > 0)  {
+    lcd.setCursor(door[0], door[1]);
+    lcd.write(SKIN_DOOR);
+  }
+//------------------------------------------ DRAW GG_DOOR ---------------------------------------
+  if (door_obj_gg.get_exist())  {
+    lcd.setCursor(door_obj_gg.getX(), door_obj_gg.getY());
+    lcd.write(SKIN_DOOR);
+  }
+//------------------------------------------ DRAW RESTART_DOOR ---------------------------------------
+  if (restart_door[2] > 0)  {
+    lcd.setCursor(restart_door[0], restart_door[1]);
+    lcd.write(SKIN_DOOR);
+  }
+//------------------------------------------ DRAW FAKE_DOOR ---------------------------------------
+  if (fake_door[2] > 0)  {
+    lcd.setCursor(fake_door[0], fake_door[1]);
+    lcd.write(SKIN_DOOR);
+  }
+//------------------------------------------ DRAW OM_DOOR ---------------------------------------
+  if (lvl == OM_LVL)  {
+    lcd.setCursor(exitOm[0], exitOm[1]);
+    lcd.write(SKIN_DOOR);
+  }
+//------------------------------------------ DRAW OM ---------------------------------------
+  if (lvl == OM_LVL)  {
+    lcd.setCursor(CENTER_X, 1);
+    lcd.write(SKIN_OM_L);
+    lcd.setCursor(CENTER_X+1, 1);
+    lcd.write(SKIN_OM_R);
+  }
+//------------------------------------------ DRAW HP ---------------------------------------
+  if (lvl != END_LVL && lvl != OM_LVL)
+  {
+    lcd.setCursor(hp_pos_x, 0);
+    lcd.print(player.getHp());
+  }
+//------------------------------------------ DRAW MAIN MONSTER ---------------------------------------
+  if (monster.getHp() > 0)  {
+    lcd.setCursor(monster.getCurrentX(), monster.getCurrentY());
+    lcd.write(SKIN_MONSTER);
+  }
+//------------------------------------------ DRAW OTHER MONSTER ---------------------------------------
+  if (monster_3.getHp() > 0)  {
+    lcd.setCursor(monster_3.getCurrentX(), monster_3.getCurrentY());
+    lcd.write(SKIN_MONSTER);
+  }
+//------------------------------------------ DRAW TRAP ---------------------------------------
+  if (trap[2] > 0)  {
+    lcd.setCursor(trap[0], trap[1]);
+    lcd.print("^");
+  }
+//------------------------------------------ DRAW HEART ---------------------------------------
+  if (heart[2] > 0) {
+    lcd.setCursor(heart[0], heart[1]);
+    lcd.write(SKIN_HEART);
+  }
+}
   byte cbuttons()
   {
     if (encbut.rightH())
@@ -1199,17 +1184,18 @@ void draw()
       softwareReset();
       return 1;
     }
-    if (encbut.click() && player.getCurrentX() == gg_door[0] && player.getCurrentY() == gg_door[1] && gg_door[2] > 0)
+ 
+    if (encbut.click() && check_collision(&player, &door_obj_gg)) // Если кликнули на ГГ дверь
     {
-      gg_door[2]--;                // вычиттаем дчверь из карты
+      door_obj_gg.set_exist(0);
       all_tone(TONE_OPEN_DOOR); // звук открытия двери
       lcd.clear();
       play_animation(ANIMATION_ENDING);
-      
       lcd.noBacklight();
       while (true){}
       return 1;
     }
+    
 
     #ifdef DEVELOPER_MODE
       if (encbut.hold(2))//получить уровень 
