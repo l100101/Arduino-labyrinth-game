@@ -20,26 +20,25 @@ DoorMapObject door_obj_restart(0,0,0, TYPE_RESTART_DOOR_OBJECT);  //
 DoorMapObject door_obj_gg(0,0,0, TYPE_GG_DOOR_OBJECT);            //
 DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT);            //
 DoorMapObject door_obj_fake(0,0,0, TYPE_FAKE_DOOR_OBJECT);        //
+
 // TrapMapObject trap_obj(0,0,0); // инициализация с координатами ловушки
 // HeartMapObject heart_obj(0,0,1); // инициализация с координатами сердца
-
-// Написать класс карты?(объектов на карте). Случайное расположение 1/0
-
 byte restart_door[3]  = {0, 0, 0};
 byte gg_door[3] = {0, 0, 0};
 byte hearts[3]  = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
 byte hp_pos_x   = 19;
 byte trap[3]    = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ловушка
 byte heart[3]   = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
+// Написать класс карты?(объектов на карте). Случайное расположение 1/0
 
+boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte lvl = OPENING_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
-// 1 - фонарь, монстр и ловушка
+// 1 - фонарь, ~~монстр~~ и ловушка
 // 2 = сейчас 1 монстр. без приколов/ Доделать ловушку 
 // 3 =  фонарь и 2 монстра. посветка не моргает. 2 двери. близнецовый уровень
 // 4 = сейчас заглушка. без приколов
 // 108 
-boolean lvlup = 0; // флаг для перехода в следующий уровень
 byte cbuttons();
 
 bool check_collision(Player* playerObj, MapObject* obj2) {
@@ -194,47 +193,47 @@ void ccheck() // проверка координат
     //  default:
     //   break;
     //  }   
-
-  if (wall[player.getCurrentY()][player.getCurrentX()] == 1) // возвращени координат человек на прежнюю координату при столкновении со стеной
-  {
-    player.setCurrentX(player.getPreviousX());
+  //--------------------------------------------------------- COLLISION WALL ---------------------------------------------------------
+ 
+  if (wall[player.getCurrentY()][player.getCurrentX()] == 1)  {
+    player.setCurrentX(player.getPreviousX());  // возвращени координат человек на прежнюю координату при столкновении со стеной
     player.setCurrentY(player.getPreviousY());
   }
+ //--------------------------------------------------------- COLLISION TRAP ---------------------------------------------------------
 
-  // -------------------------------------------------------------------------------------------------------------------
   if (player.getCurrentX() == trap[0] && player.getCurrentY() == trap[1] && trap[2] > 0) // столкновение со статичной ловушкой
   {
     player.takeDamage(1);
     all_tone(TONE_TRAP_ACTIVATE);
   }
-  // столкновение с движущимся монстром
-  if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY() && monster.getHp() > 0)
-  {
+ //--------------------------------------------------------- COLLISION MAIN MONSTER ---------------------------------------------------------
+ 
+  if (player.getCurrentX() == monster.getCurrentX() && player.getCurrentY() == monster.getCurrentY() && monster.getHp() > 0)  {
     player.takeDamage(1);
     all_tone(TONE_MONSTER_DAMAGE);
   }
-  // столкновение с дополнительным движущимся монстром
+ 
+ //--------------------------------------------------------- COLLISION OTHER MONSTER ---------------------------------------------------------
+ 
   if (player.getCurrentX() == monster_3.getCurrentX() && player.getCurrentY() == monster_3.getCurrentY() && monster_3.getHp() > 0)
     player.takeDamage(1);
+
+ //--------------------------------------------------------- COLLISION EXIT OM ---------------------------------------------------------
  
-  //Выход из Ом команаты
-  if (player.getCurrentX() == exitOm[0] && player.getCurrentY() == exitOm[1] && lvl == OM_LVL)
-  // if (player.getCurrentX() == 18 && player.getCurrentY() == 2 && lvl == OM_LVL)
-  {
+  if (player.getCurrentX() == exitOm[0] && player.getCurrentY() == exitOm[1] && lvl == OM_LVL)  {
     lvl = 0;
     lvlup = true;
   }
+ //--------------------------------------------------------- COLLISION ENTER OM ---------------------------------------------------------
 
-  //Вход в Ом команату
-  if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == OPENING_LVL)
-    {
-      lvlup = true;
-      lvl = OM_LVL;
-    }
-
+  if (player.getCurrentX() == enterOm[0] && player.getCurrentY() == enterOm[1] && lvl == OPENING_LVL)  {
+    lvlup = true;
+    lvl = OM_LVL;
+  }
   // if (immortality == true)
   //   return;
 
+ //--------------------------------------------------------- GAME OVER ---------------------------------------------------------
   if (player.getHp() <= 0)
   {
     gameOver();
@@ -277,7 +276,6 @@ void mouth_animation(int8_t num)//TODO: delete delay, add timer
 }
 void chelSays(uint8_t num)
 {
-
   switch (num)
   {
   case 1:
@@ -1102,38 +1100,33 @@ void draw()
 
 byte cbuttons()
 {
-  if (encbut.rightH())
-  { //++y
+  if (encbut.rightH())  { 
     player.move(UP_DIR);
-    return 1;
+    return 1;           //++y
   }
-  if (encbut.leftH())
-  { //--y
+  if (encbut.leftH()) { 
     player.move(DOWN_DIR);
-    return 1;
+    return 1;          //--y
   }
-  if (encbut.left())
-  { //--x
+  if (encbut.left())  {
     player.move(LEFT_DIR);
-    return 1;
+    return 1;          // --x
   }
-  if (encbut.right())
-  { //++x
+  if (encbut.right()) {
     player.move(RIGHT_DIR);
-    return 1;
+    return 1;          // ++x
   }
 
-  //New realization
-  if (encbut.click() && check_collision(&player, &key_obj))
-  {                         // подбор ключа
+  //----------------------------------------------------------- KEY PICK UP -----------------------------------------------------------
+  if (encbut.click() && check_collision(&player, &key_obj)) {
     player.takeKeys(1);     // добавляем ключ в карман
     key_obj.set_exist(0);   // вычитаем ключ из карты
     all_tone(TONE_PICK_UP); // звук подбора
     return 1;
   }
 
-  if (encbut.click() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0)
-  {                     // подбор жизни
+  //----------------------------------------------------------- HEART PICK UP -----------------------------------------------------------
+  if (encbut.click() && player.getCurrentX() == heart[0] && player.getCurrentY() == heart[1] && heart[2] > 0) {
     heart[2]--;         // вычитаем аптечкуиз карты
     player.takeHeal(1); // лечим перса
     all_tone(TONE_HEAL);
@@ -1175,45 +1168,48 @@ byte cbuttons()
     //     return 1;
     //   }
 
-    if (encbut.click() && check_collision(&player, &door_obj_lvlup) && door_obj_lvlup.get_exist() && player.getNumberOfKeys() > 0)
-    {
-      player.dropKeys(1);             // вычитаем ключ из кармана
-      door_obj_lvlup.set_exist(0);    // вычитаем дверь из карты
-      all_tone(TONE_OPEN_DOOR);       // звук открытия двери
-      lvlup = true;
-      lcd.clear();
-      return 1;
-    }
-    if (encbut.click() && player.getCurrentX() == restart_door[0] && player.getCurrentY() == restart_door[1] && restart_door[2] > 0)
-    {
-      restart_door[2]--;                // вычиттаем дчверь из карты
-      all_tone(TONE_OPEN_DOOR); // звук открытия двери
-      lcd.clear();
-      softwareReset();
-      return 1;
-    }
- 
-    if (encbut.click() && check_collision(&player, &door_obj_gg)) // Если кликнули на ГГ дверь
-    {
-      door_obj_gg.set_exist(0);
-      all_tone(TONE_OPEN_DOOR); // звук открытия двери
-      lcd.clear();
-      play_animation(ANIMATION_ENDING);
-      lcd.noBacklight();
-      while (true){}
-      return 1;
-    }
+  //----------------------------------------------------------- LVL UP DOOR -----------------------------------------------------------
+  if (encbut.click() && check_collision(&player, &door_obj_lvlup) && door_obj_lvlup.get_exist() && player.getNumberOfKeys() > 0)
+  {
+    player.dropKeys(1);             // вычитаем ключ из кармана
+    door_obj_lvlup.set_exist(0);    // вычитаем дверь из карты
+    all_tone(TONE_OPEN_DOOR);       // звук открытия двери
+    lvlup = true;
+    lcd.clear();
+    return 1;
+  }
+//----------------------------------------------------------- RESTART DOOR -----------------------------------------------------------
+  if (encbut.click() && player.getCurrentX() == restart_door[0] && player.getCurrentY() == restart_door[1] && restart_door[2] > 0)
+  {
+    restart_door[2]--;                // вычиттаем дчверь из карты
+    all_tone(TONE_OPEN_DOOR); // звук открытия двери
+    lcd.clear();
+    softwareReset();
+    return 1;
+  }
+
+   //----------------------------------------------------------- GG DOOR -----------------------------------------------------------
+  if (encbut.click() && check_collision(&player, &door_obj_gg)) { 
+    door_obj_gg.set_exist(0);
+    all_tone(TONE_OPEN_DOOR); // звук открытия двери
+    lcd.clear();
+    play_animation(ANIMATION_ENDING);
+    lcd.noBacklight();
+  
+    while (true){}
+    return 1;
+  }
     
 
-    #ifdef DEVELOPER_MODE
-      if (encbut.hold(2))//получить уровень 
-       lvlup = true;
-    if (encbut.holdFor(RESET_TIME_MS))//Сброс
-      softwareReset();
-    #endif
+  #ifdef DEVELOPER_MODE
+  if (encbut.hold(2))//получить уровень 
+    lvlup = true;
+  if (encbut.holdFor(RESET_TIME_MS))//Сброс
+    softwareReset();
+  #endif
 
-    return 0;
-  }
+  return 0;
+}
 void toggleBacklight()
 {
   static bool backlight_state = false;
@@ -1271,8 +1267,6 @@ void loop() {
     if (lvl == OM_LVL)  {
       // all_tone(OM_TONE);
       hp_pos_x = 17;
-      // lvl_design();
-      // lvlup = false;
     }
     else  {
       all_tone(TONE_LVLUP); // звук перехода в следующий уровень
