@@ -53,10 +53,10 @@ bool check_collision(Player* obj1, MapObject* obj2) {
   return false;
 }
 
-
 void softwareReset(){
   asm volatile("jmp 0");
 }
+
 void all_tone(byte val)
 { // звук
   switch (val)

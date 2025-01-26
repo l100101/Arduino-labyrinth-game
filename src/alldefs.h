@@ -21,6 +21,7 @@
 #include "../lib/Monster/monster.h" //Класс монстра
 #include "../lib/animations/animations.h"             //Все анимации
 #include "dialogs.h"                //все диалоги
+// #include "animations.h"             //все анимации
 //system
 #define RESET_TIME_MS   6000
 
@@ -61,6 +62,7 @@
 #define TONE_LVLUP          7
 #define TONE_MONSTER_DAMAGE 8
 //SPRITES DEFAULT 
+/*
 #define SKIN_CHEL       0
 #define SKIN_KEY        1
 #define SKIN_DOOR       2
@@ -69,19 +71,43 @@
 #define SKIN_HEART      5
 #define SKIN_TRAP       6
 #define SKIN_MONSTER    7
-//SPRITES GOD
+*/
+enum sprites_default {
+                SKIN_CHEL       = 0,
+                SKIN_KEY        = 1,
+                SKIN_DOOR       = 2,
+                SKIN_WALL       = 3,
+                SKIN_FAKEDOOR   = 4,
+                SKIN_HEART      = 5,
+                SKIN_TRAP       = 6,
+                SKIN_MONSTER    = 7
+};
+// //SPRITES GOD
+enum sprites_god {
+                SKIN_EYE    = 1, 
+                SKIN_NOSE   = 3,
+                SKIN_FACE_1 = 4,
+                SKIN_FACE_2 = 5, 
+                SKIN_FACE_3 = 6, 
+                SKIN_MOUTH  = 7, 
+            SKIN_MOUTH_OPEN = 0
+};
+
+/**
 #define SKIN_EYE        1
-// #define SKIN_NOSE_2 2 // nop
+#define SKIN_NOSE_2 2 // nop
 #define SKIN_NOSE       3
 #define SKIN_FACE_1     4 // ЛОб
 #define SKIN_FACE_2     5 //
 #define SKIN_FACE_3     6 // Шея
 #define SKIN_MOUTH      7  // РОТ
 #define SKIN_MOUTH_OPEN 0
+*/
 
 #define SKIN_OM_L       6
 #define SKIN_OM_R       7
 //ANIMATIONS PLAYS (in level design)
+/*
 #define ANIMATION_OPENING           0
 #define ANIMATION_FLASHLIGHT        1
 #define ANIMATION_MONSTER           2
@@ -91,12 +117,26 @@
 #define ANIMATION_GAME_OVER         98
 #define ANIMATION_ENDING            99
 #define ANIMATION_OM_LVL            108
-//DIALOGS
+*/
+enum animations_plays {
+            ANIMATION_OPENING           = 0,
+            ANIMATION_FLASHLIGHT        = 1,
+            ANIMATION_MONSTER           = 2,
+            ANIMATION_EVIL_FRIENDS      = 3,
+            ANIMATION_PRESS_AND_TURN    = 80,
+            ANIMATION_GATE              = 81,
+            ANIMATION_GAME_OVER         = 98,
+            ANIMATION_ENDING            = 99,
+            ANIMATION_OM_LVL            = 108
+    
+};
+// //DIALOGS
 #define CHEL_CHILL_DIALOG             100
 #define MONSTER_SLABAK_DIALOG         66
 #define EVIL_FRIENDS_DIALOG           67
 
 //CREATE CHARS (in "playAnimation")
+/*
 #define CHARS_DEFAULT       2
 #define CHARS_GOD           3
 #define CHARS_MONSTER       4
@@ -105,6 +145,18 @@
 #define CHARS_GATE          81
 #define CHARS_GAME_OVER     98
 #define CHARS_OM_LVL        108
+*/
+enum create_chars {
+            CHARS_DEFAULT       = 2,
+            CHARS_GOD           = 3,
+            CHARS_MONSTER       = 4,
+            CHARS_ENDING        = 5,
+            CHARS_EVIL_FRIENDS  = 66,
+            CHARS_GATE          = 81,
+            CHARS_GAME_OVER     = 98,
+            CHARS_OM_LVL        = 108
+};
+
 //STRINGS FOR DIALOGUee
 #define FPSTR(pstr) (const __FlashStringHelper*)(pstr) // макрос для печати строк из PROGMEM на дисплей
 #define CHEL_STR_OPEN(x) FPSTR(strChel_opening[(x)]) //упрощенный вид макроса выше. Для строк чела. OPENING
