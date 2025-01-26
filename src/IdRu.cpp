@@ -19,13 +19,12 @@ DoorMapObject door_obj_lvlup(19, 2, 0, TYPE_DOOR_OBJECT);         // иници�
 DoorMapObject door_obj_restart(0,0,0, TYPE_RESTART_DOOR_OBJECT);  //
 DoorMapObject door_obj_gg(0,0,0, TYPE_GG_DOOR_OBJECT);            //
 DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT);            //
-
+DoorMapObject door_obj_fake(0,0,0, TYPE_FAKE_DOOR_OBJECT);        //
 // TrapMapObject trap_obj(0,0,0); // инициализация с координатами ловушки
 // HeartMapObject heart_obj(0,0,1); // инициализация с координатами сердца
 
 // Написать класс карты?(объектов на карте). Случайное расположение 1/0
 
-byte fake_door[3]     = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
 byte restart_door[3]  = {0, 0, 0};
 byte gg_door[3] = {0, 0, 0};
 byte hearts[3]  = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
@@ -809,12 +808,10 @@ void lvl_design() // вызываем в начале/конце каждого 
     player.setCurrentXY(2, 1);
     player.flashlight(OFF);
     // KeyMapObject key_o(2, 3, 1);
-    // DoorMapObject door_o(19, 2, 1);
-    // FakeDoorMapObject fake_door_o(19, 2, 0);
+    // DoorMapObject door_o(19, 2, 1);;
     
     // Есть ли на карте
-    // fake_door_obj.set_exist(1);
-    fake_door[2] = 0;
+    door_obj_fake.set_exist(0);
 
     key_obj.set_exist(1);
     key_obj.setX(2);
@@ -915,11 +912,11 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setHp(1);
     monster_3.setFieldMoving(3, 19, 0, 3);
     monster_3.setCurrentXY(8, 3);
-    // Есть ли на карте
-    fake_door[2] = 1;
-    // x , y
+  
+    door_obj_fake.set_exist(1);
+    door_obj_fake.setX(3);
+    door_obj_fake.setY(1);
 
-    // key[0] = 2; // key[1] = 3;
     key_obj.set_exist(1); //SEXY (Set Exist, X-coord, Y-coord)
     key_obj.setX(2);
     key_obj.setY(3);
@@ -928,10 +925,9 @@ void lvl_design() // вызываем в начале/конце каждого 
     door_obj_lvlup.setX(6);
     door_obj_lvlup.setY(3);  
 
+                                        // Есть ли на карте
     trap[0] = 4;      trap[1] = 1;    trap[2] = 1;
-
-    fake_door[0] = 3; fake_door[1] = 1;
-
+    // x , y
     break;
   }
   case 4:
@@ -955,11 +951,12 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setCurrentXY(8, 3);
     // Есть ли на карте
     trap[2] = 1;
-    fake_door[2] = 0;
     // x , y
     trap[0] = 4;
     trap[1] = 1;
 
+    door_obj_fake.set_exist(0);
+    
     key_obj.set_exist(1);
     key_obj.setX(2);
     key_obj.setY(3);
@@ -989,7 +986,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     // key[2] = 0;
     key_obj.set_exist(0);
 
-    fake_door[2] = 0;  
+    door_obj_fake.set_exist(0);
    break; 
   }
   case END_LVL:
@@ -1005,19 +1002,22 @@ void lvl_design() // вызываем в начале/конце каждого 
     player.flashlight(OFF);
     player.setCurrentXY(CENTER_X, 3);
     monster.setHp(0);
-    trap[2] = 0;
+
     key_obj.set_exist(0);
     // door_end_lvl = 0;
-    heart[2] = 0;
-    fake_door[2] = 0;  
-    restart_door[2] = 1;
-    door_obj_gg.set_exist(1);
 
-    // x , y
-    restart_door[0] = 2;
-    restart_door[1] = 2;
+    door_obj_fake.set_exist(0); 
+    door_obj_gg.set_exist(1);
     door_obj_gg.setX(17);
     door_obj_gg.setY(2);
+    
+    // x , y
+    restart_door[2] = 1;
+    restart_door[0] = 2;
+    restart_door[1] = 2;
+    heart[2] = 0;
+    
+    trap[2] = 0;
 
     break;
   }
@@ -1056,8 +1056,8 @@ void draw()
     lcd.write(SKIN_DOOR);
   }
 //------------------------------------------ DRAW FAKE_DOOR ---------------------------------------
-  if (fake_door[2] > 0)  {
-    lcd.setCursor(fake_door[0], fake_door[1]);
+  if (door_obj_fake.get_exist())  {
+    lcd.setCursor(door_obj_fake.getX(), door_obj_fake.getY());
     lcd.write(SKIN_DOOR);
   }
 //------------------------------------------ DRAW OM_DOOR ---------------------------------------
