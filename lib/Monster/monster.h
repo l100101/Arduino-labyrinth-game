@@ -53,6 +53,7 @@ public:
 //takers
     void takeDamage(int damage);
     void takeHeal(int heal);
+    void setExist(bool newExist);
 };
 
 #endif // MONSTER_H

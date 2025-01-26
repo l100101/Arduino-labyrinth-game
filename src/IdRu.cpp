@@ -27,7 +27,7 @@ DoorMapObject door_obj_om(0,0,0, TYPE_OM_DOOR_OBJECT);            //
 
 byte fake_door[3]     = {6, 3, 0}; //x,y 1-есть/0-нет. Есть на 3 лвл
 byte restart_door[3]  = {0, 0, 0};
-byte key[3]     = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
+// byte key[3]     = {0, 3, 1};    // 0-x,1-y,2-сколько ключей in map
 byte door[3]    = {19, 2, 1};  // x,y, 1-закрыта/0-открыта
 byte gg_door[3] = {0, 0, 0};
 byte hearts[3]  = {0, 0, 1}; // 0-х,1-у, 2-кол-во на карте
@@ -821,12 +821,12 @@ void lvl_design() // вызываем в начале/конце каждого 
     // Есть ли на карте
     // door_obj.set_exist(1);
     // fake_door_obj.set_exist(1);
-    key[2] = 1;
     door[2] = 1;
     fake_door[2] = 0;
-    // x , y
-    key[0] = 2;
-    key[1] = 3;
+
+    key_obj.set_exist(1);
+    key_obj.setX(2);
+    key_obj.setY(3);
 
     door[0] = 19;
     door[1] = 2;
@@ -849,21 +849,17 @@ void lvl_design() // вызываем в начале/конце каждого 
     play_animation(ANIMATION_FLASHLIGHT);
     player.flashlight(ON);
     player.setCurrentXY(2, 1);
-
-    // add set orientation
-    monster.setHp(1);
-    monster.setFieldMoving(0, 18, 0, 3);
-    monster.setCurrentXY(5, 3);
-
+    monster.setExist(0);
+    
     // KeyMapObject key_o(0, 3, 1);
     // Есть ли на карте
-    key[2] = 1;
+    key_obj.set_exist(1);
     door[2] = 1;
     trap[2] = 1;
     heart[2] = 1;
     // x , y
-    key[0] = 0;
-    key[1] = 3;
+    key_obj.setX(0);
+    key_obj.setY(3);
 
     door[0] = 19;
     door[1] = 2;
@@ -885,6 +881,7 @@ void lvl_design() // вызываем в начале/конце каждого 
         wall[y][x] = wall_2[y][x];
       }
     }
+    lcd.backlight();
     play_animation(ANIMATION_MONSTER); // У тебя ничего не получится
     player.flashlight(OFF);
     player.setCurrentXY(1, 1);
@@ -892,13 +889,15 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster.setFieldMoving(0, 17, 0, 3);
     monster.setCurrentXY(6, 1);
     // Есть ли на карте
-    key[2] = 1;
+    key_obj.set_exist(1);
     door[2] = 1;
     heart[2] = 0;
     trap[2] = 0;
     // x , y
-    key[0] = 15;
-    key[1] = 1;
+    // key[0] = 15;
+    // key[1] = 1;
+    key_obj.setX(15);
+    key_obj.setY(1);
 
     door[0] = 19;
     door[1] = 2;
@@ -924,21 +923,16 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setFieldMoving(3, 19, 0, 3);
     monster_3.setCurrentXY(8, 3);
     // Есть ли на карте
-    trap[2] = 1;
-    key[2] = 1;
-    door[2] = 1;
     fake_door[2] = 1;
     // x , y
-    trap[0] = 4;
-    trap[1] = 1;
 
-    key[0] = 2;
-    key[1] = 3;
-
-    door[0] = 6;
-    door[1] = 3;
-    fake_door[0] = 3;
-    fake_door[1] = 1;
+    // key[0] = 2; // key[1] = 3;
+    key_obj.set_exist(1); //SEXY (Set Exist, X-coord, Y-coord)
+    key_obj.setX(2);  key_obj.setY(3);
+    
+    trap[0] = 4;      trap[1] = 1;    trap[2] = 1;
+    door[0] = 6;      door[1] = 3;    door[2] = 1;
+    fake_door[0] = 3; fake_door[1] = 1;
 
     break;
   }
@@ -963,16 +957,15 @@ void lvl_design() // вызываем в начале/конце каждого 
     monster_3.setCurrentXY(8, 3);
     // Есть ли на карте
     trap[2] = 1;
-    key[2] = 1;
+    key_obj.set_exist(1);
     door[2] = 1;
     fake_door[2] = 0;
     // x , y
     trap[0] = 4;
     trap[1] = 1;
 
-    key[0] = 2;
-    key[1] = 3;
-
+    // key[0] = 2;   key[1] = 3;
+    key_obj.setX(2);  key_obj.setY(3);
     door[0] = 1;
     door[1] = 3;
     break;
@@ -994,7 +987,8 @@ void lvl_design() // вызываем в начале/конце каждого 
      // Есть ли на карте
     monster.setHp(0);
     trap[2] = 0;
-    key[2] = 0;
+    // key[2] = 0;
+    key_obj.set_exist(0);
     door[2] = 0;
     fake_door[2] = 0;  
    break; 
@@ -1013,7 +1007,7 @@ void lvl_design() // вызываем в начале/конце каждого 
     player.setCurrentXY(CENTER_X, 3);
     monster.setHp(0);
     trap[2] = 0;
-    key[2] = 0;
+    key_obj.set_exist(0);
     door[2] = 0;
     heart[2] = 0;
     fake_door[2] = 0;  
@@ -1026,7 +1020,6 @@ void lvl_design() // вызываем в начале/конце каждого 
     gg_door[0] = 17;
     gg_door[1] = 2;
 
-    
     break;
   }
   default:
@@ -1141,7 +1134,6 @@ void draw()
     if (encbut.click() && check_collision(&player, &key_obj))
     {                         // подбор ключа
       player.takeKeys(1);     // добавляем ключ в карман
-      // key[2]--;               // вычитаем ключ из карты
       key_obj.set_exist(0);   // вычитаем ключ из карты
       all_tone(TONE_PICK_UP); // звук подбора
       return 1;
@@ -1154,14 +1146,6 @@ void draw()
       all_tone(TONE_HEAL);
       return 1;
     }
-    //NEW 
-    // if (check_collision(&player, &key_obj))
-    //   {
-    //     player.takeKeys(1);     // добавляем ключ в карман
-    //     key_obj.set_exist(0);   // вычитаем ключ из карты
-    //     all_tone(TONE_PICK_UP); // звук подбора
-    //     return 1;
-    //   }
 
     // if (check_collision(&player, &heart_obj))
     //   {

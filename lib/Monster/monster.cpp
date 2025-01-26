@@ -166,3 +166,8 @@ void Monster::setHp(uint8_t newHp)
 {
     hp  = newHp;
 }
+
+void Monster::setExist(bool newExist)
+{
+    hp = newExist;
+}
