@@ -31,7 +31,7 @@ byte trap[3]    = {4, 0, 0};   // 0-х,1-y,3-кол-во статичная ло
 byte heart[3]   = {17, 3, 1}; // 0-x,1-y,2-кол-во аптечек на карте
 // Написать класс карты?(объектов на карте). Случайное расположение 1/0
 
-boolean lvlup = 0; // флаг для перехода в следующий уровень
+boolean lvlup = 0; // флаг для перехода в следующий уровень      
 byte lvl = OPENING_LVL;      
 // 0 - Opening, PRESS AND TURN, 1 monster
 // 1 - фонарь, ~~монстр~~ и ловушка
@@ -60,9 +60,11 @@ void all_tone(byte val)
   {
   case TONE_PICK_UP: // подбор предмета
     tone(BUZZER_PIN, 2115, 100);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 1800, 200);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 3000, 300);
     break;
   case TONE_OPEN_DOOR: // звук открытия двери
@@ -73,23 +75,29 @@ void all_tone(byte val)
     break;
   case TONE_TRAP_ACTIVATE: // Срабатывания ловушки
     tone(BUZZER_PIN, 1500, 500);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 1800, 500);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 3000, 500);
     break;
   case TONE_START_GAME: // Начало игры
     tone(BUZZER_PIN, 1500, 500);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 1800, 500);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     tone(BUZZER_PIN, 3000, 500);
     break;
   case TONE_MONSTER_DAMAGE: // Урон от монстра
     tone(BUZZER_PIN, 500, 250);
-    delay(300);
+    // delay(300);
+    wait_for_action(300);
     tone(BUZZER_PIN, 100, 100);
-    delay(150);
+    // delay(150);
+    wait_for_action(150);
     break;
   }
 }
@@ -258,7 +266,7 @@ void drawMap()
   }
 }
 
-void mouth_animation(int8_t num)//TODO: delete delay, add timer
+void mouth_animation(int8_t num)//TODO: replace delay() to wait_action
 {
   for (int i = 1; i <= num; i++) // говорим ртом
   {
@@ -271,7 +279,8 @@ void mouth_animation(int8_t num)//TODO: delete delay, add timer
     {
       lcd.write(SKIN_MOUTH_OPEN);
     }
-    delay(300);
+    // delay(300);
+    wait_for_action(300);
   }
 }
 void chelSays(uint8_t num)
@@ -378,7 +387,7 @@ void godSays(uint8_t num)
     break;
   case 6:
     lcd.setCursor(0, 0);
-    lcd.print(GOD_STR_FLASHLIGHT(0)); //
+    lcd.print(GOD_STR_FLASHLIGHT(0)); // Тебе понадолбится фонарик
     lcd.setCursor(0, 1);
     lcd.print(GOD_STR_FLASHLIGHT(1)); //
     lcd.setCursor(0, 2);
@@ -399,8 +408,6 @@ void godSays(uint8_t num)
     mouth_animation(10);
     break;
   }
-
-  // delay(3000);
   wait_for_action();
   lcd.clear();
 }
@@ -633,23 +640,22 @@ void play_animation(uint8_t num)
     charsCreate(CHARS_MONSTER);
     for (int i = 19; i > 6; i--) // идёт справа налево
     {
+      monsterSays(MONSTER_SLABAK_DIALOG); // ты слабак
       lcd.setCursor(i, 1 + (i % 2));
       lcd.write(SKIN_MONSTER);
       lcd.setCursor(2, 1);
       lcd.write(SKIN_CHEL);
-      delay(300);
+      wait_for_action(300);
       lcd.clear();
     }
     lcd.setCursor(6, 1);
     lcd.write(SKIN_MONSTER);
     monsterSays(MONSTER_SLABAK_DIALOG); // ты слабак
-    // delay(4000);
     wait_for_action();
     lcd.clear();
     lcd.setCursor(2, 1);
     lcd.write(SKIN_CHEL);
     chelSays(CHEL_CHILL_DIALOG); // не
-    // delay(4000);
     wait_for_action();
     lcd.clear();
     charsCreate(CHARS_DEFAULT);
@@ -671,7 +677,7 @@ void play_animation(uint8_t num)
       lcd.write(SKIN_MONSTER);
       lcd.setCursor(2, 1);
       lcd.write(SKIN_CHEL);
-      delay(300);
+      wait_for_action(300);
       lcd.clear();
     }
     lcd.setCursor(6, 1);
@@ -680,13 +686,11 @@ void play_animation(uint8_t num)
     lcd.write(SKIN_MONSTER);
 
     monsterSays(EVIL_FRIENDS_DIALOG); // Нас 2
-    // delay(4000);
     wait_for_action();
     lcd.clear();
     lcd.setCursor(2, 1);
     lcd.write(SKIN_CHEL);
     chelSays(EVIL_FRIENDS_DIALOG); // оба пизды получите
-    // delay(4000);
     // lcd.clear();
     // charsCreate(CHARS_DEFAULT);
     break;
@@ -708,7 +712,8 @@ void play_animation(uint8_t num)
       lcd.write(SKIN_DOOR);
       lcd.setCursor(i, 3);
       lcd.write(SKIN_DOOR);
-      delay(40+i*5);
+      // delay(40+i*5);
+      wait_for_action(40+i*5);
     }
     lcd.noBacklight();
     delay(300);
@@ -723,7 +728,8 @@ void play_animation(uint8_t num)
       lcd.print(" ");
       lcd.setCursor(i, 3);
       lcd.print(" ");
-      delay(30+i*5);
+      // delay(30+i*5);
+      wait_for_action(30+i*5);
     }
     break;
   }
@@ -774,7 +780,8 @@ void play_animation(uint8_t num)
       lcd.write(SKIN_OM_R);
       lcd.setCursor(CENTER_X, 3);
       lcd.write(SKIN_CHEL);
-      delay(1500);
+      // delay(1500);
+      wait_for_action(1500);
       lcd.clear();
     }
     lcd.setCursor(CENTER_X, 2);
@@ -800,7 +807,8 @@ void lvl_design() // вызываем в начале/конце каждого 
   case OPENING_LVL:
   {
     play_animation(ANIMATION_OPENING);
-    delay(200);
+    // delay(200);
+    wait_for_action(200);
     play_animation(ANIMATION_PRESS_AND_TURN);
 
     player.setCurrentXY(2, 1);
@@ -1161,7 +1169,6 @@ byte cbuttons()
     //   break;
     //  }   
    
-    
     //     player.Heal(1);     // добавляем ключ в карман
     //     heart_obj.set_exist(0);   // вычитаем ключ из карты
     //     all_tone(TONE_HEAL); // звук подбора
@@ -1206,7 +1213,7 @@ byte cbuttons()
     lvlup = true;
   if (encbut.holdFor(RESET_TIME_MS))//Сброс
     softwareReset();
-  #endif
+  #endif  
 
   return 0;
 }
@@ -1254,12 +1261,12 @@ void setup()  {
 void loop() {
   // опрос кнопок, расчёты, дебаг
   encbut.tick();
-  if (cbuttons()) {                               // если любая кнопка была нажата
+  if (cbuttons()) {               // если любая кнопка была нажата
     monster.autoStep(HORIZONTAL); // двигаем монстра по горизонтали
     monster_3.autoStep(VERTICAL); // двигаем монстра на 3 уровне
     player.setFieldOfView();      // обновляем поле видимости
     ccheck();
-    draw(); // отрисовка карты и всего остального
+    draw();                       // отрисовка карты и всего остального
     if (lvl == FLASHLIGHT_LVL)
       toggleBacklight();     
   }
@@ -1279,7 +1286,6 @@ void loop() {
 }
 
 void wait_for_action() {
-  // delay(800);
  while(true)
   { 
     encbut.tick();
@@ -1289,6 +1295,23 @@ void wait_for_action() {
        return;
     if (encbut.hold())
        return;
+  }
+  return;
+}
+
+void wait_for_action(uint32_t del) {
+  uint64_t wfa_timer = millis(); 
+  while(true) 
+  { 
+    encbut.tick();
+    if (cbuttons())
+      return;
+    if (encbut.click())
+      return;
+    if (encbut.hold())
+      return;
+    if(millis() > wfa_timer + del)
+      return;
   }
   return;
 }
