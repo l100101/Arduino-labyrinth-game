@@ -97,3 +97,14 @@ const char str54[] PROGMEM = "wac o6a oxpeHeeTe";
 
 const char* const strEvil_friends[] PROGMEM = {
   str51, str52, str53, str54};
+
+  //-------------------------------------------------------------------
+  //GOD SAYS END LVL
+const char str55[] PROGMEM = "TbI npeoDoJIeJI";
+const char str56[] PROGMEM = "Bce ucnbITaHu9I";
+const char str57[] PROGMEM = "BepHo JIu TbI ";
+const char str58[] PROGMEM = "noH9JI ux?";
+
+const char* const strGod_endlvl[] PROGMEM = {
+  str55, str56, str57, str58};
+  

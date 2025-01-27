@@ -73,24 +73,32 @@
 #define SKIN_MONSTER    7
 */
 enum sprites_default {
-                SKIN_CHEL       = 0,
-                SKIN_KEY        = 1,
-                SKIN_DOOR       = 2,
-                SKIN_WALL       = 3,
-                SKIN_FAKEDOOR   = 4,
-                SKIN_HEART      = 5,
-                SKIN_TRAP       = 6,
-                SKIN_MONSTER    = 7
+            SKIN_CHEL       = 0,
+            SKIN_KEY        = 1,
+            SKIN_DOOR       = 2,
+            SKIN_WALL       = 3,
+            SKIN_FAKEDOOR   = 4,
+            SKIN_HEART      = 5,
+            SKIN_TRAP       = 6,
+            SKIN_MONSTER    = 7
 };
 // //SPRITES GOD
 enum sprites_god {
-                SKIN_EYE    = 1, 
+                SKIN_EYE    = 1,
+                // its ok
                 SKIN_NOSE   = 3,
                 SKIN_FACE_1 = 4,
                 SKIN_FACE_2 = 5, 
                 SKIN_FACE_3 = 6, 
                 SKIN_MOUTH  = 7, 
             SKIN_MOUTH_OPEN = 0
+};
+
+enum sprites_end_lvl {
+    SKIN_CHEL_END_LVL       = 0,
+    SKIN_DOOR_END_LVL       = 1,
+    SKIN_MOUTH_END_LVL      = 2, 
+    SKIN_MOUTH_OPEN_END_LVL = 3
 };
 
 /**
@@ -126,14 +134,16 @@ enum animations_plays {
             ANIMATION_PRESS_AND_TURN    = 80,
             ANIMATION_GATE              = 81,
             ANIMATION_GAME_OVER         = 98,
-            ANIMATION_ENDING            = 99,
+            ANIMATION_END_LVL           = 99,
+            ANIMATION_ENDING            = 100,
             ANIMATION_OM_LVL            = 108
     
 };
 // //DIALOGS
-#define CHEL_CHILL_DIALOG             100
-#define MONSTER_SLABAK_DIALOG         66
-#define EVIL_FRIENDS_DIALOG           67
+#define CHEL_CHILL_DIALOG           100
+#define MONSTER_SLABAK_DIALOG       66
+#define EVIL_FRIENDS_DIALOG         67
+#define GOD_ENDLVL_DIALOG           99
 
 //CREATE CHARS (in "playAnimation")
 /*
@@ -154,6 +164,7 @@ enum create_chars {
             CHARS_EVIL_FRIENDS  = 66,
             CHARS_GATE          = 81,
             CHARS_GAME_OVER     = 98,
+            CHARS_END_LVL       = 100,
             CHARS_OM_LVL        = 108
 };
 
@@ -169,6 +180,8 @@ enum create_chars {
 #define CHEL_STR_CHILL(x) FPSTR(strChel_chill[(x)])//выйдет.
 
 #define MONSTERS_STR_EVIL_FRIENDS(x) FPSTR(strEvil_friends[(x)])//Нас двое
+
+#define GOD_STR_END_LVL(x) FPSTR(strGod_endlvl[(x)])
 // ---- encoder -----------------------------------------------
 #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
 #define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки) 

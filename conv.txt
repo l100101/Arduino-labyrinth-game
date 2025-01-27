@@ -1,2 +1,1 @@
-const char 1[] PROGMEM = "Hac DBoe u DBepu To}I{e DBe, TbI He cnpaBuwbc9I!
-wac o6a oxpeHeeTe
+const char godStr_endlvl[] PROGMEM = "TbI npeoDoJIeJI Bce ucnbITaHu9, BepHo JIu TbI noH9JI ux?";

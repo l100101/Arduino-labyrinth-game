@@ -253,7 +253,7 @@ void drawMap()
   {
     for (int x = player.fieldOfViewStart; x <= player.fieldOfViewEnd; x++) // если координаты стены в пределах фонаря(+-2 ед.) или дисплея(0,19)
     {
-      if (wall[y][x] > 0) // и стена есть, торисуем её
+      if (wall[y][x] > 0) // и стена есть, то рисуем её
       {
         lcd.setCursor(x, y);
         if (lvl == OM_LVL )
@@ -324,7 +324,7 @@ void chelSays(uint8_t num)
     lcd.print(CHEL_STR_CHILL(2)); // демон.
     break;
   case EVIL_FRIENDS_DIALOG:
-    lcd.setCursor(0, 2);
+    lcd.setCursor(1, 0);
     lcd.print(MONSTERS_STR_EVIL_FRIENDS(3));
     break;
   }
@@ -407,6 +407,17 @@ void godSays(uint8_t num)
     lcd.print(GOD_STR_FLASHLIGHT(7)); // Будь осторожен
     mouth_animation(10);
     break;
+  case GOD_ENDLVL_DIALOG: //99
+    lcd.setCursor(0,0);
+    lcd.print(GOD_STR_END_LVL(0));
+    lcd.setCursor(0,1);
+    lcd.print(GOD_STR_END_LVL(1));
+    lcd.setCursor(0,2);
+    lcd.print(GOD_STR_END_LVL(2));
+    lcd.setCursor(0,3);
+    lcd.print(GOD_STR_END_LVL(3));
+    mouth_animation(10);
+    break;
   }
   wait_for_action();
   lcd.clear();
@@ -444,6 +455,15 @@ void charsCreate(uint8_t num)
   switch (num)
   {
   case CHARS_DEFAULT:
+    lcd.createChar(SKIN_CHEL, people);
+    lcd.createChar(SKIN_KEY, keyChar);
+    lcd.createChar(SKIN_DOOR, doorChar);
+    lcd.createChar(SKIN_WALL, wallChar);
+    lcd.createChar(SKIN_FAKEDOOR, fakedoorChar);
+    lcd.createChar(SKIN_HEART, heartChar);
+    // lcd.createChar(6, );
+    lcd.createChar(SKIN_MONSTER, monsterChar);
+    break;
   case CHARS_MONSTER:{
     lcd.createChar(SKIN_CHEL, people);
     lcd.createChar(SKIN_KEY, keyChar);
@@ -458,7 +478,7 @@ void charsCreate(uint8_t num)
   case CHARS_GOD:{
     lcd.createChar(SKIN_EYE, eyeChar);
     lcd.createChar(SKIN_NOSE, oneNose);
-    lcd.createChar(SKIN_NOSE, twoNose);
+    lcd.createChar(SKIN_NOSE, twoNose); // не баг
     lcd.createChar(SKIN_FACE_1, faceOneChar);
     lcd.createChar(SKIN_FACE_2, faceTwoChar);
     lcd.createChar(SKIN_FACE_3, faceThreeChar);
@@ -483,6 +503,12 @@ void charsCreate(uint8_t num)
     lcd.createChar(SKIN_OM_R, OmCharR);
     break;
   }
+  case CHARS_END_LVL:
+    lcd.createChar(SKIN_CHEL_END_LVL, people);
+    lcd.createChar(SKIN_DOOR_END_LVL, doorChar);
+    lcd.createChar(SKIN_MOUTH_END_LVL, rotChar); // TODO: rename "rot" to mouth! 
+    lcd.createChar(SKIN_MOUTH_OPEN_END_LVL, openRotChar);
+    break;
   case CHARS_ENDING:
     break;
   }
@@ -661,7 +687,7 @@ void play_animation(uint8_t num)
     charsCreate(CHARS_DEFAULT);
     break;
   }
-  case ANIMATION_EVIL_FRIENDS: // TODO
+  case ANIMATION_EVIL_FRIENDS:
   {
     #ifdef OFF_ANIMATIONS
       break;
@@ -669,13 +695,14 @@ void play_animation(uint8_t num)
     // charsCreate(CHARS_EVIL_FRIENDS);
     charsCreate(CHARS_MONSTER);
     lcd.clear();
-    for (int i = 19; i > 6; i--) // идут справа налево
+    // for (int i = 19; i > 6; i--) // идут справа налево
+    for (int i = 0; i < 6; i++) // идут слева направо
     {
       lcd.setCursor(i, 1 + (i % 2));
       lcd.write(SKIN_MONSTER);
       lcd.setCursor(7, (i % 4));
       lcd.write(SKIN_MONSTER);
-      lcd.setCursor(2, 1);
+      lcd.setCursor(19, 2);
       lcd.write(SKIN_CHEL);
       wait_for_action(300);
       lcd.clear();
@@ -688,8 +715,10 @@ void play_animation(uint8_t num)
     monsterSays(EVIL_FRIENDS_DIALOG); // Нас 2
     wait_for_action();
     lcd.clear();
-    lcd.setCursor(2, 1);
+    lcd.setCursor(19, 2);
     lcd.write(SKIN_CHEL);
+    lcd.setCursor(18, 1);
+    // lcd.print(slash); // здесь добавить палочку монолога от персонажа
     chelSays(EVIL_FRIENDS_DIALOG); // оба пизды получите
     // lcd.clear();
     // charsCreate(CHARS_DEFAULT);
@@ -739,6 +768,19 @@ void play_animation(uint8_t num)
       break;
     #endif
     charsCreate(CHARS_ENDING);
+
+    break;
+  }
+  case ANIMATION_END_LVL:
+  {
+    #ifdef OFF_ANIMATIONS
+      break;
+    #endif
+    charsCreate(CHARS_GOD);
+    godSays(GOD_ENDLVL_DIALOG);
+    wait_for_action();
+    charsCreate(CHARS_DEFAULT);
+    lcd.clear();
 
     break;
   }
@@ -997,17 +1039,19 @@ void lvl_design() // вызываем в начале/конце каждого 
   }
   case END_LVL:
   {
-    // play_animation(ANIMATION_END_LVL);
+    play_animation(ANIMATION_END_LVL);
     for (int y = 0; y < 4; y++)
     {
       for (int x = 0; x < 20; x++)
       {
-        wall[y][x] = wall_108[y][x];
+        wall[y][x] = 0;
       }
     }
     player.flashlight(OFF);
-    player.setCurrentXY(CENTER_X, 3);
-    monster.setHp(0);
+    player.setCurrentXY(9, 3); // center
+    monster.setExist(0);
+    monster_3.setExist(0);
+    monster_4.setExist(0);
 
     key_obj.set_exist(0);
     // door_end_lvl = 0;
@@ -1274,6 +1318,8 @@ void loop() {
     if (lvl == OM_LVL)  {
       // all_tone(OM_TONE);
       hp_pos_x = 17;
+    }else if(lvl ==  EVIL_FRIENDS_LVL){
+      lvl = END_LVL;
     }
     else  {
       all_tone(TONE_LVLUP); // звук перехода в следующий уровень
@@ -1286,7 +1332,7 @@ void loop() {
 }
 
 void wait_for_action() {
- while(true)
+  while(true)
   { 
     encbut.tick();
     if (cbuttons())
