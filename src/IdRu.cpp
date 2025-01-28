@@ -1234,6 +1234,7 @@ byte cbuttons()
   {
     restart_door[2]--;                // вычиттаем дчверь из карты
     all_tone(TONE_OPEN_DOOR); // звук открытия двери
+    lvl = 0;
     lcd.clear();
     softwareReset();
     return 1;
